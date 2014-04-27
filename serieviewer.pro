@@ -28,7 +28,8 @@ SOURCES += src/adddialogimpl.cpp \
 	   src/defines.cpp \
            src/setplayerdialogimpl.cpp 
 RESOURCES += src/icons.qrc
-CONFIG += serieviewerdbus \ 
+CONFIG += serieviewerdbus \
+          serieviewerffmpeg \
           qt \
           qtestlib \
           debug
@@ -38,7 +39,7 @@ QT +=     core \
 INCLUDEPATH += . \
           src
 
-LIBS += -lavformat -lavcodec -lavutil
+
 
 QMAKE_CXXFLAGS = -O2 -march=native -D__STDC_CONSTANT_MACROS
 #QMAKE_CXXFLAGS = -Wall -Wpedantic -Wextra -Wno-long-long -D__STDC_CONSTANT_MACROS
@@ -51,4 +52,9 @@ serieviewerdbus {
     SOURCES += src/serieviewerdbus.cpp
     QT      += dbus
 } else {
+}
+
+serieviewerffmpeg {
+    DEFINES += FFMPEG_LIB
+    LIBS += -lavformat -lavcodec -lavutil
 }

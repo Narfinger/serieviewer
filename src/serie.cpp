@@ -2,11 +2,14 @@
 #include <QMessageBox>
 #include <QStringList>
 #include <QTime>
-extern "C"
-{
-#include <libavformat/avformat.h>
-#include <libavutil/dict.h>
-}
+
+#ifdef FFMPEG_LIB
+    extern "C"
+    {
+    #include <libavformat/avformat.h>
+    #include <libavutil/dict.h>
+    }
+#endif
 
 #include "serie.h"
 #include "settings.h"
@@ -105,40 +108,43 @@ bool Serie::isOngoing()
 
 QPair<QString, int> Serie::getDuration()
 {
-    if(this->isDisabled() || this->isFinished())
+    #ifdef FFMPEG_LIB
+        if(this->isDisabled() || this->isFinished())
+            return qMakePair(QString(""), m_index);
+        
+        //this is multiple times and stupid
+        QString nextepisodetoplay = m_dir.absoluteFilePath( m_dir.entryList(QDir::Files, QDir::Name).at(m_episode-1) );
+        QByteArray ba = nextepisodetoplay.toLocal8Bit();
+        const char *c_str = ba.data();
+        
+        AVFormatContext* pFormatCtx = avformat_alloc_context();
+        int ret = avformat_open_input(&pFormatCtx, c_str, NULL, NULL);
+        
+        if(ret != 0)
+            return qMakePair(QString("?"), m_index);
+        if(avformat_find_stream_info(pFormatCtx, 0) < 0) {
+            qDebug() << "problem with stream info";
+            return qMakePair(QString("?"), m_index);
+        }
+    
+        const qint64 duration = static_cast<qint64>(pFormatCtx->duration / AV_TIME_BASE);
+        qint64 seconds = duration;
+        qint64 minutes = duration / 60;
+        seconds %= 60;
+        qint64 hours = minutes / 60;
+        minutes %= 60;
+        
+        avformat_free_context(pFormatCtx);
+        
+        
+        QTime time(hours,minutes,seconds);
+        if(hours==0)
+            return qMakePair(time.toString("mm:ss"), m_index);
+        else
+            return qMakePair(time.toString("hh:mm:ss"), m_index);
+    #else
         return qMakePair(QString(""), m_index);
-    
-    //this is multiple times and stupid
-    QString nextepisodetoplay = m_dir.absoluteFilePath( m_dir.entryList(QDir::Files, QDir::Name).at(m_episode-1) );
-    QByteArray ba = nextepisodetoplay.toLocal8Bit();
-    const char *c_str = ba.data();
-    
-    AVFormatContext* pFormatCtx = avformat_alloc_context();
-    int ret = avformat_open_input(&pFormatCtx, c_str, NULL, NULL);
-    
-    if(ret != 0)
-        return qMakePair(QString("?"), m_index);
-    if(avformat_find_stream_info(pFormatCtx, 0) < 0) {
-        qDebug() << "problem with stream info";
-	return qMakePair(QString("?"), m_index);
-    }
-    
-    const qint64 duration = static_cast<qint64>(pFormatCtx->duration / AV_TIME_BASE);
-    qint64 seconds = duration;
-    qint64 minutes = duration / 60;
-    seconds %= 60;
-    qint64 hours = minutes / 60;
-    minutes %= 60;
-    
-    avformat_free_context(pFormatCtx);
-    
-    
-    QTime time(hours,minutes,seconds);
-    if(hours==0)
-        return qMakePair(time.toString("mm:ss"), m_index);
-    else
-        return qMakePair(time.toString("hh:mm:ss"), m_index);
-    
+    #endif
 }
 
 void Serie::setOngoing(bool valuetoset)

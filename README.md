@@ -15,6 +15,7 @@ make
 Optional Features
 ==========================
 - dbus (see FEATURE in serieviewer.pro)
+- ffmpeg (to show duration of the next episode)
 
 Todo
 ==========================
@@ -22,5 +23,6 @@ Todo
 - Add whole directory with subdirectories should add all the subdirs as series with links (toggleable)
 - cleanup privat and public of mwindowimpl.cpp
 - remove duration row if disabled
-- let ffmpeg be compile time check
 - port to cmake
+- fix icons
+- reload on switch getduration?
