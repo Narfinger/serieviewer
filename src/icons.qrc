@@ -6,7 +6,7 @@
         <file alias="exit.png">icons/application-exit.png</file>
         <file alias="previous.png">icons/go-previous.png</file>
 	<file alias="settings.png">icons/configure.png</file>
-        <file alias="ongoing.png">icons/ongoing.png</file>
+        <file alias="ongoing.png">icons/dialog-ok.png</file>
 	<file alias="shuffle.png">icons/roll.png</file>
 	<file alias="refresh.png">icons/view-refresh.png</file>
 	<file alias="cleanup.png">icons/run-build-clean.png</file>
