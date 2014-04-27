@@ -205,12 +205,12 @@ void MWindowImpl::buildmenus()
         serieactionlist.append(showinfo);
         semenu->addAction(showinfo);
 
-        QAction* ongoing = new QAction(QIcon(":/icons/ongoing"), "Enable Ongoing of this Serie", this);
+        QAction* ongoing = new QAction(QIcon(":/icons/button_ok"), "Enable Ongoing of this Serie", this);
         connect(ongoing, SIGNAL(triggered()), this, SLOT(setOngoing()));
         serieactionlist.append(ongoing);
         semenu->addAction(ongoing);
             
-        QAction* notongoing = new QAction(QIcon(":/icons/button_ok.png"), "Disable Ongoing of this Serie", this);
+        QAction* notongoing = new QAction(QIcon(":/icons/ongoing.png"), "Disable Ongoing of this Serie", this);
         connect(notongoing, SIGNAL(triggered()), this, SLOT(setNotOngoing()));
         serieactionlist.append(notongoing);
         semenu->addAction(notongoing);
