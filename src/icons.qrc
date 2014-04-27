@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/" >
+    <qresource prefix="icons/" >
         <file alias="add.png">icons/list-add.png</file>
         <file alias="button_delete.png">icons/edit-delete.png</file>
         <file alias="button_ok.png">icons/dialog-ok-apply.png</file>
