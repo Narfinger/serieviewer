@@ -1,0 +1,45 @@
+1.0
+- Added undo
+- various other small things
+
+0.91
+- Play Next In Serie Button which plays the next episode in the serie you last
+watched
+- linked serie: you can link series together. For exmple if you linked x to y,
+if x is finished, y will start on the next "Play Next In Serie" button press
+
+0.9
+- added convert _ to spaces settings
+- FIX: the bug where we call some function multiple times is fixed
+
+0.8:
+- number of serie are shown in the main menu
+
+0.7:
+- option if unfinished serie should be sortet or left at the end of the list
+- Priortized sorting: Now series with already one episode watched are sortet to the beginning if you enable this
+- Cleanup XMLHandler Code
+- Cleanup delete code now with new reload function
+- Add Play Now Button, playing the first serie
+- on Linux we now have the output of the player on stdout und stderr, do we
+need this on windows?
+
+0.6:
+- save window size, position and widget size and position
+- FIX: on add we didn't apply any filter so we got a wrong number of episodes
+- FIX: save if you change arguments in the player
+- FIX: no disable menubar on playing
+
+0.5:
+- every playlist has now an own player
+- now the mainwindow gets tranzparent if something is played. WOHO nice effect! well but perhaps it doesn't work on your system
+- each serie has now own parameter for setting arguments
+
+0.4:
+- settings dialog
+- menubar + quit + aboutQt + about
+
+
+Changelog for 0.3
+- if a serie is moved we now make it inactive the same for no episodes left
+- check if playerpath points to a file
