@@ -24,5 +24,4 @@ Todo
 - cleanup privat and public of mwindowimpl.cpp
 - remove duration row if disabled
 - port to cmake
-- fix icons
 - reload on switch getduration?
