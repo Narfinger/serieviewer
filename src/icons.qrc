@@ -11,5 +11,6 @@
 	<file alias="refresh.png">icons/view-refresh.png</file>
 	<file alias="cleanup.png">icons/run-build-clean.png</file>
         <file alias="info.png">icons/help-about.png</file>
+	<file alias="save.png">icons/document-save.png</file>
     </qresource>
 </RCC>
