@@ -2,7 +2,7 @@
 
 const char* APPNAME = "serieviewer";
 const char* DBUSNAME = "org.serieviewer";
-const char* DEFAULTPLAYER = "/usr/bin/mplayer";
+const char* DEFAULTPLAYER = "/usr/bin/vlc";
 #ifdef Q_OS_WIN32
     const char* FILENAME = "serieviewer.xml";
     const char* BFILENAME = "serieviewer.xml.bak";
