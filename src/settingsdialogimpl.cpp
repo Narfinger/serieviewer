@@ -59,9 +59,10 @@ SettingsDialogImpl::SettingsDialogImpl(QWidget *parent)
     ui.tableWidget->setColumnWidth(0,200);
     
     
-    QTableWidgetItem* name = new QTableWidgetItem("Player");
-    
+    QTableWidgetItem* name = new QTableWidgetItem("Player");    
     ui.tableWidget->setHorizontalHeaderItem(0,name);
+    QTableWidgetItem* args = new QTableWidgetItem("Args");    
+    ui.tableWidget->setHorizontalHeaderItem(1,args);
     
     
     QList<QPair<QString, QString> > players = Settings::Instance()->getPlayerList();
