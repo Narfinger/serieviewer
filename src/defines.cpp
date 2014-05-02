@@ -22,6 +22,6 @@ const int WATCHBSIZE = 80;
 const int ONGOINGSIZE = 80;
 const int DURATIONSIZE = 80;
 const int LASTPLAYEDLABELSIZE = 30;
-const char* DEFAULTSETTINGSFILE = "/home/engelzz/.serieviewer.xml";
+const char* DEFAULTSETTINGSFILE = "~/.serieviewer.xml";
 
 const bool SAVESIZE = true;
