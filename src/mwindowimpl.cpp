@@ -63,7 +63,8 @@ MWindowImpl::MWindowImpl(QWidget *parent)
         settings.endGroup();
     }
     QString settingsfile = settings.value("settingsfile").toString();
-    Settings::Instance()->setSettingsFilename(settingsfile);
+    if(!settingsfile.isNull())
+       Settings::Instance()->setSettingsFilename(settingsfile);
 
 
     QTableWidgetItem* name = new QTableWidgetItem("Series Name");

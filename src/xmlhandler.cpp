@@ -373,6 +373,8 @@ bool XMLHandler::write(QList<Serie*>  list)
 const QString XMLHandler::getFileStringFromSettings()
 {
     Settings* settings = Settings::Instance();
-    const QString filename = settings->getSettingsFilename();
+    QString filename = settings->getSettingsFilename();
+    if(filename.startsWith("~"))
+       filename.replace(0,1, QDir::homePath());
     return filename;
 }
