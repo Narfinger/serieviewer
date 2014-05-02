@@ -3,14 +3,6 @@
 const char* APPNAME = "serieviewer";
 const char* DBUSNAME = "org.serieviewer";
 const char* DEFAULTPLAYER = "/usr/bin/vlc";
-#ifdef Q_OS_WIN32
-    const char* FILENAME = "serieviewer.xml";
-    const char* BFILENAME = "serieviewer.xml.bak";
-#else
-    const char* FILENAME = ".serieviewer.xml";
-    const char* BFILENAME = ".serieviewer.xml.bak";
-#endif
-
 const char* PROGRAMMVERSION = "1.0";
 const char* DBUSARGS = "-f";
 const float OPACITY= 0.85;
