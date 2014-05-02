@@ -93,16 +93,16 @@ MWindowImpl::MWindowImpl(QWidget *parent)
 	
     if(!xmlhandler->read())
     {
-        qDebug() << "Couldn't read any data. For security reasons we wil backup the file if it exists";
-        QFile backup(BFILENAME);
-        QFile file(FILENAME);
-        if(file.exists())
-        {
-            qDebug() << "try to copy";
-            if(backup.exists())
-                backup.remove();
-            file.copy(BFILENAME);
-        }
+        qDebug() << "Couldn't read any data. If you don't change anything you might recover the file.";
+        // QFile backup(BFILENAME);
+        // QFile file(FILENAME);
+        // if(file.exists())
+        // {
+        //     qDebug() << "try to copy";
+        //     if(backup.exists())
+        //         backup.remove();
+        //     file.copy(BFILENAME);
+        // }
         //player = DEFAULTPLAYER;
     }
 

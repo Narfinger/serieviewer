@@ -9,8 +9,6 @@
 extern const char* APPNAME;
 extern const char* DBUSNAME;
 extern const char* DEFAULTPLAYER;
-extern const char* FILENAME;
-extern const char* BFILENAME;
 extern const char* PROGRAMMVERSION;
 extern const char* DBUSARGS;
 
