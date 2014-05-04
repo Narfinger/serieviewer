@@ -18,7 +18,9 @@ Settings* Settings::Instance ()
 }
 
 Settings::Settings()
-    : m_lastpath(),m_player(DEFAULTPLAYER), m_sort(false), m_ongoingsort(true), m_priorsort(false), m_reloadsort(false), m_convertnames(false),m_scanmedia(false), m_settingsfile(DEFAULTSETTINGSFILE)
+   : m_lastpath(),m_player(DEFAULTPLAYER), m_sort(false), m_ongoingsort(true), 
+     m_priorsort(false), m_reloadsort(false), m_convertnames(false),m_scanmedia(false), 
+     m_opacity(DEFAULTOPACITY), m_settingsfile(DEFAULTSETTINGSFILE)
 { 
 }
 

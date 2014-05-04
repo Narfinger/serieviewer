@@ -1138,25 +1138,26 @@ void MWindowImpl::setGui(int snumber)
 
 void MWindowImpl::serieStarted()
 {
-    Serie* callee = qobject_cast<Serie*>(QObject::sender());
-    if(callee==0)
-        qDebug() << "The callee is null (in started), do we really want that?";
-    currentlyplaying = callee;
-    ui.clearButton->click();
+   int opacity = Settings::Instance()->getOpacity();
+   Serie* callee = qobject_cast<Serie*>(QObject::sender());
+   if(callee==0)
+      qDebug() << "The callee is null (in started), do we really want that?";
+   currentlyplaying = callee;
+   ui.clearButton->click();
    
-    ui.tableWidget->setEnabled(false);
-
-    ui.deleteButton->setEnabled(false);
-    ui.menubar->setEnabled(false);
-    ui.playNextButton->setEnabled(false);
-    ui.playNextInSerieButton->setEnabled(false);
-    ui.playLastAddedButton->setEnabled(false);
-    ui.undoButton->setEnabled(false);
+   ui.tableWidget->setEnabled(false);
    
-    ui.searchEdit->setEnabled(false);
-    ui.clearButton->setEnabled(false);
+   ui.deleteButton->setEnabled(false);
+   ui.menubar->setEnabled(false);
+   ui.playNextButton->setEnabled(false);
+   ui.playNextInSerieButton->setEnabled(false);
+   ui.playLastAddedButton->setEnabled(false);
+   ui.undoButton->setEnabled(false);
    
-    this->setWindowOpacity ( OPACITY );
+   ui.searchEdit->setEnabled(false);
+   ui.clearButton->setEnabled(false);
+   
+   this->setWindowOpacity( (100 - opacity)/100.0 );
 }
 
 void MWindowImpl::serieStopped(int snumber)

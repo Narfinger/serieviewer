@@ -54,6 +54,8 @@ SettingsDialogImpl::SettingsDialogImpl(QWidget *parent)
     else
         ui.scanmediabox->setCheckState(Qt::Unchecked);
     
+    ui.opacitySpinbox->setValue(settings->getOpacity());
+
     // qDebug() << settings->getSort() << settings->getOngoingSort() << settings->getPriorSort();
     ui.tableWidget->setColumnWidth(0,300);
     ui.tableWidget->setColumnWidth(0,200);
@@ -262,6 +264,8 @@ void SettingsDialogImpl::acceptClicked()
     instance->setScanMedia(getScanMedia());
     
     instance->setSettingsFilename(getSettingsFile());
+
+    instance->setOpacity(ui.opacitySpinbox->value());
     
     accept();
 }

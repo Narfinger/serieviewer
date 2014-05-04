@@ -48,7 +48,7 @@ p, li { white-space: pre-wrap; }
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -287,53 +287,6 @@ deleting</string>
        <string>Misc</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout2">
-       <item row="2" column="4" colspan="2">
-        <widget class="QLabel" name="settingsfilelabel">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="5">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Automatically changes _,. to whitespace on the input field and removes extensions appropriately</string>
-         </property>
-         <property name="wordWrap">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="5">
-        <widget class="QCheckBox" name="convertnamescheckbox">
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Convert specials to whitespace</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Settings File</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="5">
-        <widget class="QCheckBox" name="scanmediabox">
-         <property name="text">
-          <string>Scan Media Files for duration</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="2">
         <widget class="QPushButton" name="settingsfileButton">
          <property name="sizePolicy">
@@ -357,6 +310,33 @@ deleting</string>
          </property>
         </widget>
        </item>
+       <item row="0" column="5">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Automatically changes _,. to whitespace on the input field and removes extensions appropriately</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="5">
+        <widget class="QCheckBox" name="convertnamescheckbox">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Convert specials to whitespace</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4" colspan="2">
+        <widget class="QLabel" name="settingsfilelabel">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="1">
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -373,6 +353,26 @@ deleting</string>
          </property>
         </spacer>
        </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Settings File</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="5">
+        <widget class="QCheckBox" name="scanmediabox">
+         <property name="text">
+          <string>Scan Media Files for duration</string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="3">
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
@@ -388,6 +388,26 @@ deleting</string>
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Transparency</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="QSpinBox" name="opacitySpinbox">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
