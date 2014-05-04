@@ -30,6 +30,7 @@ class Settings : public QObject
     bool m_scanmedia;              //!< if we should use ffmpeg to scan media
     QUuid m_lastplayed;            //!< name of the serie last played
     QUuid m_lastadded;             //!< uuid of last serie we added
+    int m_opacity;
     
     QString m_settingsfile; /* this is only for saving while the application is running
                                this gets not exported to xml but to QSettings */
@@ -78,6 +79,9 @@ class Settings : public QObject
     QUuid getLastAdded()           { return m_lastadded; }
     void setLastAdded(QUuid last)  { m_lastadded = last; }
     
+    int getOpacity()               { return m_opacity; }
+    void setOpacity(int trans)     { m_opacity = trans;}
+
     QString getSettingsFilename()  { return m_settingsfile; }
     void setSettingsFilename(QString file) { m_settingsfile = file; }
 };	

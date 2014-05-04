@@ -21,7 +21,7 @@ extern const char* DBUSARGS;
 #endif
 
 
-extern const float OPACITY;
+extern const int DEFAULTOPACITY;
 extern const char* FIRMNAME;
 extern const int NAMESIZE;
 extern const int ACTSIZE;

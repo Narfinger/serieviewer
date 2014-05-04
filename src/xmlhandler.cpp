@@ -117,6 +117,11 @@ void XMLHandler::readSettings(QDomDocument &doc)
     QDomNodeList lastaddedlist = doc.elementsByTagName("lastadded");
     QUuid lastaddedtext(lastaddedlist.at(0).toElement().text());
     instance->setLastAdded(lastaddedtext);
+
+    //transparency
+    QDomNodeList opacitylist = doc.elementsByTagName("opacity");
+    int opacityint = opacitylist.at(0).toElement().text().toInt();
+    instance->setOpacity(opacityint);
 }
 
 bool XMLHandler::readSerie(QDomDocument &doc)
@@ -303,6 +308,14 @@ void XMLHandler::writeSettings(QDomDocument &doc, QDomElement &root)
         QDomText lastadded_text;
         lastadded_text = doc.createTextNode(instance->getLastAdded().toString());
         lastadded_elem.appendChild(lastadded_text);
+    }
+
+    {
+       QDomElement opacity_elem = doc.createElement("opacity");
+       settings.appendChild(opacity_elem);
+       QDomText opacity_text;
+       opacity_text = doc.createTextNode(QString::number(instance->getOpacity()));
+       opacity_elem.appendChild(opacity_text);
     }
 }
 
