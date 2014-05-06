@@ -18,10 +18,18 @@ Settings* Settings::Instance ()
 }
 
 Settings::Settings()
-   : m_lastpath(),m_player(DEFAULTPLAYER), m_sort(false), m_ongoingsort(true), 
-     m_priorsort(false), m_reloadsort(false), m_convertnames(false),m_scanmedia(false), 
-     m_opacity(DEFAULTOPACITY), m_settingsfile(DEFAULTSETTINGSFILE)
+   : m_player(DEFAULTPLAYER), m_settingsfile(DEFAULTSETTINGSFILE)
 { 
+   m_settings["lastpath"] = QVariant("");
+   m_settings["sort"] = QVariant(false);
+   m_settings["ongoingsort"] = QVariant(true);
+   m_settings["priorsort"] = QVariant(false);
+   m_settings["reloadsort"] = QVariant(false);
+   m_settings["convertnames"] = QVariant(false);
+   m_settings["scanmedia"] = QVariant(false);
+   m_settings["lastplayed"] = QVariant(QUuid());
+   m_settings["lastadded"] = QVariant(Quuid());
+   m_settings["opacity"] = QVariant(DEFAULTOPACITY);    
 }
 
 

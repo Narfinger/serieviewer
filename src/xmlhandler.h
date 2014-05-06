@@ -18,6 +18,7 @@ class XMLHandler : public QObject
     Q_OBJECT
   private:
     bool readSetup(QDomDocument &doc, QFile &file);
+    void setVariantByType(QVariant* value, QString text);
     void readSettings(QDomDocument &doc);
     bool readSerie(QDomDocument &doc);
     
