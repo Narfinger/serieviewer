@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET = serieviewer
 # Input
 HEADERS += src/adddialogimpl.h \
 	   src/linkdialogimpl.h \
@@ -31,13 +31,14 @@ RESOURCES += src/icons.qrc
 CONFIG += serieviewerdbus \
           serieviewerffmpeg \
           qt \
-          qtestlib \
           debug
 QT +=     core \
           gui \
-          xml
+          xml \
+	  widgets
 INCLUDEPATH += . \
           src
+LIBS += -lQt5Concurrent
 
 
 

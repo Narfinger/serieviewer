@@ -54,24 +54,32 @@ bool XMLHandler::readSetup(QDomDocument &doc, QFile& file)
 
 void XMLHandler::setVariantByType(QVariant* value, QString text)
 {
-   QMetaType::Type type = value.type();
+   QVariant::Type type = value->type();
    switch(type)
    {
       case QMetaType::Bool:
+      {
 	 bool b = (text == "true");
 	 value->setValue(b);
 	 break;
-      case QMetaType::Uuid:
+      }
+      case QMetaType::QUuid:
+      {
 	 QUuid id = QUuid(text);
 	 value->setValue(id);
 	 break;
-      case QMetaType::int:
-	 int integer = QString::number(text);
+      }
+      case QMetaType::Int:
+      {
+	 int integer = text.toInt();
 	 value->setValue(integer);
 	 break;
+      }
       case QMetaType::QString:
+      {
 	 value->setValue(text);
 	 break;
+      }
       default:
 	 qDebug() << "Did not find the correct type.";
 
@@ -96,15 +104,14 @@ void XMLHandler::readSettings(QDomDocument &doc)
 
 
     // do the various settings
-    QHashIterator<QString, QVariant> i(instance->m_settings);
+    QMutableHashIterator<QString, QVariant> i(instance->m_settings);
     while(i.hasNext())
     {
        i.next();
        QString key = i.key();
-       QVariant value = i.value();
-       QDomeNodeList elementlist = doc.elementsByTagName(key);
+       QDomNodeList elementlist = doc.elementsByTagName(key);
        QString elementtext = elementlist.at(0).toElement().text();
-       setVariantByType(&value, elementtext);
+       setVariantByType(&(i.value()), elementtext);
     }
 
     //sort
@@ -240,8 +247,8 @@ void XMLHandler::writeSerie(QDomDocument &doc, QDomElement &series, QList<Serie*
             serieelem.setAttribute("episode", serie->getEpisodeNum());
             serieelem.setAttribute("player", serie->getPlayer());
             serieelem.setAttribute("arguments", serie->getArguments());
-            serieelem.setAttribute("uuid", serie->getUuid());
-            serieelem.setAttribute("link", serie->getLink());
+            serieelem.setAttribute("uuid", serie->getUuid().toString());
+            serieelem.setAttribute("link", serie->getLink().toString());
 			
             int max = serie->getMax();
             if(serie->isOngoing())

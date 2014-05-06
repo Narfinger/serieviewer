@@ -1,7 +1,7 @@
 #ifndef SETTINGSDIALOGIMPL_H
 #define SETTINGSDIALOGIMPL_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QColor>
 
 #include "ui_settingsdialog.h"

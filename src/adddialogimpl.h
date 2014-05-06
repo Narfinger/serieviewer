@@ -1,7 +1,7 @@
 #ifndef ADDDIALOGIMPL_H
 #define ADDDIALOGIMPL_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QString>
 #include <QList>
 #include <QPair>

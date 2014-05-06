@@ -1,7 +1,7 @@
 #ifndef LINKDIALOGIMPL_H
 #define LINKDIALOGIMPL_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QString>
 #include <QList>
 #include <QUuid>
