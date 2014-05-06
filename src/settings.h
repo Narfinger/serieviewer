@@ -10,6 +10,7 @@
 #include <QUuid>
 #include <QVariant>
 #include <QHash>
+#include <QUuid>
 
 /** 	@class Settings
 	Singleton class for serving settings
@@ -46,34 +47,34 @@ class Settings : public QObject
     void setSettingsFilename(QString file) { m_settingsfile = file; }
 
     /* getter and setters for convenience */
-    QString getLastPath()          { return m_settings["lastpath"].toString(); }   
+    QString getLastPath()          { return m_settings.value("lastpath").toString(); }   
     void setLastPath(QString path) { m_settings.insert("lastpath", QVariant(path)); }
     
-    bool getSort()                 { return m_settings["sort"].toBool(); }
+    bool getSort()                 { return m_settings.value("sort").toBool(); }
     void setSort(bool sort)        { m_settings.insert("sort", QVariant(sort)); }
                
-    bool getOngoingSort()          { return m_settings["ongoingsort"].toBool(); }
+    bool getOngoingSort()          { return m_settings.value("ongoingsort").toBool(); }
     void setOngoingSort(bool sort) { m_settings.insert("ongoingsort", QVariant(sort)); }
     
-    bool getReloadSort()           { return m_settings["reloadsort"].toBool(); }
+    bool getReloadSort()           { return m_settings.value("reloadsort").toBool(); }
     void setReloadSort(bool sort)  { m_settings.insert("reloadsort", QVariant(sort)); }
     
-    bool getPriorSort()            { return m_settings["priorsort"].toBool(); }
+    bool getPriorSort()            { return m_settings.value("priorsort").toBool(); }
     void setPriorSort(bool sort)   { m_settings.insert("priorsort", QVariant(sort)); }
     
-    bool getConvertNames()         { return m_settings["convertnames"].toBool(); }
+    bool getConvertNames()         { return m_settings.value("convertnames").toBool(); }
     void setConvertNames(bool conv){ m_settings.insert("convertnames", QVariant(conv)); }
     
-    bool getScanMedia()            { return m_settings["scanmedia"].toBool(); }
+    bool getScanMedia()            { return m_settings.value("scanmedia").toBool(); }
     void setScanMedia(bool scan)   { m_settings.insert("scanmedia", QVariant(scan)); }
     
-    QUuid getLastPlayed()          { return m_settings["lastplayed"].toQUuid(); }
+    QUuid getLastPlayed()          { return m_settings.value("lastplayed").toUuid(); }
     void setLastPlayed(QUuid last) { m_settings.insert("lastplayed", QVariant(last)); }
     
-    QUuid getLastAdded()           { return m_settings["lastadded"].toQUuid(); }
+    QUuid getLastAdded()           { return m_settings.value("lastadded").toUuid(); }
     void setLastAdded(QUuid last)  { m_settings.insert("lastadded", QVariant(last)); }
     
-    int getOpacity()               { return m_settings["opacity"].toInt(); }
+    int getOpacity()               { return m_settings.value("opacity").toInt(); }
     void setOpacity(int opa)     { m_settings.insert("opacity", QVariant(opa)); }
 
 

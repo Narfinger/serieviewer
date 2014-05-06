@@ -1,7 +1,7 @@
 #ifndef MWINDOWIMPL_H
 #define MWINDOWIMPL_H
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 #include <QList>
 #include <QHash>
 #include <QUuid>

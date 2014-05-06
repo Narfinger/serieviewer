@@ -3,7 +3,7 @@
 
 #include "ui_infodialog.h"
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 
 #include "serie.h"
 

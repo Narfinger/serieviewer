@@ -1,7 +1,7 @@
 #ifndef SETPLAYERDIALOGIMPL_H
 #define SETPLAYERDIALOGIMPL_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include <QString>
 
 #include "ui_setplayerdialog.h"

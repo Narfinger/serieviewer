@@ -28,7 +28,7 @@ Settings::Settings()
    m_settings["convertnames"] = QVariant(false);
    m_settings["scanmedia"] = QVariant(false);
    m_settings["lastplayed"] = QVariant(QUuid());
-   m_settings["lastadded"] = QVariant(Quuid());
+   m_settings["lastadded"] = QVariant(QUuid());
    m_settings["opacity"] = QVariant(DEFAULTOPACITY);    
 }
 
