@@ -52,16 +52,38 @@ bool XMLHandler::readSetup(QDomDocument &doc, QFile& file)
     return true;
 }
 
+void XMLHandler::setVariantByType(QVariant* value, QString text)
+{
+   QMetaType::Type type = value.type();
+   switch(type)
+   {
+      case QMetaType::Bool:
+	 bool b = (text == "true");
+	 value->setValue(b);
+	 break;
+      case QMetaType::Uuid:
+	 QUuid id = QUuid(text);
+	 value->setValue(id);
+	 break;
+      case QMetaType::int:
+	 int integer = QString::number(text);
+	 value->setValue(integer);
+	 break;
+      case QMetaType::QString:
+	 value->setValue(text);
+	 break;
+      default:
+	 qDebug() << "Did not find the correct type.";
+
+   }
+}
+
 void XMLHandler::readSettings(QDomDocument &doc)
 {
     //parse for lastpath
     Settings* instance = Settings::Instance();		
     Q_ASSERT(instance != 0);
-    QDomNodeList pathlist = doc.elementsByTagName("lastpath");
-    if(pathlist.size()==0)
-        qDebug() << "no lastpath settings found";
-    instance->setLastPath( pathlist.at(0).toElement().text() );
-		
+	
     //parse for player
     QDomNodeList playerlist = doc.elementsByTagName("player");
     if(playerlist.size()==0)
@@ -72,56 +94,24 @@ void XMLHandler::readSettings(QDomDocument &doc)
         instance->addPlayer( elem.text(), elem.attribute("arguments") );
     }
 
+
+    // do the various settings
+    QHashIterator<QString, QVariant> i(instance->m_settings);
+    while(i.hasNext())
+    {
+       i.next();
+       QString key = i.key();
+       QVariant value = i.value();
+       QDomeNodeList elementlist = doc.elementsByTagName(key);
+       QString elementtext = elementlist.at(0).toElement().text();
+       setVariantByType(&value, elementtext);
+    }
+
     //sort
     QDomNodeList sortlist = doc.elementsByTagName("sort");
     QString sorttext = sortlist.at(0).toElement().text();
     bool sortit = (sorttext=="true");
     instance->setSort(sortit);
-	
-    //sort ongoing
-    QDomNodeList sortonglist = doc.elementsByTagName("sortongoing");
-    QString sortongtext = sortonglist.at(0).toElement().text();		
-    bool sortong = (sortongtext=="true");
-    instance->setOngoingSort(sortong);
-	
-    //sort priority
-    QDomNodeList sortpriolist = doc.elementsByTagName("sortprior");
-    QString sortpriotext = sortpriolist.at(0).toElement().text();
-    bool sortprio = (sortpriotext == "true");
-    instance->setPriorSort(sortprio);
-
-    //sort reloaded list
-    QDomNodeList sortreloadlist = doc.elementsByTagName("sortreload");
-    QString sortreloadtext = sortreloadlist.at(0).toElement().text();
-    bool sortreload = (sortreloadtext == "true");
-    instance->setReloadSort(sortreload);
-
-    //convert names
-    QDomNodeList convertnameslist = doc.elementsByTagName("convertnames");
-    QString convertnamestext = convertnameslist.at(0).toElement().text();
-    bool convert = (convertnamestext == "true");
-    instance->setConvertNames(convert);
-
-    //scan media
-    QDomNodeList scanmedialist = doc.elementsByTagName("scanmedia");
-    QString scanmediatext = scanmedialist.at(0).toElement().text();
-    bool scanmedia = (scanmediatext == "true");
-    instance->setScanMedia(scanmedia);
-
-    //lastplayed
-    QDomNodeList lastplayedlist = doc.elementsByTagName("lastplayed");
-    QUuid lastplayedtext(lastplayedlist.at(0).toElement().text());
-    instance->setLastPlayed(lastplayedtext);
-
-    //last added
-    QDomNodeList lastaddedlist = doc.elementsByTagName("lastadded");
-    QUuid lastaddedtext(lastaddedlist.at(0).toElement().text());
-    instance->setLastAdded(lastaddedtext);
-
-    //transparency
-    QDomNodeList opacitylist = doc.elementsByTagName("opacity");
-    int opacityint = opacitylist.at(0).toElement().text().toInt();
-    instance->setOpacity(opacityint);
 }
 
 bool XMLHandler::readSerie(QDomDocument &doc)
@@ -212,11 +202,20 @@ void XMLHandler::writeSettings(QDomDocument &doc, QDomElement &root)
     QDomText versionnumber = doc.createTextNode(PROGRAMMVERSION);
     version.appendChild(versionnumber);
 	
-    QDomElement lastpathelem = doc.createElement("lastpath");
-    settings.appendChild(lastpathelem);
-    QDomText path = doc.createTextNode( instance->getLastPath() );
-    lastpathelem.appendChild(path);
-	
+   
+    // write various settings
+    QHashIterator<QString, QVariant> i(instance->m_settings);
+    while(i.hasNext())
+    {
+       i.next();
+       QString key = i.key();
+       QVariant value = i.value();
+       QDomElement element = doc.createElement(key);
+       settings.appendChild(element);
+       QDomText text = doc.createTextNode( value.toString());
+       element.appendChild(text);
+    }
+
     QList<QPair<QString, QString> > players = instance->getPlayerList();
 	
     for(int i=0; i<players.size(); i++)
@@ -226,96 +225,6 @@ void XMLHandler::writeSettings(QDomDocument &doc, QDomElement &root)
         QDomText playertext = doc.createTextNode( players.at(i).first );
         playerelem.setAttribute("arguments", players.at(i).second  );
         playerelem.appendChild(playertext);
-    }
-	
-    {
-        QDomElement sortelem = doc.createElement("sort");
-        settings.appendChild(sortelem);	
-        QDomText sorttext;
-        if( instance->getSort())
-            sorttext = doc.createTextNode("true");
-        else
-            sorttext = doc.createTextNode("false");
-        sortelem.appendChild(sorttext);
-    }
-	
-    {
-        QDomElement sortongelem = doc.createElement("sortongoing");
-        settings.appendChild(sortongelem);	
-        QDomText sortongtext;
-        if( instance->getOngoingSort())
-            sortongtext = doc.createTextNode("true");
-        else
-            sortongtext = doc.createTextNode("false");
-        sortongelem.appendChild(sortongtext);
-    }
-	
-    {
-        QDomElement sortprioelem = doc.createElement("sortprior");
-        settings.appendChild(sortprioelem);
-        QDomText sortpriotext;
-        if( instance->getPriorSort() )
-            sortpriotext = doc.createTextNode("true");
-        else
-            sortpriotext = doc.createTextNode("false");
-        sortprioelem.appendChild(sortpriotext);
-    }
-
-    {
-        QDomElement sortreloadelem = doc.createElement("sortreload");
-        settings.appendChild(sortreloadelem);
-        QDomText sortreloadtext;
-        if( instance->getReloadSort() )
-            sortreloadtext = doc.createTextNode("true");
-        else
-            sortreloadtext = doc.createTextNode("false");
-        sortreloadelem.appendChild(sortreloadtext);
-    }
-
-    {
-        QDomElement convertnameselem = doc.createElement("convertnames");
-        settings.appendChild(convertnameselem);
-        QDomText convertnamestext;
-        if( instance->getConvertNames() )
-            convertnamestext = doc.createTextNode("true");
-        else
-            convertnamestext = doc.createTextNode("false");
-        convertnameselem.appendChild(convertnamestext);
-    }
-
-    {
-        QDomElement scanmediaelem = doc.createElement("scanmedia");
-        settings.appendChild(scanmediaelem);
-        QDomText scanmediatext;
-        if( instance->getScanMedia() )
-            scanmediatext = doc.createTextNode("true");
-        else
-            scanmediatext = doc.createTextNode("false");
-        scanmediaelem.appendChild(scanmediatext);
-    }
-
-    {
-        QDomElement lastplayed_elem = doc.createElement("lastplayed");
-        settings.appendChild(lastplayed_elem);
-        QDomText lastplayed_text;
-        lastplayed_text = doc.createTextNode(instance->getLastPlayed().toString());
-        lastplayed_elem.appendChild(lastplayed_text);
-    }
-
-    {
-        QDomElement lastadded_elem = doc.createElement("lastadded");
-        settings.appendChild(lastadded_elem);
-        QDomText lastadded_text;
-        lastadded_text = doc.createTextNode(instance->getLastAdded().toString());
-        lastadded_elem.appendChild(lastadded_text);
-    }
-
-    {
-       QDomElement opacity_elem = doc.createElement("opacity");
-       settings.appendChild(opacity_elem);
-       QDomText opacity_text;
-       opacity_text = doc.createTextNode(QString::number(instance->getOpacity()));
-       opacity_elem.appendChild(opacity_text);
     }
 }
 
