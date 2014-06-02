@@ -48,7 +48,7 @@ p, li { white-space: pre-wrap; }
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -404,6 +404,9 @@ deleting</string>
        </item>
        <item row="3" column="4">
         <widget class="QSpinBox" name="opacitySpinbox">
+         <property name="correctionMode">
+          <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+         </property>
          <property name="maximum">
           <number>100</number>
          </property>
