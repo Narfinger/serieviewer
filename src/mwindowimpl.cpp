@@ -532,21 +532,7 @@ void MWindowImpl::on_playLastAddedButton_clicked()
 void MWindowImpl::on_undoButton_clicked()
 {
     if(lastplayed!=0 && lastplayed->getEpisodeNum()!=1)
-    {
-        int episodenum = lastplayed->getEpisodeNum();
-        lastplayed->setEpisode(episodenum -1);
-	
-        //finding the snumber for a serie, this is local because i really should not use this
-        int index = 0;
-        for(index=0; index<list.size(); index++)
-            if(list.at(index)->getUuid()==lastplayed->getUuid())
-                break;
-        episodeChangedInSerie(index);
-
-	//give highlight
-	ui.tableWidget->selectRow(index);
-	setLastPlayedName();
-    }
+        lastplayed->rewind();
 }
 
 void MWindowImpl::on_clearButton_clicked()
