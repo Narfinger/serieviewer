@@ -269,7 +269,7 @@
        <string>add Serie</string>
       </property>
       <property name="icon">
-       <iconset>
+       <iconset resource="icons.qrc">
         <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
       </property>
      </widget>
@@ -283,7 +283,7 @@
        <string>remove from List</string>
       </property>
       <property name="icon">
-       <iconset>
+       <iconset resource="icons.qrc">
         <normaloff>:/icons/button_delete.png</normaloff>:/icons/button_delete.png</iconset>
       </property>
      </widget>
@@ -299,11 +299,199 @@
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSerieviewer">
+    <property name="title">
+     <string>Serieviewer</string>
+    </property>
+    <addaction name="actionSettings"/>
+    <addaction name="actionRefresh"/>
+    <addaction name="actionClean_up_Series"/>
+    <addaction name="actionQuit_without_saving"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuSerie">
+    <property name="title">
+     <string>Serie</string>
+    </property>
+    <addaction name="actionShow_Series_Info"/>
+    <addaction name="actionEnable_Ongoing"/>
+    <addaction name="actionDisable_Ongoing"/>
+    <addaction name="actionRewind_by_one"/>
+    <addaction name="actionSet_the_link"/>
+    <addaction name="actionSet_player"/>
+   </widget>
+   <widget class="QMenu" name="menuPlaying">
+    <property name="title">
+     <string>Playing</string>
+    </property>
+    <addaction name="actionRandom"/>
+    <addaction name="actionNewRandom"/>
+    <addaction name="actionPlay_next_in_Series"/>
+    <addaction name="actionPlay_last_added"/>
+    <addaction name="actionPlay_next"/>
+    <addaction name="actionUndo_last_play"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout_Qt"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuSerieviewer"/>
+   <addaction name="menuSerie"/>
+   <addaction name="menuPlaying"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">
    <property name="text">
     <string>about</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/refresh.png</normaloff>:/icons/refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+  </action>
+  <action name="actionClean_up_Series">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/cleanup.png</normaloff>:/icons/cleanup.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clean up Series</string>
+   </property>
+  </action>
+  <action name="actionQuit_without_saving">
+   <property name="text">
+    <string>Quit without saving</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/exit.png</normaloff>:/icons/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Q</string>
+   </property>
+  </action>
+  <action name="actionShow_Series_Info">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/info.png</normaloff>:/icons/info.png</iconset>
+   </property>
+   <property name="text">
+    <string>Show Series Info</string>
+   </property>
+  </action>
+  <action name="actionEnable_Ongoing">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/button_ok.png</normaloff>:/icons/button_ok.png</iconset>
+   </property>
+   <property name="text">
+    <string>Enable Ongoing</string>
+   </property>
+  </action>
+  <action name="actionDisable_Ongoing">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/ongoing.png</normaloff>:/icons/ongoing.png</iconset>
+   </property>
+   <property name="text">
+    <string>Disable Ongoing</string>
+   </property>
+  </action>
+  <action name="actionRewind_by_one">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/previous.png</normaloff>:/icons/previous.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rewind by one</string>
+   </property>
+  </action>
+  <action name="actionSet_the_link">
+   <property name="text">
+    <string>Set the link</string>
+   </property>
+  </action>
+  <action name="actionSet_player">
+   <property name="text">
+    <string>Change Player/arguments</string>
+   </property>
+  </action>
+  <action name="actionRandom">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pick Random</string>
+   </property>
+   <property name="shortcut">
+    <string>R</string>
+   </property>
+  </action>
+  <action name="actionNewRandom">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pick New Random</string>
+   </property>
+  </action>
+  <action name="actionPlay_next_in_Series">
+   <property name="text">
+    <string>Play next in Series</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionPlay_last_added">
+   <property name="text">
+    <string>Play last added</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
+  <action name="actionPlay_next">
+   <property name="text">
+    <string>Play next</string>
+   </property>
+   <property name="shortcut">
+    <string>N</string>
+   </property>
+  </action>
+  <action name="actionUndo_last_play">
+   <property name="text">
+    <string>Undo last play</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>about Qt</string>
    </property>
   </action>
  </widget>
