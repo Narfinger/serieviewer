@@ -33,10 +33,6 @@ class MWindowImpl : public QMainWindow
     Serie* lastadded;
     Serie* currentlyplaying;             //!< serie which is currently playing otherwise null
     
-    QList<QAction*> serieactionlist;       //!<list of the qactions in the serie menu, order is the same as in building
-    
-    QMenu* seriemenu;           //!< serie menu we need for rightlick stuff
-    
     void buildmenus(); //!< builds the menu bar at the start and adds seriemenu
     
     void saveXML(bool sort = true);      //!< saves the XML file (we have some things we need to do before it)

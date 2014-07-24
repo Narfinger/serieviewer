@@ -169,124 +169,28 @@ MWindowImpl::~MWindowImpl()
 
 void MWindowImpl::buildmenus()
 {
-    //Serieviewer
-    {
-        QMenu* smenu = new QMenu("&Serieviewer", this);
-	
-        QAction* settings = new QAction(QIcon(":/icons/settings.png"), "Settings", this);
-        connect(settings, SIGNAL(triggered()), this, SLOT(askForSettings()));
-        smenu->addAction(settings);
-            
-        QAction* reload = new QAction(QIcon(":/icons/refresh.png"), "Reload", this);
-        reload->setShortcuts(QKeySequence::Refresh);
-        connect(reload, SIGNAL(triggered()), this, SLOT(reload()));
-        smenu->addAction(reload);
-
-        QAction* cleanup = new QAction(QIcon(":/icons/cleanup.png"), "Clean Up Series", this);
-        connect(cleanup, SIGNAL(triggered()), this, SLOT(cleanupSeries()));
-        smenu->addAction(cleanup);
-
-        QAction* quitwith = new QAction(QIcon(":/icons/exit.png"), "Quit without saving", this);
-        connect(quitwith, SIGNAL(triggered()), this, SLOT(quitWithoutSaving()));
-        smenu->addAction(quitwith);
-            
-        QAction* quit = new QAction(QIcon(":/icons/exit.png"), "Quit", this);
-        quit->setShortcut(QKeySequence(Qt::Key_Q));
-        connect(quit,SIGNAL(triggered()), qApp, SLOT(quit()));
-        smenu->addAction(quit);
-            
-        ui.menubar->addMenu(smenu);
-    }
-
-    //Serie
-    {
-        QMenu* semenu = new QMenu("S&erie", this);
-
-        QAction* showinfo = new QAction(QIcon(":/icons/info"), "Show Series info", this);
-        connect(showinfo, SIGNAL(triggered()), this, SLOT(showSerieInfo()));
-        serieactionlist.append(showinfo);
-        semenu->addAction(showinfo);
-
-        QAction* ongoing = new QAction(QIcon(":/icons/button_ok"), "Enable Ongoing of this Serie", this);
-        connect(ongoing, SIGNAL(triggered()), this, SLOT(setOngoing()));
-        serieactionlist.append(ongoing);
-        semenu->addAction(ongoing);
-            
-        QAction* notongoing = new QAction(QIcon(":/icons/ongoing.png"), "Disable Ongoing of this Serie", this);
-        connect(notongoing, SIGNAL(triggered()), this, SLOT(setNotOngoing()));
-        serieactionlist.append(notongoing);
-        semenu->addAction(notongoing);
-            
-        QAction* rewind = new QAction(QIcon(":/icons/previous.png"), "Rewind the series by one episode", this);
-        connect(rewind, SIGNAL(triggered()), this, SLOT(rewind()));
-        serieactionlist.append(rewind);
-        semenu->addAction(rewind);
-
-        QAction* link = new QAction("Sets the link", this);
-        connect(link, SIGNAL(triggered()), this, SLOT(setLink()));
-        serieactionlist.append(link);
-        semenu->addAction(link);
-
-        QAction* player = new QAction("Change Player/arguments", this);
-        connect(player, SIGNAL(triggered()), this, SLOT(setPlayer()));
-        serieactionlist.append(player);
-        semenu->addAction(player);
-            
-        ui.menubar->addMenu(semenu);
-
-        seriemenu = semenu;
-    }
-
-    //global actions
-    {
-        QMenu* gmenu = new QMenu("&Playing", this);
-
-        srand(time(0));
-        QAction* random = new QAction(QIcon(":/icons/shuffle.png"), "Pick Random", this);
-        random->setShortcut(QKeySequence(Qt::Key_R));
-        connect(random, SIGNAL(triggered()), this, SLOT(random()));
-        gmenu->addAction(random);
-
-        QAction* newrandom = new QAction(QIcon(":/icons/shuffle.png"), "Pick New Random", this);
-        connect(newrandom, SIGNAL(triggered()), this, SLOT(newRandom()));
-        gmenu->addAction(newrandom);
-            
-        QAction* playnextinseries = new QAction("Play next in Series", this);
-        playnextinseries->setShortcut(QKeySequence(Qt::Key_P));
-        connect(playnextinseries, SIGNAL(triggered()), this, SLOT(on_playNextInSerieButton_clicked()));
-        gmenu->addAction(playnextinseries);
-
-        QAction* playlastadded = new QAction("Play last added", this);
-        playlastadded->setShortcut(QKeySequence(Qt::Key_L));
-        connect(playlastadded, SIGNAL(triggered()), this, SLOT(on_playLastAddedButton_clicked()));
-        gmenu->addAction(playlastadded);
-
-        QAction* playnext = new QAction("Play next", this);
-        playnext->setShortcut(QKeySequence(Qt::Key_N));
-        connect(playnext, SIGNAL(triggered()), this, SLOT(on_playNextButton_clicked()));
-        gmenu->addAction(playnext);
-
-        QAction* undoaction = new QAction("Undo last play", this);
-        undoaction->setShortcut(QKeySequence(Qt::Key_U));
-        connect(undoaction, SIGNAL(triggered()), this, SLOT(on_undoButton_clicked()));
-        gmenu->addAction(undoaction);
-
-        ui.menubar->addMenu(gmenu);
-    }
-
-    //help
-    {
-        QMenu* hmenu = new QMenu("&Help", this);
-        QAction* aboutQt = new QAction("about Qt", this);
-        connect(aboutQt,SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-        QAction* about = new QAction(QIcon(":/icons/vlc.png"), "about", this);
-        connect(about,SIGNAL(triggered()), this, SLOT(about()));
-	
-        hmenu->addAction(aboutQt);
-        hmenu->addAction(about);
-        
-        ui.menubar->addMenu(hmenu);
-    }
+    connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(askForSettings()));
+    connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(reload()));
+    connect(ui.actionClean_up_Series, SIGNAL(triggered()), this, SLOT(cleanupSeries()));
+    connect(ui.actionQuit_without_saving, SIGNAL(triggered()), this, SLOT(quitWithoutSaving()));
+    connect(ui.actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    
+    connect(ui.actionShow_Series_Info, SIGNAL(triggered()), this, SLOT(showSerieInfo()));
+    connect(ui.actionEnable_Ongoing, SIGNAL(triggered()), this, SLOT(setOngoing()));
+    connect(ui.actionDisable_Ongoing, SIGNAL(triggered()), this, SLOT(setNotOngoing()));
+    connect(ui.actionRewind_by_one, SIGNAL(triggered()), this, SLOT(rewind()));
+    connect(ui.actionSet_the_link, SIGNAL(triggered()), this, SLOT(setLink()));
+    connect(ui.actionSet_player, SIGNAL(triggered()), this, SLOT(setPlayer()));
+    
+    connect(ui.actionRandom, SIGNAL(triggered()), this, SLOT(random()));
+    connect(ui.actionNewRandom, SIGNAL(triggered()), this, SLOT(newRandom()));
+    connect(ui.actionPlay_next_in_Series, SIGNAL(triggered()), this, SLOT(on_playNextInSerieButton_clicked()));
+    connect(ui.actionPlay_last_added, SIGNAL(triggered()), this, SLOT(on_playLastAddedButton_clicked()));
+    connect(ui.actionPlay_next, SIGNAL(triggered()), this, SLOT(on_playNextButton_clicked()));
+    connect(ui.actionUndo_last_play, SIGNAL(triggered()), this, SLOT(on_undoButton_clicked()));
+    
+    connect(ui.actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 }
 
 void MWindowImpl::saveXML(bool sort)
@@ -557,11 +461,11 @@ void MWindowImpl::cellFocusChanged(int currentrow, int currentcolumn, int previo
     {
         Serie* serie = list.at(currentrow);
         Q_ASSERT(serie!=0);
-        QAction* showinfoaction = serieactionlist.at(0);
-        QAction* ongoingaction = serieactionlist.at(1);
-        QAction* notongoingaction = serieactionlist.at(2);
-        QAction* rewindaction = serieactionlist.at(3);
-        QAction* playeraction = serieactionlist.at(4);
+        QAction* showinfoaction = ui.actionShow_Series_Info;
+        QAction* ongoingaction = ui.actionEnable_Ongoing;
+        QAction* notongoingaction = ui.actionDisable_Ongoing;
+        QAction* rewindaction = ui.actionRewind_by_one;
+        QAction* playeraction = ui.actionSet_player;
         Q_UNUSED(playeraction);
     
         if(serie->isOngoing())
@@ -1211,7 +1115,7 @@ void MWindowImpl::rightClickPopup(QPoint point)
         return;
     else
     {
-        seriemenu->popup(ui.tableWidget->mapToGlobal(point));
+      ui.menuSerie->popup(ui.tableWidget->mapToGlobal(point));
     }
 }
 
