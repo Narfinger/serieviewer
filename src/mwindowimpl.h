@@ -61,11 +61,15 @@ class MWindowImpl : public QMainWindow
     
     void reload();                  //!< saves the xml and reloads the serie
     
-    void about();                  //! the about box		
+    void about();                  //! the about box	
+     
+    void addSerieRecursive();	//adds all subfolders as a seperate entry
     
     void addGuiSerie(QString path=""); //!< adds a serie but gives the dialog
     
-    void on_addButton_clicked();
+    void on_addButton_clicked() { addGuiSerie(); };
+    
+    void on_addDirRecursiveButton_clicked() { addSerieRecursive(); };
     
     void on_deleteButton_clicked();
     
