@@ -169,6 +169,7 @@ MWindowImpl::~MWindowImpl()
 
 void MWindowImpl::buildmenus()
 {
+    connect(ui.actionAdd_recursive, SIGNAL(triggered()), this, SLOT(addSerieRecursive()));
     connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(askForSettings()));
     connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(reload()));
     connect(ui.actionClean_up_Series, SIGNAL(triggered()), this, SLOT(cleanupSeries()));
@@ -320,6 +321,38 @@ void MWindowImpl::about()
     QMessageBox::about ( this, QString("Versioninfo"), message );
 }
 
+void MWindowImpl::addSerieRecursive()
+{
+    const int oldsize = list.size();
+    QString dirstring = QFileDialog::getExistingDirectory(this, "Open Dir for Recursive", Settings::Instance()->getLastPath(), 
+							  QFileDialog::ShowDirsOnly);
+    if(!dirstring.isEmpty())
+    {
+        QDir dir(dirstring);
+        for(const QFileInfo& d : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot))
+	{
+	    if(d.isDir())
+		addGuiSerie(d.absoluteFilePath());
+	}
+	
+	//set lastpath we need to check if somebody added series, this is not nice but i don't know any other way really
+	//I know this is a hack and ideally addGuiSerie should just return a bool
+	if(oldsize != list.size())
+	{
+	    //setup links
+	    for(int i = oldsize; i<list.size()-1; i++)
+	    {
+		Serie* s = list.at(i);
+		Serie* next = list.at(i+1);
+		s->setLink(next->getUuid());
+		qDebug() << "linking:" << s->getName() << "to" << next->getName();
+	    }
+	    dir.cdUp();
+	    Settings::Instance()->setLastPath(dir.absolutePath());
+	}
+    }
+}
+
 void MWindowImpl::addGuiSerie(QString path)
 {
     AddDialogImpl* dialog=new AddDialogImpl(&list, path, this);
@@ -338,11 +371,6 @@ void MWindowImpl::addGuiSerie(QString path)
     }
     delete dialog;
     ui.numberLabel->setText(QString::number(list.size()));
-}
-
-void MWindowImpl::on_addButton_clicked()
-{
-    addGuiSerie();
 }
 
 void MWindowImpl::on_deleteButton_clicked()

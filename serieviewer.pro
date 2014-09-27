@@ -42,7 +42,7 @@ LIBS += -lQt5Concurrent
 
 
 
-QMAKE_CXXFLAGS = -O2 -march=native -D__STDC_CONSTANT_MACROS
+QMAKE_CXXFLAGS = -O2 -march=native -D__STDC_CONSTANT_MACROS -std=c++11
 #QMAKE_CXXFLAGS = -Wall -Wpedantic -Wextra -Wno-long-long -D__STDC_CONSTANT_MACROS
 
 
