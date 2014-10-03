@@ -38,6 +38,8 @@ class InfoDialogImpl : public QDialog
     ~InfoDialogImpl()
     {
     }
+
+    void setLinkName(const QString& name) { ui.linklabel->setText(name); };
     
     QString getResult()
     {

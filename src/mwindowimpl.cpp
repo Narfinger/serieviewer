@@ -761,6 +761,9 @@ void MWindowImpl::showSerieInfo()
         Q_ASSERT(!serie->isDisabled());
 
         InfoDialogImpl* infodialog = new InfoDialogImpl(this,serie);
+	Serie* linked = getSerieForUuid(serie->getLink());
+	if(linked!= nullptr)
+	  infodialog->setLinkName(linked->getName());
         infodialog->exec();
         if(infodialog->result()==QDialog::Accepted)
         {
