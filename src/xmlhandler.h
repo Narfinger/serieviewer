@@ -26,6 +26,8 @@ class XMLHandler : public QObject
     void writeSerie( QDomDocument &doc, QDomElement &series, QList<Serie*> &list);
     
     const QString getFileStringFromSettings(); /* produces the correct string from settings, still does need to be opened */
+    
+    bool filedidnotexist = false;
   public:
     XMLHandler( QObject *parent = 0);
     

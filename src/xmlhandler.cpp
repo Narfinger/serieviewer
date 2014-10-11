@@ -171,7 +171,9 @@ bool XMLHandler::read()
     QFile file(filename);
     if(!file.exists())
     {
-        qDebug() << "We don't see a settings file at the path " <<  file.fileName();
+	
+        qDebug() << "We don't see a settings file at the path" <<  file.fileName();
+	filedidnotexist = true;
         emit askForPlayer();
         return false;
     }
@@ -273,6 +275,11 @@ bool XMLHandler::write(QList<Serie*>  list)
 {
     const QString filename = this->getFileStringFromSettings();
     QFile file(filename);
+    if(filedidnotexist && file.exists())
+    {
+        qDebug() << "Abort writing, there is a file where there was no file";
+	return false;
+    }
     file.open(QIODevice::WriteOnly | QIODevice::Truncate);
     QTextStream out;
     out.setDevice(&file);
