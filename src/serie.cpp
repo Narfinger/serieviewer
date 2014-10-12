@@ -189,9 +189,10 @@ void Serie::setEpisode(int episodetoset)
 QString Serie::getNextEpisodeName()
 {
     QStringList entries = m_dir.entryList(QDir::Files, QDir::Name);
-    if(entries.count() > m_episode)
+    if(entries.count() >= m_episode)
         return entries.at(m_episode-1);
-    else return QString();
+    else 
+        return QString();
 }
 
 
