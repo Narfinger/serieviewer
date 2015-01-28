@@ -464,7 +464,10 @@ void MWindowImpl::on_playLastAddedButton_clicked()
 void MWindowImpl::on_undoButton_clicked()
 {
     if(lastplayed!=0 && lastplayed->getEpisodeNum()!=1)
+    {
         lastplayed->rewind();
+	setLastPlayedName();
+    }
 }
 
 void MWindowImpl::on_clearButton_clicked()
@@ -917,6 +920,7 @@ void MWindowImpl::rewind()
                     
             cellFocusChanged(row,0,0,0);
             changed = true;
+	    setLastPlayedName();
         }
     }
     else 
