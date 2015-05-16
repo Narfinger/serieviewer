@@ -12,7 +12,7 @@ data Serie = Serie { dir :: FilePath
                    , maxepisode :: Int
                    , ongoing :: Bool
                    , title :: String
-                   } deriving (Show)
+                   } deriving (Show, Eq)
 
 extensions :: [String]
 extensions = [".txt", ".mkv", ".mp3", ".avi"]
