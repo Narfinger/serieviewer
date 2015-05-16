@@ -4,4 +4,4 @@ import Serie
 
 
 main :: IO ()
-main = retunr ()
+main = return ()

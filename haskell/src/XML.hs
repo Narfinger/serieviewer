@@ -11,9 +11,16 @@ instance XmlPickler Serie where
 
 xpSerie :: PU Serie
 xpSerie = xpElem "serie" $
-          xpWrap ( uncurry Serie
-                 , \ s -> (dir Serie)) $ 
-          xpPair (xpAttr "dir" xpickle)
+          xpWrap ( \ (( d,e,m,o,t)) -> Serie d e m o t
+                 , \ t -> (dir t, episode t, maxepisode t
+                          , ongoing t, title t
+                          )
+                 ) $
+          xp5Tuple (xpAttr "dir" xpickle)
+                   (xpAttr "episode" xpickle)
+                   (xpAttr "max" xpickle)
+                   (xpAttr "ongoing" xpickle)
+                   (xpAttr "title" xpickle)
 
 
 -- getSerie = deep (isElem >>> hasName "serie") >>> 
@@ -25,15 +32,26 @@ xpSerie = xpElem "serie" $
 --     t <- getText -< x
 --     returnA -< Serie { dir = d, episode = e, maxepisode = m, ongoing = o, title = t}
 
-  
+processSerie	:: IOSArrow Serie Serie
+processSerie
+    = arrIO ( \ x -> do {print x ; return x})
+
+          
 runTest = 
   do
-    runX ( xunpickleDocument xpSeason
+    runX ( xunpickleDocument xpSerie
            [ withValidate no
            , withTrace 1
            , withRemoveWS yes
            , withPreserveComment no
            ] "~/.serieviewer.xml"
+           >>> processSerie >>>
+           xpickleDocument   xpSerie
+                               [ withIndent yes
+                               ] "new-simple2.xml"
+	   
+         )
+      return ()
 
 
 
