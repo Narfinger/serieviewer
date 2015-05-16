@@ -1,13 +1,9 @@
 {-# LANGUAGE Arrows, NoMonomorphismRestriction #-}
 
-module XMLSerie where
+module XMLHandler where
 import Serie (Serie(..))
 
 import Data.Map
-
-import System.Directory
-import System.FilePath
-
 import Text.XML.HXT.Core
 
 instance XmlPickler Serie where
