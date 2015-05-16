@@ -2,12 +2,18 @@
 
 module XMLSerie where
 import Serie (Serie(..))
+
+import Data.Map
+
+import System.Directory
+import System.FilePath
+
 import Text.XML.HXT.Core
 
 instance XmlPickler Serie where
   xpickle = xpSerie
 
-
+type Series = [Serie]
 
 xpSerie :: PU Serie
 xpSerie = xpElem "serie" $
@@ -16,48 +22,33 @@ xpSerie = xpElem "serie" $
                           , ongoing t, title t
                           )
                  ) $
-          xp5Tuple (xpAttr "dir" xpickle)
-                   (xpAttr "episode" xpickle)
-                   (xpAttr "max" xpickle)
-                   (xpAttr "ongoing" xpickle)
-                   (xpAttr "title" xpickle)
+          xp5Tuple (xpAttr "dir" xpText)
+                   (xpAttr "episode" xpPrim)
+                   (xpAttr "max" xpPrim)
+                   (xpAttr "ongoing" xpPrim)
+                   (xpAttr "title" xpText)
 
+xpSeries :: PU Series
+xpSeries = xpElem "series" $
+           xpList xpickle
 
--- getSerie = deep (isElem >>> hasName "serie") >>> 
---   proc x -> do
---     d <- getAttrValue "dir" -< x
---     e <- getAttrValue "episode" -< x
---     m <- getAttrValue "max" -< x
---     o <- getAttrValue "ongoing" -< x
---     t <- getText -< x
---     returnA -< Serie { dir = d, episode = e, maxepisode = m, ongoing = o, title = t}
-
-processSerie	:: IOSArrow Serie Serie
+processSerie :: IOSArrow Series Series
 processSerie
     = arrIO ( \ x -> do {print x ; return x})
 
-          
-runTest = 
-  do
-    runX ( xunpickleDocument xpSerie
-           [ withValidate no
-           , withTrace 1
-           , withRemoveWS yes
-           , withPreserveComment no
-           ] "~/.serieviewer.xml"
-           >>> processSerie >>>
-           xpickleDocument   xpSerie
-                               [ withIndent yes
-                               ] "new-simple2.xml"
-	   
-         )
-      return ()
 
+readSerie :: FilePath -> IO Series
+readSerie fp = do
+  s<- runX ( xunpickleDocument xpSeries
+                               [ withValidate no
+                               , withTrace 1
+                               , withRemoveWS yes
+                               , withPreserveComment no
+                               ] fp
+           );
+    return $ s !! 0;
 
-
-
-    
-    -- runX (readDocument [ withValidate no] "~/.serieviewer.xml" 
-    --       >>> getSerie 
-    --      )
-
+writeSerie :: FilePath -> Series -> IO ()
+writeSerie fp serie = do
+  runX (constA serie >>> xpickleDocument xpSeries [ withIndent yes] fp);
+  return ()
