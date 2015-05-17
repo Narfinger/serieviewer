@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable serieviewer
   main-is:             Main.hs
-  other-modules:       Pages Serie XMLHandler
+  other-modules:       Bootstrap Pages Serie XMLHandler
   -- other-extensions:    
   build-depends:       base >=4.8 && <4.9
                      , directory >= 1.2.2.0

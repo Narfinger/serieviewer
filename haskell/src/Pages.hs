@@ -5,6 +5,10 @@ module Pages
        )
        where
 
+import qualified Bootstrap as B
+import Serie (Serie(..))
+
+import Control.Monad (forM_)
 import           Text.Blaze ((!))
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
@@ -29,5 +33,23 @@ siteTemplate title body =
   ] body
 
 
-indexPage :: H.Html
-indexPage = siteTemplate "Main" "TestSeries"
+serieRow :: Serie -> H.Html
+serieRow s =
+  H.tr $ do
+    H.td $ H.toHtml $ title s
+    H.td $ H.toHtml $ episode s
+    H.td $ H.toHtml $ maxepisode s
+    H.td $ H.toHtml $ ongoing s
+
+indexPage :: [Serie] -> H.Html
+indexPage series = siteTemplate "Main" $
+                  H.div ! A.class_ "container" $ do
+                    H.div ! A.class_ "row" $ do
+                      H.h1 $ "Series"
+                      H.table ! A.class_ "table table-striped" $ do
+                        H.tr $ do
+                          H.td "Title"
+                          H.td "Episode"
+                          H.td "Max Episode"
+                          H.td "Ongoing"
+                        forM_ series serieRow
