@@ -35,9 +35,11 @@ siteTemplate title body =
 
 serieRow :: Serie -> H.Html
 serieRow s =
+  let maxvalue = H.stringValue $ show $ maxepisode s
+      e =  H.stringValue $ show $ episode s in
   H.tr $ do
     H.td $ H.toHtml $ title s
-    H.td $ H.toHtml $ episode s
+    H.td $ H.input ! A.type_ "number" ! A.step "1" ! A.min "1" ! A.max  maxvalue ! A.value e
     H.td $ H.toHtml $ maxepisode s
     H.td $ H.toHtml $ ongoing s
 
@@ -46,10 +48,19 @@ indexPage series = siteTemplate "Main" $
                   H.div ! A.class_ "container" $ do
                     H.div ! A.class_ "row" $ do
                       H.h1 $ "Series"
-                      H.table ! A.class_ "table table-striped" $ do
-                        H.tr $ do
-                          H.td "Title"
-                          H.td "Episode"
-                          H.td "Max Episode"
-                          H.td "Ongoing"
-                        forM_ series serieRow
+                      H.form $ do
+                        H.table ! A.class_ "table table-striped" $ do
+                          H.tr $ do
+                            H.td "Title"
+                            H.td "Episode"
+                            H.td "Max Episode"
+                            H.td "Ongoing"
+                          forM_ series serieRow
+
+teststuff =
+  let testseries = [ Serie { dir = "/tmp", episode = 1, maxepisode = 5, ongoing = False, title = "Test this onece" }
+                   , Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice" }
+                   , Serie { dir = "/tmp", episode = 1, maxepisode = 3, ongoing = True, title = "Test this thrice" }]
+      stuff = [Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice" }]
+  in
+   renderHtml $ indexPage stuff

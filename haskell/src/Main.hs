@@ -9,7 +9,7 @@ import XMLHandler
 
 
 testseries = [ Serie { dir = "/tmp", episode = 1, maxepisode = 5, ongoing = False, title = "Test this onece" }
-             , Serie { dir = "/tmp", episode = 1, maxepisode = 10, ongoing = False, title = "Test this twice" }
+             , Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice" }
              , Serie { dir = "/tmp", episode = 1, maxepisode = 3, ongoing = True, title = "Test this thrice" }]
 
 main :: IO ()
