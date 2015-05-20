@@ -2,6 +2,7 @@
 
 module Pages
        ( indexPage
+       , playPage
        )
        where
 
@@ -33,6 +34,11 @@ siteTemplate title body =
   ] body
 
 
+serieButton :: Serie -> H.Html
+serieButton s =
+  H.button ! A.type_ "submit" ! A.class_ "btn btn-success" $ do
+    "Play"
+
 serieRow :: Serie -> H.Html
 serieRow s =
   let maxvalue = H.stringValue $ show $ maxepisode s
@@ -42,6 +48,11 @@ serieRow s =
     H.td $ H.input ! A.type_ "number" ! A.step "1" ! A.min "1" ! A.max  maxvalue ! A.value e
     H.td $ H.toHtml $ maxepisode s
     H.td $ H.toHtml $ ongoing s
+    H.td $ serieButton s
+
+playPage :: Int -> H.Html
+playPage snumber = siteTemplate "TMP" $ H.toHtml snumber 
+  
 
 indexPage :: [Serie] -> H.Html
 indexPage series = siteTemplate "Main" $
