@@ -44,7 +44,14 @@ runUpdatePage number f = do
   let s = series !! number
   let nx = f s
   let nxs = updateList series number nx
-  H.ok $ H.toResponse $ indexPage testseries
+  liftIO $ atomically $ writeTVar tvar nxs;
+  H.ok $ H.toResponse $ indexPage nxs
+
+index :: App H.Response
+index = do
+  tvar <- get;
+  series <- liftIO $ readTVarIO tvar;
+  H.ok $ H.toResponse $ indexPage series
 
 playSerie :: Int -> App H.Response
 playSerie number = do
@@ -53,19 +60,19 @@ playSerie number = do
   let s = series !! number
   liftIO $ atomically $ writeTVar tvar (testseries ++ testseries);
   --  S.playCurrentEpisode s;
-  H.ok $ H.toResponse $ indexPage testseries
+  H.seeOther ("/"::String) (H.toResponse ("" ::String))
 
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
 runApp series (App sp) = do
   H.mapServerPartT (flip evalStateT series) sp
 
-      -- figure out type
+routing :: TVar Series -> H.ServerPartT IO H.Response
 routing series = msum
        [ H.dir "style.css" $ H.serveFile (H.asContentType "text/css") "static/style.css"
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
        , H.dir "execute"   $ H.dir "play" $ runApp series (playSerie 1)
 --       , H.dir "execute"   $ H.
-       , H.ok $ H.toResponse $ indexPage testseries
+       , runApp series index
        ]
 
 main :: IO ()
