@@ -9,6 +9,7 @@ module Pages
 import qualified Bootstrap as B
 import Serie (Serie(..))
 
+import Control.Concurrent.STM
 import Control.Monad (forM_)
 import           Text.Blaze ((!))
 import qualified Text.Blaze.Html5 as H
@@ -50,8 +51,8 @@ serieRow s =
     H.td $ H.toHtml $ ongoing s
     H.td $ serieButton s
 
-playPage :: Int -> H.Html
-playPage snumber = siteTemplate "TMP" $ H.toHtml snumber 
+playPage :: Serie -> H.Html
+playPage serie = siteTemplate "TMP" "blubber"   
   
 
 indexPage :: [Serie] -> H.Html

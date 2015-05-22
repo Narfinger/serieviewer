@@ -9,7 +9,7 @@ import Text.XML.HXT.Core
 instance XmlPickler Serie where
   xpickle = xpSerie
 
-type Series = [Serie]
+--type Series = [Serie]
 
 xpSerie :: PU Serie
 xpSerie = xpElem "serie" $
@@ -24,16 +24,16 @@ xpSerie = xpElem "serie" $
                    (xpAttr "ongoing" xpPrim)
                    (xpAttr "title" xpText)
 
-xpSeries :: PU Series
+xpSeries :: PU [Serie]
 xpSeries = xpElem "series" $
            xpList xpickle
 
-processSerie :: IOSArrow Series Series
+processSerie :: IOSArrow [Serie] [Serie]
 processSerie
     = arrIO ( \ x -> do {print x ; return x})
 
 
-readSerie :: FilePath -> IO Series
+readSerie :: FilePath -> IO [Serie]
 readSerie fp = do
   s<- runX ( xunpickleDocument xpSeries
                                [ withValidate no
@@ -44,7 +44,7 @@ readSerie fp = do
            );
     return $ s !! 0;
 
-writeSerie :: FilePath -> Series -> IO ()
+writeSerie :: FilePath -> [Serie] -> IO ()
 writeSerie fp serie = do
   runX (constA serie >>> xpickleDocument xpSeries [ withIndent yes] fp);
   return ()
