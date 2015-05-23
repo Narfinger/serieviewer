@@ -1,5 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
-
+{-# LANGUAGE OverloadedStrings,CPP, FlexibleInstances, GeneralizedNewtypeDeriving,
+    TypeSynonymInstances, QuasiQuotes #-}
 module Pages
        ( indexPage
        , playPage
@@ -9,12 +9,16 @@ module Pages
 import qualified Bootstrap as B
 import Serie (Serie(..))
 
+
 import Control.Concurrent.STM
 import Control.Monad (forM_)
 import           Text.Blaze ((!))
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
-
+import Language.Javascript.JMacro ( ToJExpr(..), Ident(..), renderJs
+                                  , JStat(..), JExpr(..)
+                                  , JVal(..), jmacro, jsv
+                                  , jLam, jVarTy)
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 
 mainTemplate :: String -> [H.Html] -> H.Html -> H.Html
@@ -32,12 +36,16 @@ siteTemplate title body =
   [
     H.link ! A.rel "stylesheet" ! A.href "static/css/bootstrap.min.css"
   , H.script ! A.src "static/js/bootstrap.min.js" $ ""
+  , H.script ! A.src "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" $ ""
   ] body
 
+--jsToAtrribute :: a -> H.Html
+jsToAttribute js = H.toValue $ show $ renderJs js
 
 serieButton :: Serie -> H.Html
 serieButton s = 
-  H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.value "/execute/play/1/" $ do
+  H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.onclick (jsToAttribute [jmacro|
+                                                                                       $.post("/execute/play/" + s) |]) $ do
     "Play"
 
 serieRow :: Serie -> H.Html
