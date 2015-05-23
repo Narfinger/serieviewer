@@ -36,8 +36,8 @@ siteTemplate title body =
 
 
 serieButton :: Serie -> H.Html
-serieButton s =
-  H.button ! A.type_ "submit" ! A.class_ "btn btn-success" $ do
+serieButton s = 
+  H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.value "/execute/play/1/" $ do
     "Play"
 
 serieRow :: Serie -> H.Html

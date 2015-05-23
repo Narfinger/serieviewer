@@ -1,5 +1,6 @@
 module Serie ( Serie(..)
              , playCurrentEpisode
+             , incrementEpisode
              ) where
 
 import Control.Monad

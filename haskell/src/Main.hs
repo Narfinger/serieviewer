@@ -31,21 +31,24 @@ testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ong
              , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice" }]
 
 
-updateList :: [a] -> Int -> a -> [a]
-updateList list number element =
+replaceElementInList :: [a] -> Int -> Maybe a -> [a]
+replaceElementInList list number element =
   let (h,t) = splitAt number list in
-    let dropped = drop 0 t in
-     h ++ (element : dropped)
+    let dropped = drop 1 t in
+      case element of
+       Nothing -> h ++ dropped
+       Just e  -> h ++ (e : dropped)
 
 --runUpdatePage :: Int -> App H.Response
+runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> m H.Response
 runUpdatePage number f = do
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;
   let s = series !! number
   let nx = f s
-  let nxs = updateList series number nx
+  let nxs = replaceElementInList series number nx
   liftIO $ atomically $ writeTVar tvar nxs;
-  H.ok $ H.toResponse $ indexPage nxs
+  H.seeOther ("/"::String) (H.toResponse ("" ::String))
 
 index :: App H.Response
 index = do
@@ -53,24 +56,20 @@ index = do
   series <- liftIO $ readTVarIO tvar;
   H.ok $ H.toResponse $ indexPage series
 
-playSerie :: Int -> App H.Response
-playSerie number = do
-  tvar <- get;
-  series <- liftIO $ readTVarIO tvar;
-  let s = series !! number
-  liftIO $ atomically $ writeTVar tvar (testseries ++ testseries);
-  --  S.playCurrentEpisode s;
-  H.seeOther ("/"::String) (H.toResponse ("" ::String))
-
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
 runApp series (App sp) = do
   H.mapServerPartT (flip evalStateT series) sp
+
+playSerie :: Int -> App H.Response
+playSerie number =
+  runUpdatePage number S.incrementEpisode
+
 
 routing :: TVar Series -> H.ServerPartT IO H.Response
 routing series = msum
        [ H.dir "style.css" $ H.serveFile (H.asContentType "text/css") "static/style.css"
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
-       , H.dir "execute"   $ H.dir "play" $ runApp series (playSerie 1)
+       , H.dir "execute"   $ H.dir "play" $ H.path $ \n -> runApp series (playSerie n)
 --       , H.dir "execute"   $ H.
        , runApp series index
        ]
