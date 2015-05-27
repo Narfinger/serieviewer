@@ -16,6 +16,7 @@ import qualified Happstack.Server as H
 
 import Pages (indexPage, playPage)
 import qualified Serie as S
+import Utils (replaceElementInList)
 import XMLHandler
 
 type Series = [S.Serie]
@@ -31,16 +32,7 @@ testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ong
              , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice" }]
 
 
-replaceElementInList :: [a] -> Int -> Maybe a -> [a]
-replaceElementInList list number element =
-  let (h,t) = splitAt number list in
-    let dropped = drop 1 t in
-      case element of
-       Nothing -> h ++ dropped
-       Just e  -> h ++ (e : dropped)
-
---runUpdatePage :: Int -> App H.Response
-runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> m H.Response
+--runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> m H.Response
 runUpdatePage number f = do
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;

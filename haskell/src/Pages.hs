@@ -8,7 +8,7 @@ module Pages
 
 import qualified Bootstrap as B
 import Serie (Serie(..))
-
+import Utils (replaceChar)
 
 import Control.Concurrent.STM
 import Control.Monad (forM_)
@@ -35,18 +35,18 @@ siteTemplate title body =
   mainTemplate title
   [
     H.link ! A.rel "stylesheet" ! A.href "static/css/bootstrap.min.css"
-  , H.script ! A.src "static/js/bootstrap.min.js" $ ""
   , H.script ! A.src "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" $ ""
+  , H.script ! A.src "static/js/bootstrap.min.js" $ ""
   ] body
 
 --jsToAtrribute :: a -> H.Html
-jsToAttribute js = H.toValue $ show $ renderJs js
+jsToAttribute js = H.preEscapedToValue $ replaceChar '"' '\'' $ filter (/='\\') $ show $ renderJs js
 
 serieButton :: Serie -> H.Html
-serieButton s = 
-  H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.onclick (jsToAttribute [jmacro|
-                                                                                       $.post("/execute/play/" + s) |]) $ do
-    "Play"
+serieButton s =
+  let execstring = "/execute/play/" ++ (show 1) ++ "/" in
+   H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.onclick (jsToAttribute [jmacro|$.post( `(execstring)` ); |]) $ do
+     "Play"
 
 serieRow :: Serie -> H.Html
 serieRow s =
