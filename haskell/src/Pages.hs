@@ -42,19 +42,29 @@ siteTemplate title body =
 --jsToAtrribute :: a -> H.Html
 jsToAttribute js = H.preEscapedToValue $ replaceChar '"' '\'' $ filter (/='\\') $ show $ renderJs js
 
+--jsPostRequest String -> Int
+buildJsPostRequest s i =
+  let execstring = s ++ (show i) ++ "/" in
+   jsToAttribute [jmacro|$.post( `(execstring)` ); |]
+
 serieButton :: Int -> H.Html
-serieButton s =
-  let execstring = "/execute/play/" ++ (show s) ++ "/" in
-   H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.onclick (jsToAttribute [jmacro|$.post( `(execstring)` ); |]) $ do
+serieButton i =
+  let exec = buildJsPostRequest "/execute/play/" i in
+   H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.onclick exec $ do
      "Play"
+
+serieSpinBox :: (Serie, Int) -> H.Html
+serieSpinBox (s,i) =
+  let maxvalue = H.stringValue $ show $ maxepisode s
+      e =  H.stringValue $ show $ episode s
+      exec = buildJsPostRequest "/execute/change/" i in
+   H.td $ H.input ! A.type_ "number" ! A.step "1" ! A.min "1" ! A.max  maxvalue ! A.value e ! A.onchange exec
 
 serieRow :: (Serie,Int) -> H.Html
 serieRow (s,i) =
-  let maxvalue = H.stringValue $ show $ maxepisode s
-      e =  H.stringValue $ show $ episode s in
   H.tr $ do
     H.td $ H.toHtml $ title s
-    H.td $ H.input ! A.type_ "number" ! A.step "1" ! A.min "1" ! A.max  maxvalue ! A.value e
+    serieSpinBox (s,i)
     H.td $ H.toHtml $ maxepisode s
     H.td $ H.toHtml $ ongoing s
     H.td $ serieButton i
