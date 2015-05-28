@@ -1,5 +1,6 @@
 module Utils (
     replaceChar
+  , replaceJSQuotes
   , replaceElementInList
   ) where
 
@@ -16,3 +17,6 @@ replaceElementInList list number element =
        Nothing -> h ++ dropped
        Just e  -> h ++ (e : dropped)
 
+
+replaceJSQuotes :: String -> String
+replaceJSQuotes = replaceChar '"' '\''

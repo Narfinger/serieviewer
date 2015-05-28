@@ -8,7 +8,7 @@ module Pages
 
 import qualified Bootstrap as B
 import Serie (Serie(..))
-import Utils (replaceChar)
+import Utils (replaceJSQuotes)
 
 import Control.Concurrent.STM
 import Control.Monad (forM_)
@@ -39,10 +39,10 @@ siteTemplate title body =
   , H.script ! A.src "static/js/bootstrap.min.js" $ ""
   ] body
 
---jsToAtrribute :: a -> H.Html
-jsToAttribute js = H.preEscapedToValue $ replaceChar '"' '\'' $ filter (/='\\') $ show $ renderJs js
+--jsToAttribute :: Language.Javascript.JMacro.Base.JsToDoc a, Language.Javascript.JMacro.Base.JMacro a) => a -> H.AttributeValue
+jsToAttribute js = H.preEscapedToValue $ replaceJSQuotes $ filter (/='\\') $ show $ renderJs js
 
---jsPostRequest String -> Int
+buildJsPostRequest :: (Show a) => [Char] -> a -> H.AttributeValue
 buildJsPostRequest s i =
   let execstring = s ++ (show i) ++ "/" in
    jsToAttribute [jmacro|$.post( `(execstring)` ); |]
@@ -95,4 +95,4 @@ teststuff =
                    , Serie { dir = "/tmp", episode = 1, maxepisode = 3, ongoing = True, title = "Test this thrice" }]
       stuff = [Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice" }]
   in
-   renderHtml $ indexPage stuff
+   renderHtml $  serieSpinBox (stuff !! 0, 1)
