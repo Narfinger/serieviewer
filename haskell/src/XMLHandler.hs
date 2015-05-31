@@ -57,7 +57,7 @@ readSeries fp = do
                                , withPreserveComment no
                                ] fp
            );
-    return $ s !! 0;
+    return $ head s ;
 
 writeSeries :: FilePath -> [Serie] -> IO ()
 writeSeries fp serie = do

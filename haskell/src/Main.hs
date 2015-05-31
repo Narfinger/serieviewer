@@ -50,8 +50,7 @@ index = do
   H.ok $ H.toResponse $ indexPage series
 
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
-runApp series (App sp) = do
-  H.mapServerPartT (flip evalStateT series) sp
+runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp -- (flip evalStateT series) sp
 
 playSerie :: Int -> App H.Response
 playSerie number =

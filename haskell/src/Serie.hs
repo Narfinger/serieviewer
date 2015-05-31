@@ -31,7 +31,7 @@ filterSupportedExtensions =
 
 episodeList :: Serie -> IO [FilePath]
 episodeList serie =
-  filterSupportedExtensions <$> (getDirectoryContents $ dir serie)
+  filterSupportedExtensions <$> getDirectoryContents (dir serie)
   
 incrementEpisode :: Serie -> Maybe Serie
 incrementEpisode s =
@@ -45,7 +45,7 @@ incrementEpisode s =
 loadSerieFromDir :: FilePath -> [FilePath] -> Serie
 loadSerieFromDir d fps =
   let filtered = filterSupportedExtensions fps
-      t = (reverse $ splitPath d) !! 1 in
+      t = reverse (splitPath d !! 1) in
   serie d (length filtered) t
 
 loadSerie :: FilePath -> IO Serie
@@ -55,10 +55,10 @@ loadSerie dir =
 playCurrentEpisode :: Serie -> IO ()
 playCurrentEpisode s = do
   d <- episodeList s;
-  let fname = d !! (episode s)
+  let fname = d !! episode s
   let p = (proc "/usr/bin/kate" [fname])
                { cwd = Just $ dir s }
-  putStrLn $ show fname;
+  print fname;
   r <- createProcess p;
   return ()
   

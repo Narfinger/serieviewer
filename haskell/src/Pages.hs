@@ -1,5 +1,4 @@
-{-# LANGUAGE OverloadedStrings,CPP, FlexibleInstances, GeneralizedNewtypeDeriving,
-    TypeSynonymInstances, QuasiQuotes #-}
+{-# LANGUAGE OverloadedStrings,CPP, FlexibleInstances, GeneralizedNewtypeDeriving, QuasiQuotes #-}
 module Pages
        ( indexPage
        , playPage
@@ -43,9 +42,9 @@ siteTemplate title body =
 --jsToAttribute :: Language.Javascript.JMacro.Base.JsToDoc a, Language.Javascript.JMacro.Base.JMacro a) => a -> H.AttributeValue
 jsToAttribute js = H.preEscapedToValue $ replaceJSQuotes $ filter (/='\\') $ show $ renderJs js
 
-buildJsPostRequest :: (Show a) => [Char] -> a -> H.AttributeValue
+buildJsPostRequest :: (Show a) => String -> a -> H.AttributeValue
 buildJsPostRequest s i =
-  let execstring = s ++ (show i) ++ "/" in
+  let execstring = s ++ show i ++ "/" in
    jsToAttribute [jmacro|$.post( `(execstring)` ); |]
 
 serieButton :: Int -> H.Html
