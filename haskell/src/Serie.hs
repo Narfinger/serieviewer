@@ -1,10 +1,12 @@
 module Serie ( Serie(..)
              , playCurrentEpisode
              , incrementEpisode
+             , serie
              ) where
 
 import Control.Monad
 import Data.List
+import Data.UUID
 import System.Directory
 import System.FilePath
 import System.Process
@@ -14,7 +16,11 @@ data Serie = Serie { dir :: FilePath
                    , maxepisode :: Int
                    , ongoing :: Bool
                    , title :: String
+                   , uuid :: UUID
                    } deriving (Show, Eq)
+
+serie :: String -> Int -> String -> Serie
+serie d maxep t = Serie { dir = d, episode = 1, maxepisode = maxep, ongoing = False, title = t, uuid = nil }
 
 extensions :: [String]
 extensions = [".txt", ".mkv", ".mp3", ".avi"]
@@ -40,7 +46,7 @@ loadSerieFromDir :: FilePath -> [FilePath] -> Serie
 loadSerieFromDir d fps =
   let filtered = filterSupportedExtensions fps
       t = (reverse $ splitPath d) !! 1 in
-  Serie { dir = d, episode = 1, maxepisode = length filtered, ongoing = False, title = t} 
+  serie d (length filtered) t
 
 loadSerie :: FilePath -> IO Serie
 loadSerie dir = 

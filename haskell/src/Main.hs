@@ -12,6 +12,7 @@ import Control.Monad.State.Strict  ( MonadState, StateT, get, put,  evalStateT )
 import Control.Monad.Trans         ( MonadIO, liftIO )
 import Control.Concurrent.STM
 import Control.Concurrent.STM.TVar
+import Data.UUID
 import qualified Happstack.Server as H
 
 import Pages (indexPage, playPage)
@@ -27,9 +28,9 @@ newtype App a = App { unApp :: H.ServerPartT (StateT (TVar Series) IO) a }
              , H.WebMonad H.Response, H.FilterMonad H.Response
              , H.Happstack, MonadState (TVar [S.Serie]) )
 
-testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ongoing = False, S.title = "Test this onece" }
-             , S.Serie { S.dir = "/tmp", S.episode = 3, S.maxepisode = 10, S.ongoing = False, S.title = "Test this twice" }
-             , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice" }]
+testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ongoing = False, S.title = "Test this onece", S.uuid = nil}
+             , S.Serie { S.dir = "/tmp", S.episode = 3, S.maxepisode = 10, S.ongoing = False, S.title = "Test this twice",  S.uuid = nil}
+             , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice",  S.uuid = nil}]
 
 
 --runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> m H.Response

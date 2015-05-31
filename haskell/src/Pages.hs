@@ -5,13 +5,9 @@ module Pages
        , playPage
        )
        where
-
-import qualified Bootstrap as B
-import Serie (Serie(..))
-import Utils (replaceJSQuotes)
-
 import Control.Concurrent.STM
 import Control.Monad (forM_)
+import Data.UUID
 import           Text.Blaze ((!))
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
@@ -20,6 +16,11 @@ import Language.Javascript.JMacro ( ToJExpr(..), Ident(..), renderJs
                                   , JVal(..), jmacro, jsv
                                   , jLam, jVarTy)
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+
+import qualified Bootstrap as B
+import Serie (Serie(..))
+import Utils (replaceJSQuotes)
+
 
 mainTemplate :: String -> [H.Html] -> H.Html -> H.Html
 mainTemplate title headers body =
@@ -90,9 +91,9 @@ indexPage series =
              forM_ zipped serieRow
 
 teststuff =
-  let testseries = [ Serie { dir = "/tmp", episode = 1, maxepisode = 5, ongoing = False, title = "Test this onece" }
-                   , Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice" }
-                   , Serie { dir = "/tmp", episode = 1, maxepisode = 3, ongoing = True, title = "Test this thrice" }]
-      stuff = [Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice" }]
+  let testseries = [ Serie { dir = "/tmp", episode = 1, maxepisode = 5,  ongoing = False, title = "Test this onece", uuid = nil}
+             , Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice",  uuid = nil}
+             , Serie { dir = "/tmp", episode = 1, maxepisode = 3,  ongoing = True,  title = "Test this thrice",  uuid = nil}]
+      stuff = [Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice", uuid = nil}]
   in
    renderHtml $  serieSpinBox (stuff !! 0, 1)
