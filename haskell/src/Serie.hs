@@ -11,12 +11,12 @@ import System.Directory
 import System.FilePath
 import System.Process
  
-data Serie = Serie { dir :: FilePath
-                   , episode :: Int
-                   , maxepisode :: Int
-                   , ongoing :: Bool
-                   , title :: String
-                   , uuid :: UUID
+data Serie = Serie { dir :: FilePath    -- ^ main directory of the serie
+                   , episode :: Int     -- ^ Current Episode (yet to play)
+                   , maxepisode :: Int  -- ^ Maximum Episode
+                   , ongoing :: Bool    -- ^ Is this an ongoing series?
+                   , title :: String    -- ^ Title of the series
+                   , uuid :: UUID       -- ^ UUID to quickly uniquely identify this series, is useful for next series
                    } deriving (Show, Eq)
 
 -- |Constructs a serie with default parameter for maxepisode, ongoing and uuid 
