@@ -15,6 +15,8 @@ import Language.Javascript.JMacro ( ToJExpr(..), Ident(..), renderJs
                                   , JVal(..), jmacro, jsv
                                   , jLam, jVarTy)
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+import Data.Text.Lazy (unpack)
+import Text.PrettyPrint.Leijen.Text (renderOneLine, displayT)
 
 import qualified Bootstrap as B
 import Serie (Serie(..))
@@ -40,7 +42,8 @@ siteTemplate title body =
   ] body
 
 --jsToAttribute :: Language.Javascript.JMacro.Base.JsToDoc a, Language.Javascript.JMacro.Base.JMacro a) => a -> H.AttributeValue
-jsToAttribute js = H.preEscapedToValue $ replaceJSQuotes $ filter (/='\\') $ show $ renderJs js
+-- renderJs gives us a type Doc which we transform to SimpleDoc without newlines, put it into a lazy text and unpack it to string
+jsToAttribute js = H.preEscapedToValue $ replaceJSQuotes $ filter (/='\\') $ unpack $ displayT $ renderOneLine $ renderJs js
 
 buildJsPostRequest :: (Show a) => String -> a -> H.AttributeValue
 buildJsPostRequest s i =
@@ -89,6 +92,8 @@ indexPage series =
                H.td "Ongoing"
              forM_ zipped serieRow
 
+
+stuff = Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice", uuid = nil}
 teststuff =
   let testseries = [ Serie { dir = "/tmp", episode = 1, maxepisode = 5,  ongoing = False, title = "Test this onece", uuid = nil}
              , Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice",  uuid = nil}
