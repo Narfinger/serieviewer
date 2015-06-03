@@ -36,7 +36,7 @@ testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ong
              , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice",  S.uuid = nil}]
 
 
---runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> m H.Response
+runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> (a -> IO a1) -> m H.Response
 runUpdatePage number updatef runf = do
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;
@@ -58,7 +58,6 @@ index = do
 
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
 runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp -- (flip evalStateT series) sp
-
 
 playSerie :: Int -> App H.Response
 playSerie number = runUpdatePage number S.incrementEpisode S.playCurrentEpisode 
