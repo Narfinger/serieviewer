@@ -44,8 +44,8 @@ runUpdatePage number updatef runf = do
   liftIO $ atomically $ writeTVar tvar nxs;
   H.seeOther ("/"::String) (H.toResponse ("" ::String))
 
-emptyFun :: S.Serie -> App ()
-emptyFun s =  App ()
+emptyFun :: (Monad m) => t -> m ()
+emptyFun s =  return ()
 
 index :: App H.Response
 index = do
@@ -56,8 +56,9 @@ index = do
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
 runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp -- (flip evalStateT series) sp
 
+
 playSerie :: Int -> App H.Response
-playSerie number = runUpdatePage number S.incrementEpisode emptyFun 
+playSerie number = runUpdatePage number S.incrementEpisode S.playCurrentEpisode 
 
 changeSerie :: Int -> App H.Response
 changeSerie number = runUpdatePage number S.incrementEpisode emptyFun
@@ -66,8 +67,8 @@ routing :: TVar Series -> H.ServerPartT IO H.Response
 routing series = msum
        [ H.dir "style.css" $ H.serveFile (H.asContentType "text/css") "static/style.css"
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
---       , H.dir "execute"   $ H.dir "play"   $ H.path $ \n -> runApp series (playSerie n)
---       , H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
+       , H.dir "execute"   $ H.dir "play"   $ H.path $ \n -> runApp series (playSerie n)
+       , H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
          --       , H.dir "execute"   $ H.
        , runApp series index
        ]
