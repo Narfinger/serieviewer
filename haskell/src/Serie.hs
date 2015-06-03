@@ -1,7 +1,7 @@
 module Serie ( Serie(..)
-             , playCurrentEpisode
              , incrementEpisode
              , serie
+             , playCurrentEpisode
              ) where
 
 import Control.Monad
@@ -58,9 +58,9 @@ loadSerieFromDir d fps =
 loadSerie :: FilePath -> IO Serie
 loadSerie dir = 
   loadSerieFromDir dir <$> getDirectoryContents dir
-
+  
 -- |Play current Episode in Serie
---playCurrentEpisode :: Serie -> IO ()
+playCurrentEpisode :: Serie -> IO ()
 playCurrentEpisode s = do
   d <- episodeList s;
   let fname = d !! episode s
@@ -68,4 +68,4 @@ playCurrentEpisode s = do
                { cwd = Just $ dir s }
   print fname;
   r <- createProcess p;
-  
+  return ()

@@ -15,6 +15,9 @@ import Control.Concurrent.STM.TVar
 import Data.UUID
 import qualified Happstack.Server as H
 
+import System.Directory
+import System.FilePath
+import System.Process
 import Pages (indexPage, playPage)
 import qualified Serie as S
 import Utils (replaceElementInList)
@@ -33,18 +36,18 @@ testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ong
              , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice",  S.uuid = nil}]
 
 
---runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> (b -> IO ()) -> m H.Response
+--runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> m H.Response
 runUpdatePage number updatef runf = do
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;
   let s = series !! number
   let nx = updatef s
   let nxs = replaceElementInList series number nx
-  runf s;
+  liftIO $ runf s;
   liftIO $ atomically $ writeTVar tvar nxs;
   H.seeOther ("/"::String) (H.toResponse ("" ::String))
 
-emptyFun :: (Monad m) => t -> m ()
+emptyFun :: t -> IO ()
 emptyFun s =  return ()
 
 index :: App H.Response
