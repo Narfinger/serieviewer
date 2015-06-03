@@ -33,15 +33,19 @@ testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ong
              , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice",  S.uuid = nil}]
 
 
---runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> m H.Response
-runUpdatePage number f = do
+--runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> (b -> IO ()) -> m H.Response
+runUpdatePage number updatef runf = do
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;
   let s = series !! number
-  let nx = f s
+  let nx = updatef s
   let nxs = replaceElementInList series number nx
+  runf s;
   liftIO $ atomically $ writeTVar tvar nxs;
   H.seeOther ("/"::String) (H.toResponse ("" ::String))
+
+emptyFun :: S.Serie -> App ()
+emptyFun s =  App ()
 
 index :: App H.Response
 index = do
@@ -53,16 +57,18 @@ runApp :: TVar Series -> App a -> H.ServerPartT IO a
 runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp -- (flip evalStateT series) sp
 
 playSerie :: Int -> App H.Response
-playSerie number =
-  runUpdatePage number S.incrementEpisode
+playSerie number = runUpdatePage number S.incrementEpisode emptyFun 
 
+changeSerie :: Int -> App H.Response
+changeSerie number = runUpdatePage number S.incrementEpisode emptyFun
 
 routing :: TVar Series -> H.ServerPartT IO H.Response
 routing series = msum
        [ H.dir "style.css" $ H.serveFile (H.asContentType "text/css") "static/style.css"
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
-       , H.dir "execute"   $ H.dir "play" $ H.path $ \n -> runApp series (playSerie n)
---       , H.dir "execute"   $ H.
+--       , H.dir "execute"   $ H.dir "play"   $ H.path $ \n -> runApp series (playSerie n)
+--       , H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
+         --       , H.dir "execute"   $ H.
        , runApp series index
        ]
 
