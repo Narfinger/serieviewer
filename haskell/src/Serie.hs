@@ -63,9 +63,16 @@ loadSerie dir =
 playCurrentEpisode :: Serie -> IO ()
 playCurrentEpisode s = do
   d <- episodeList s;
-  let fname = d !! episode s
-  let p = (proc "/usr/bin/kate" [fname])
+  let len = length d
+  let ep = episode s
+  if ep >= len
+     then do
+       print "No Episode to Play";
+       return();
+    else do
+    let fname = d !! episode s
+    let p = (proc "/usr/bin/kate" [fname])
                { cwd = Just $ dir s }
-  print fname;
-  r <- createProcess p;
-  return ()
+    print fname;
+    r <- createProcess p;
+    return ()
