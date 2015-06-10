@@ -31,7 +31,7 @@ newtype App a = App { unApp :: H.ServerPartT (StateT (TVar Series) IO) a }
              , H.WebMonad H.Response, H.FilterMonad H.Response
              , H.Happstack, MonadState (TVar [S.Serie]) )
 
-testseries = [ S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 5,  S.ongoing = False, S.title = "Test this onece", S.uuid = nil}
+testseries = [ S.Serie { S.dir = "/tmp/test", S.episode = 1, S.maxepisode = 5,  S.ongoing = False, S.title = "Test this onece", S.uuid = nil}
              , S.Serie { S.dir = "/tmp", S.episode = 3, S.maxepisode = 10, S.ongoing = False, S.title = "Test this twice",  S.uuid = nil}
              , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice",  S.uuid = nil}]
 
@@ -71,7 +71,8 @@ routing series = msum
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
        , H.dir "execute"   $ H.dir "play"   $ H.path $ \n -> runApp series (playSerie n)
        , H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
-         --       , H.dir "execute"   $ H.
+       -- , H.dir "execute"   $ H.dir "modify" $ H.path $ \n -> 
+                                                             --       , H.dir "execute"   $ H.
        , runApp series index
        ]
 

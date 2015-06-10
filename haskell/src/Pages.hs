@@ -50,11 +50,17 @@ buildJsPostRequest s i =
   let execstring = s ++ show i ++ "/" in
    jsToAttribute [jmacro|$.post( `(execstring)` ); |]
 
-serieButton :: Int -> H.Html
-serieButton i =
+playButton :: Int -> H.Html
+playButton i =
   let exec = buildJsPostRequest "/execute/play/" i in
    H.button ! A.type_ "submit" ! A.class_ "btn btn-success" ! A.onclick exec $ do
      "Play"
+
+modifyButton :: Int -> H.Html
+modifyButton i =
+  let exec = jsToAttribute ([jmacro| window.location="/modify"; |]) in
+  H.button ! A.type_ "submit" ! A.class_ "btn btn-info" ! A.onclick exec $ do
+    "Modify"
 
 serieSpinBox :: (Serie, Int) -> H.Html
 serieSpinBox (s,i) =
@@ -70,7 +76,8 @@ serieRow (s,i) =
     serieSpinBox (s,i)
     H.td $ H.toHtml $ maxepisode s
     H.td $ H.toHtml $ ongoing s
-    H.td $ serieButton i
+    H.td $ playButton i
+    H.td $ modifyButton i
 
 playPage :: Serie -> H.Html
 playPage serie = siteTemplate "TMP" "blubber"   
@@ -90,6 +97,8 @@ indexPage series =
                H.td "Episode"
                H.td "Max Episode"
                H.td "Ongoing"
+               H.td "Play"
+               H.td "Modify"
              forM_ zipped serieRow
 
 
