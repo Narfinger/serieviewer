@@ -56,11 +56,12 @@ index = do
   series <- liftIO $ readTVarIO tvar;
   H.ok $ H.toResponse $ indexPage series
 
-modify :: App H.Response
-modify = do
+modify :: Int -> App H.Response
+modify n = do
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;
-  H.ok $ H.toResponse $ modifyPage
+  let s = series !! n
+  H.ok $ H.toResponse $ modifyPage s
 
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
 runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp -- (flip evalStateT series) sp
@@ -77,9 +78,8 @@ routing series = msum
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
        , H.dir "execute"   $ H.dir "play"   $ H.path $ \n -> runApp series (playSerie n)
        , H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
-       , H.dir "modify"    $ runApp series modify 
-       -- , H.dir "execute"   $ H.dir "modify" $ H.path $ \n -> 
-                                                             --       , H.dir "execute"   $ H.
+--       , H.dir "modify"    $ runApp series modify 
+       , H.dir "modify" $ H.path $ \n -> runApp series (modify n)
        , runApp series index
        ]
 

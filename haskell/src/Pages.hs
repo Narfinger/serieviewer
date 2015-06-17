@@ -59,9 +59,12 @@ playButton i =
 
 modifyButton :: Int -> H.Html
 modifyButton i =
-  let exec = jsToAttribute ([jmacro| window.location="/modify/"; |]) in
-  H.button ! A.type_ "submit" ! A.class_ "btn btn-info" ! A.onclick exec $ do
+  let link = H.toValue ("/modify/" ++ (show i)) in
+  H.a ! A.href link $ do
     "Modify"
+  --let exec = jsToAttribute ([jmacro| window.location="/modify/"; |]) in
+  --H.button ! A.type_ "submit" ! A.class_ "btn btn-info" ! A.onclick exec $ do
+--    "Modify"
 
 serieSpinBox :: (Serie, Int) -> H.Html
 serieSpinBox (s,i) =
@@ -103,10 +106,24 @@ indexPage series =
              forM_ zipped serieRow
 
 
-modifyPage :: H.Html
-modifyPage =
-  siteTemplate "Main" $
-  H.h1 $ "BLUBBER"
+modifyPage :: Serie -> H.Html
+modifyPage s =
+  let t = "testtitle"
+      eps = "1"
+      p = "Path"  in
+  siteTemplate "Modify" $
+  H.div ! A.class_ "container" $ do
+    H.h1 $ "Modify Serie"
+    H.table ! A.class_ "table table-striped" $ do
+      H.tr $ do
+        H.td "Title"
+        H.td t
+      H.tr $ do
+        H.td "Episode"
+        H.td eps
+      H.tr $ do
+        H.td "Path"
+        H.td p
 
 stuff = Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice", uuid = nil}
 teststuff =
