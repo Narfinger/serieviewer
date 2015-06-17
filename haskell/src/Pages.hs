@@ -2,6 +2,7 @@
 module Pages
        ( indexPage
        , playPage
+       , modifyPage
        )
        where
 import Control.Concurrent.STM
@@ -58,7 +59,7 @@ playButton i =
 
 modifyButton :: Int -> H.Html
 modifyButton i =
-  let exec = jsToAttribute ([jmacro| window.location="/modify"; |]) in
+  let exec = jsToAttribute ([jmacro| window.location="/modify/"; |]) in
   H.button ! A.type_ "submit" ! A.class_ "btn btn-info" ! A.onclick exec $ do
     "Modify"
 
@@ -101,6 +102,11 @@ indexPage series =
                H.td "Modify"
              forM_ zipped serieRow
 
+
+modifyPage :: H.Html
+modifyPage =
+  siteTemplate "Main" $
+  H.h1 $ "BLUBBER"
 
 stuff = Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice", uuid = nil}
 teststuff =

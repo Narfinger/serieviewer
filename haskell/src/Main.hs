@@ -18,7 +18,7 @@ import qualified Happstack.Server as H
 import System.Directory
 import System.FilePath
 import System.Process
-import Pages (indexPage, playPage)
+import Pages (indexPage, playPage, modifyPage)
 import qualified Serie as S
 import Utils (replaceElementInList)
 import XMLHandler
@@ -56,6 +56,12 @@ index = do
   series <- liftIO $ readTVarIO tvar;
   H.ok $ H.toResponse $ indexPage series
 
+modify :: App H.Response
+modify = do
+  tvar <- get;
+  series <- liftIO $ readTVarIO tvar;
+  H.ok $ H.toResponse $ modifyPage
+
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
 runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp -- (flip evalStateT series) sp
 
@@ -71,6 +77,7 @@ routing series = msum
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
        , H.dir "execute"   $ H.dir "play"   $ H.path $ \n -> runApp series (playSerie n)
        , H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
+       , H.dir "modify"    $ runApp series modify 
        -- , H.dir "execute"   $ H.dir "modify" $ H.path $ \n -> 
                                                              --       , H.dir "execute"   $ H.
        , runApp series index
