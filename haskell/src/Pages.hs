@@ -37,7 +37,7 @@ siteTemplate :: String -> H.Html -> H.Html
 siteTemplate title body =
   mainTemplate title
   [
-    H.link ! A.rel "stylesheet" ! A.href "static/css/bootstrap.min.css"
+    H.link ! A.rel "stylesheet" ! A.href "/static/css/bootstrap.min.css"
   , H.script ! A.src "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" $ ""
   , H.script ! A.src "static/js/bootstrap.min.js" $ ""
   ] body
@@ -86,7 +86,6 @@ serieRow (s,i) =
 playPage :: Serie -> H.Html
 playPage serie = siteTemplate "TMP" "blubber"   
   
-
 indexPage :: [Serie] -> H.Html
 indexPage series =
   let zipped = zip series [0..] in
@@ -105,25 +104,29 @@ indexPage series =
                H.td "Modify"
              forM_ zipped serieRow
 
-
 modifyPage :: Serie -> H.Html
 modifyPage s =
-  let t = "testtitle"
-      eps = "1"
+  let ti = H.toValue $ title s
+      ep = H.toValue $ episode s in  
+  let t = H.input ! A.value ti
+      eps = H.input ! A.type_ "number" ! A.step "1" ! A.min "1"  ! A.value  ep
       p = "Path"  in
   siteTemplate "Modify" $
   H.div ! A.class_ "container" $ do
-    H.h1 $ "Modify Serie"
-    H.table ! A.class_ "table table-striped" $ do
-      H.tr $ do
-        H.td "Title"
-        H.td t
-      H.tr $ do
-        H.td "Episode"
-        H.td eps
-      H.tr $ do
-        H.td "Path"
-        H.td p
+    H.div ! A.class_ "row" $ do
+      H.h1 $ "Modify Serie"
+      H.form $ do
+        H.table ! A.class_ "table table-striped" $ do
+          H.tr $ do
+            H.td "Title"
+            H.td t
+          H.tr $ do
+            H.td "Episode"
+            H.td eps
+          H.tr $ do
+            H.td "Path"
+            H.td p
+        H.button ! A.type_ "submit" ! A.class_ "btn btn-success" $ do "Update" 
 
 stuff = Serie { dir = "/tmp", episode = 3, maxepisode = 10, ongoing = False, title = "Test this twice", uuid = nil}
 teststuff =
