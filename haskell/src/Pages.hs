@@ -108,14 +108,14 @@ modifyPage :: Serie -> H.Html
 modifyPage s =
   let ti = H.toValue $ title s
       ep = H.toValue $ episode s in  
-  let t = H.input ! A.value ti
-      eps = H.input ! A.type_ "number" ! A.step "1" ! A.min "1"  ! A.value  ep
+  let t = H.input ! A.value ti ! A.name "title"
+      eps = H.input ! A.type_ "number" ! A.step "1" ! A.min "1"  ! A.value  ep ! A.name "episode"
       p = "Path"  in
   siteTemplate "Modify" $
   H.div ! A.class_ "container" $ do
     H.div ! A.class_ "row" $ do
       H.h1 $ "Modify Serie"
-      H.form $ do
+      H.form ! A.action "/execute/change/" ! A.method "POST" $ do
         H.table ! A.class_ "table table-striped" $ do
           H.tr $ do
             H.td "Title"

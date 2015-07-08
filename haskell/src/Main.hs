@@ -7,7 +7,7 @@
 module Main where
 
 import Control.Applicative         ( Applicative, Alternative, (<$>))
-import Control.Monad               ( msum, MonadPlus )
+import Control.Monad               ( msum, mplus, MonadPlus )
 import Control.Monad.State.Strict  ( MonadState, StateT, get, put,  evalStateT )
 import Control.Monad.Trans         ( MonadIO, liftIO )
 import Control.Concurrent.STM
@@ -36,7 +36,10 @@ testseries = [ S.Serie { S.dir = "/tmp/test", S.episode = 1, S.maxepisode = 5,  
              , S.Serie { S.dir = "/tmp", S.episode = 1, S.maxepisode = 3,  S.ongoing = True,  S.title = "Test this thrice",  S.uuid = nil}]
 
 
-runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -> (a -> Maybe a) -> (a -> IO a1) -> m H.Response
+runUpdatePage :: (MonadIO m, MonadState (TVar [a]) m, H.FilterMonad H.Response m) => Int -- ^ Number of Serie in list
+              -> (a -> Maybe a)                                                          -- ^ Function to produce changed serie
+              -> (a -> IO a1)                                                            -- ^ IO action after changing
+              -> m H.Response
 runUpdatePage number updatef runf = do
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;
@@ -58,13 +61,14 @@ index = do
 
 modify :: Int -> App H.Response
 modify n = do
+  -- check if post request then do stuff otherwise normal
   tvar <- get;
   series <- liftIO $ readTVarIO tvar;
   let s = series !! n
   H.ok $ H.toResponse $ modifyPage s
 
 runApp :: TVar Series -> App a -> H.ServerPartT IO a
-runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp -- (flip evalStateT series) sp
+runApp series (App sp) = H.mapServerPartT (`evalStateT` series) sp
 
 playSerie :: Int -> App H.Response
 playSerie number = runUpdatePage number S.incrementEpisode S.playCurrentEpisode 
@@ -72,12 +76,22 @@ playSerie number = runUpdatePage number S.incrementEpisode S.playCurrentEpisode
 changeSerie :: Int -> App H.Response
 changeSerie number = runUpdatePage number S.incrementEpisode emptyFun
 
+changeSeriePost :: Int -> App H.Response
+changeSeriePost number = do
+--  eps <- (read $ H.look "episode" :: App Int)
+  t <-   H.look "title";
+  runUpdatePage number (\s -> Just (s { S.title = t,
+                                        S.episode = 1
+                                      })
+                       ) emptyFun
+
 routing :: TVar Series -> H.ServerPartT IO H.Response
 routing series = msum
        [ H.dir "style.css" $ H.serveFile (H.asContentType "text/css") "static/style.css"
        , H.dir "static"    $ H.serveDirectory H.EnableBrowsing [] "static/"
        , H.dir "execute"   $ H.dir "play"   $ H.path $ \n -> runApp series (playSerie n)
-       , H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
+       --, H.dir "execute"   $ H.dir "change" $ H.path $ \n -> runApp series (changeSerie n)
+       , H.dir "execute"    $ H.dir "change" $ (H.method H.GET >> H.path (\n ->  runApp series (changeSerie n)) `mplus` (H.method H.POST >> runApp series (changeSeriePost 1)))
 --       , H.dir "modify"    $ runApp series modify 
        , H.dir "modify" $ H.path $ \n -> runApp series (modify n)
        , runApp series index
