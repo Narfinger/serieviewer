@@ -14,6 +14,7 @@ set(serieviewer_SRCS
     src/mwindowimpl.cpp
     src/serie.cpp
     src/serieviewerdbus.cpp
+    src/seriemodel.cpp
     src/setplayerdialogimpl.cpp
     src/settings.cpp
     src/settingsdialogimpl.cpp
