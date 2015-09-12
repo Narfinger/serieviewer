@@ -33,11 +33,17 @@
 #include "serie.h"
 #include "xmlhandler.h"
 #include "settings.h"
+#include "seriemodel.h"
 
 MWindowImpl::MWindowImpl(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    
+    {
+      SerieModel* s = new SerieModel();
+      ui.tableView->setModel(s);
+    }
 	
     //signalmapper = new QSignalMapper(this);
     spinmapper = new QSignalMapper(this);
