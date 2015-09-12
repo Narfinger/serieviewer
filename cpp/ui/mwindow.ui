@@ -15,21 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout">
-    <item row="2" column="2">
-     <widget class="QPushButton" name="deleteButton">
-      <property name="toolTip">
-       <string>Delete a serie from the list but of course keep it on the harddisk</string>
-      </property>
-      <property name="text">
-       <string>remove from List</string>
-      </property>
-      <property name="icon">
-       <iconset resource="icons.qrc">
-        <normaloff>:/icons/button_delete.png</normaloff>:/icons/button_delete.png</iconset>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="4">
+    <item row="0" column="0" colspan="5">
      <layout class="QHBoxLayout" name="headerLayout">
       <item>
        <widget class="QLabel" name="filterLabel">
@@ -49,6 +35,20 @@
        <widget class="QLineEdit" name="searchEdit"/>
       </item>
      </layout>
+    </item>
+    <item row="2" column="2">
+     <widget class="QPushButton" name="deleteButton">
+      <property name="toolTip">
+       <string>Delete a serie from the list but of course keep it on the harddisk</string>
+      </property>
+      <property name="text">
+       <string>remove from List</string>
+      </property>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/button_delete.png</normaloff>:/icons/button_delete.png</iconset>
+      </property>
+     </widget>
     </item>
     <item row="1" column="0" colspan="3">
      <widget class="QTableWidget" name="tableWidget">
@@ -86,7 +86,7 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="3" rowspan="2">
+    <item row="1" column="4" rowspan="2">
      <layout class="QVBoxLayout" name="sideBarLayout">
       <item>
        <widget class="QPushButton" name="playNextInSerieButton">
@@ -299,6 +299,9 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="3">
+     <widget class="QTableView" name="tableView"/>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -307,7 +310,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>20</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSerieviewer">
@@ -334,7 +337,7 @@
    </widget>
    <widget class="QMenu" name="menuPlaying">
     <property name="title">
-     <string>Playing</string>
+     <string>P&amp;laying</string>
     </property>
     <addaction name="actionRandom"/>
     <addaction name="actionNewRandom"/>
@@ -345,7 +348,7 @@
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
-     <string>About</string>
+     <string>Abo&amp;ut</string>
     </property>
     <addaction name="actionAbout_Qt"/>
     <addaction name="actionAbout"/>
@@ -358,7 +361,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">
    <property name="text">
-    <string>about</string>
+    <string>a&amp;bout</string>
    </property>
   </action>
   <action name="actionSettings">
@@ -367,7 +370,7 @@
      <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
    </property>
    <property name="text">
-    <string>Settings</string>
+    <string>&amp;Settings</string>
    </property>
   </action>
   <action name="actionRefresh">
@@ -376,7 +379,7 @@
      <normaloff>:/icons/refresh.png</normaloff>:/icons/refresh.png</iconset>
    </property>
    <property name="text">
-    <string>Refresh</string>
+    <string>&amp;Refresh</string>
    </property>
   </action>
   <action name="actionClean_up_Series">
@@ -385,12 +388,12 @@
      <normaloff>:/icons/cleanup.png</normaloff>:/icons/cleanup.png</iconset>
    </property>
    <property name="text">
-    <string>Clean up Series</string>
+    <string>&amp;Clean up Series</string>
    </property>
   </action>
   <action name="actionQuit_without_saving">
    <property name="text">
-    <string>Quit without saving</string>
+    <string>&amp;Quit without saving</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -399,7 +402,7 @@
      <normaloff>:/icons/exit.png</normaloff>:/icons/exit.png</iconset>
    </property>
    <property name="text">
-    <string>Quit</string>
+    <string>Q&amp;uit</string>
    </property>
    <property name="shortcut">
     <string>Q</string>
@@ -411,7 +414,7 @@
      <normaloff>:/icons/info.png</normaloff>:/icons/info.png</iconset>
    </property>
    <property name="text">
-    <string>Show Series Info</string>
+    <string>&amp;Show Series Info</string>
    </property>
   </action>
   <action name="actionEnable_Ongoing">
@@ -420,7 +423,7 @@
      <normaloff>:/icons/button_ok.png</normaloff>:/icons/button_ok.png</iconset>
    </property>
    <property name="text">
-    <string>Enable Ongoing</string>
+    <string>&amp;Enable Ongoing</string>
    </property>
   </action>
   <action name="actionDisable_Ongoing">
@@ -429,7 +432,7 @@
      <normaloff>:/icons/ongoing.png</normaloff>:/icons/ongoing.png</iconset>
    </property>
    <property name="text">
-    <string>Disable Ongoing</string>
+    <string>&amp;Disable Ongoing</string>
    </property>
   </action>
   <action name="actionRewind_by_one">
@@ -438,17 +441,17 @@
      <normaloff>:/icons/previous.png</normaloff>:/icons/previous.png</iconset>
    </property>
    <property name="text">
-    <string>Rewind by one</string>
+    <string>&amp;Rewind by one</string>
    </property>
   </action>
   <action name="actionSet_the_link">
    <property name="text">
-    <string>Set the link</string>
+    <string>Set the &amp;link</string>
    </property>
   </action>
   <action name="actionSet_player">
    <property name="text">
-    <string>Change Player/arguments</string>
+    <string>&amp;Change Player/arguments</string>
    </property>
   </action>
   <action name="actionRandom">
@@ -457,7 +460,7 @@
      <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
    </property>
    <property name="text">
-    <string>Pick Random</string>
+    <string>&amp;Pick Random</string>
    </property>
    <property name="shortcut">
     <string>R</string>
@@ -469,12 +472,12 @@
      <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
    </property>
    <property name="text">
-    <string>Pick New Random</string>
+    <string>Pick &amp;New Random</string>
    </property>
   </action>
   <action name="actionPlay_next_in_Series">
    <property name="text">
-    <string>Play next in Series</string>
+    <string>Play next &amp;in Series</string>
    </property>
    <property name="shortcut">
     <string>P</string>
@@ -482,7 +485,7 @@
   </action>
   <action name="actionPlay_last_added">
    <property name="text">
-    <string>Play last added</string>
+    <string>Play &amp;last added</string>
    </property>
    <property name="shortcut">
     <string>L</string>
@@ -490,7 +493,7 @@
   </action>
   <action name="actionPlay_next">
    <property name="text">
-    <string>Play next</string>
+    <string>Pla&amp;y next</string>
    </property>
    <property name="shortcut">
     <string>N</string>
@@ -498,12 +501,12 @@
   </action>
   <action name="actionUndo_last_play">
    <property name="text">
-    <string>Undo last play</string>
+    <string>&amp;Undo last play</string>
    </property>
   </action>
   <action name="actionAbout_Qt">
    <property name="text">
-    <string>about Qt</string>
+    <string>&amp;about Qt</string>
    </property>
   </action>
   <action name="actionAdd_recursive">
@@ -512,7 +515,7 @@
      <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
    </property>
    <property name="text">
-    <string>Add Recursive</string>
+    <string>&amp;Add Recursive</string>
    </property>
   </action>
  </widget>
