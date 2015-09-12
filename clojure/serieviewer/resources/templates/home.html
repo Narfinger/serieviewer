@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" >
+    <div class="row" >
+        <h1>Series</h1>
+        <form>
+            <table class="table table-striped" >
+                <tr>
+                    <td>Title</td>
+                    <td>Episode</td>
+                    <td>Max Episode</td>
+                    <td>Ongoing</td>
+                    <td>Play</td>
+                    <td>Modify</td>
+                </tr>                        
+                {% for s in series %}
+                <tr>
+                    <td>{{ s.title }}</td>
+                    <td>SPINBOX</td>
+                    <td>{{ s.maxepisode }}</td>
+                    <td>{{ s.ongoing }}</td>
+                    <td>BUTTONPLAY</td>
+                    <td>BUTTONMODIFY</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </form>
+    </div>
+</div>
+{% endblock %}
