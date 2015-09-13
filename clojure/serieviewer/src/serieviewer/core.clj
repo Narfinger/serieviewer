@@ -35,13 +35,13 @@
           (timbre/error t "failed to start nREPL"))))))
 
 (defn http-port [port]
-  (parse-port (or port (env :port) 3000)))
+  (parse-port (or port (env :port) 8000)))
 
 (defonce http-server (atom nil))
 
 (defn start-http-server [port]
   (init)
-  (reset! http-server (immutant/run app :host "0.0.0.0" :port port)))
+  (reset! http-server (immutant/run app :host "127.0.0.1" :port port)))
 
 (defn stop-http-server []
   (when @http-server

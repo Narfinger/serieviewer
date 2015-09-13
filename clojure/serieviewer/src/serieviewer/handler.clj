@@ -16,12 +16,12 @@
    put any initialization code here"
   []
 
-  (timbre/merge-config!
-    {:level     (if (env :dev) :trace :info)
-     :appenders {:rotor (rotor/rotor-appender
-                          {:path "serieviewer.log"
-                           :max-size (* 512 1024)
-                           :backlog 10})}})
+  ;; (timbre/merge-config!
+  ;;   {:level     (if (env :dev) :trace :info)
+  ;;    :appenders {:rotor (rotor/rotor-appender
+  ;;                         {:path "serieviewer.log"
+  ;;                          :max-size (* 512 1024)
+  ;;                          :backlog 10})}})
 
   (if (env :dev) (parser/cache-off!))
   (timbre/info (str
