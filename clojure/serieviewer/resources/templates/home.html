@@ -16,7 +16,7 @@
                 {% for s in series %}
                 <tr>
                     <td>{{ s.title }}</td>
-                    <td>SPINBOX</td>
+                    <td><input type="number"  step="1" min="1" max="{{ s.maxepisode }}" value="{{ s.episode }}"/> </td>
                     <td>{{ s.maxepisode }}</td>
                     <td>{{ s.ongoing }}</td>
                     <td>BUTTONPLAY</td>

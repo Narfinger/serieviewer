@@ -9,9 +9,10 @@
 ;;                    (S/->Serie "test titlte 2" 2 5 false),
 ;;                    (S/->Serie "tttt  3" 2 6 true) ])
 
+
 (defn home-page []
   (layout/render
-   "home.html" {:series nil}))
+   "home.html" {:series @S/series}))
 
 
 (defn about-page []
