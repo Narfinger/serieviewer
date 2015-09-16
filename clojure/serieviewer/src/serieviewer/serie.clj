@@ -14,8 +14,10 @@
     (Serie. title dir episode maxepisode ongoing))))
                            
 (defn- parseXML [filename]
-  (let [xmldoc (xml/parse filename)]
-    (map parseSerie (filter (fn [elt] (= :serie (:tag elt))) (xml-seq xmldoc)))))
+  (if (.exists (clojure.java.io/as-file filename))
+    (let [xmldoc (xml/parse filename)]
+      (map parseSerie (filter (fn [elt] (= :serie (:tag elt))) (xml-seq xmldoc))))
+    nil))
       
 
 (defonce ^:dynamic series  (atom (parseXML "serieviewer.xml")))
