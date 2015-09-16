@@ -9,10 +9,18 @@
 ;;                    (S/->Serie "test titlte 2" 2 5 false),
 ;;                    (S/->Serie "tttt  3" 2 6 true) ])
 
+(defn indexed
+  "Returns a lazy sequence of [index, item] pairs, where items come
+  from 's' and indexes count up from zero.
+  (indexed '(a b c d))  =>  ([0 a] [1 b] [2 c] [3 d])"
+  [s]
+  (map vector (iterate inc 0) s))
+
 
 (defn home-page []
-  (layout/render
-   "home.html" {:series @S/series}))
+  (let [list (indexed @S/series)]
+    (layout/render
+     "home.html" {:series list})))
 
 
 (defn about-page []

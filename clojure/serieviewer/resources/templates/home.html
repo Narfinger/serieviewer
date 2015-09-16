@@ -13,17 +13,22 @@
                     <td>Play</td>
                     <td>Modify</td>
                 </tr>                        
-                {% for s in series %}
+                {% for s,x in series %}
                 <tr>
                     <td>{{ s.title }}</td>
                     <td><input type="number"  step="1" min="1" max="{{ s.maxepisode }}" value="{{ s.episode }}"/> </td>
                     <td>{{ s.maxepisode }}</td>
                     <td>{{ s.ongoing }}</td>
-                    <td>BUTTONPLAY</td>
+                    <td<button class="btn btn-success" onclick="/execute/play/{{ item}}">Play</button></td>
                     <td>BUTTONMODIFY</td>
                 </tr>
                 {% endfor %}
             </table>
+        </form>
+    </div>
+    <div class="row">
+        <form action="/add/">
+            <button class="btn btn-success" type="submit">Add</button>
         </form>
     </div>
 </div>
