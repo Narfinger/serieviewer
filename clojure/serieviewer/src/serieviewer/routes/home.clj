@@ -1,7 +1,7 @@
 (ns serieviewer.routes.home
   (:require [serieviewer.layout :as layout]
             [serieviewer.serie :as S]
-            [compojure.core :refer [defroutes GET]]
+            [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
             [clojure.java.io :as io]))
 
@@ -26,8 +26,16 @@
 (defn about-page []
   (layout/render "about.html"))
 
-(defroutes home-routes
-;  (let [series (S/parseXML "")]
-    (GET "/" [] (home-page))
-    (GET "/about" [] (about-page)));)
+(defn add-page []
+  (layout/render "add.html"))
 
+(defn add-page-post [req]
+  (let [name (get (:params req) "name")]
+    (print name)))
+  
+
+(defroutes home-routes
+  (GET "/" [] (home-page))
+  (GET "/about" [] (about-page))
+  (GET "/add" [] (add-page))
+  (POST "/add-submit" [name dir] (str "Welcome"  dir)))

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" >
+    <form action="add-submit" method="post">
+        {% csrf-field %}
+        <div class="row" >
+            <div class="col-sm-4"><label for="name">Name:</label></div>
+            <div class="col-sm-4"><input type="text" id="name" name="name"/></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4"><label for="dir">File</label></div>
+            <div class="col-sm-4"><input type="file" name="dir" id="dir" mozdirectory webkitdirectory></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <button class="btn btn-success" type="submit">Add</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
