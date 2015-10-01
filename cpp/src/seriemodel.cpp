@@ -24,6 +24,10 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
   if (role == Qt::DisplayRole) {
     switch(index.column()) {
       case 0: return s->getName();
+      case 1: return s->getEpisodeNum();
+      case 2: return s->getMax();
+      case 3: return s->isOngoing();
+      case 4: return s->getDuration().first;
     }
   }
   
@@ -32,6 +36,7 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
 
 QModelIndex SerieModel::parent(const QModelIndex& child) const {
   //return QAbstractTableModel::parent(child);
+  Q_UNUSED(child)
   return QModelIndex();
 }
 
