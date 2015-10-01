@@ -13,6 +13,7 @@ class XMLHandler;
 class Serie;
 class QSignalMapper;
 class QAction;
+class SerieModel;
 
 /** 	@class MWindowImpl
 	Our main class for representing the gui and doing stuff
@@ -32,6 +33,8 @@ class MWindowImpl : public QMainWindow
     Serie* lastplayed;
     Serie* lastadded;
     Serie* currentlyplaying;             //!< serie which is currently playing otherwise null
+    
+    SerieModel* sm;
     
     void buildmenus(); //!< builds the menu bar at the start and adds seriemenu
     

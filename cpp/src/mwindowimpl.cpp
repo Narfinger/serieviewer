@@ -40,10 +40,8 @@ MWindowImpl::MWindowImpl(QWidget *parent)
 {
     ui.setupUi(this);
     
-    {
-      SerieModel* s = new SerieModel();
-      ui.tableView->setModel(s);
-    }
+    sm = new SerieModel();
+    ui.tableView->setModel(sm);
 	
     //signalmapper = new QSignalMapper(this);
     spinmapper = new QSignalMapper(this);
@@ -539,8 +537,11 @@ void MWindowImpl::cellDoubleClicked(int row, int column)
 void MWindowImpl::addToList(Serie* serie)
 {
     Q_ASSERT(serie!=0);
-
-    hashmap.insert(serie->getUuid(), serie);
+    QSharedPointer<Serie> s(serie);
+    sm->addSerie(s);
+    
+    
+    /*hashmap.insert(serie->getUuid(), serie);
     Q_ASSERT(serie->getUuid() == hashmap[serie->getUuid()]->getUuid() );
 
     serie->setIndex(list.size());	//the old size is the exact position where the new element comes in
@@ -607,7 +608,7 @@ void MWindowImpl::addToList(Serie* serie)
     //connect the spinmapper after setup, otherwise this gets weird
     spinmapper->removeMappings(sbox);
     connect(sbox,SIGNAL(valueChanged(int)), spinmapper, SLOT(map()));
-    spinmapper->setMapping(sbox, serie->getIndex());
+    spinmapper->setMapping(sbox, serie->getIndex());*/
 }
 
 void MWindowImpl::episodeChangedInSerie(int snumber)

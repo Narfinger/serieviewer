@@ -10,6 +10,7 @@
 #include <QtDebug>
 #include <QMutex>
 #include <QPair>
+#include <QSharedPointer>
 
 /** @class Serie
 Serie Class representing a serie
@@ -208,5 +209,7 @@ class Serie : public QObject
    debug operator
 */
 QDebug operator<<(QDebug dbg, Serie &c);
+
+typedef QSharedPointer<Serie> SeriePtr;
 
 #endif
