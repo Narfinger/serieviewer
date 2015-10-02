@@ -71,6 +71,8 @@ QVariant SerieModel::headerData(int section, Qt::Orientation orientation, int ro
       case 5: return "Duration";
     }
   }
+  if (orientation == Qt::Vertical)
+    return section;
   return QVariant();
 }
 

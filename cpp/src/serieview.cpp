@@ -17,7 +17,22 @@
  * 
  */
 
+#include <QDebug>
+#include <QPushButton>
+
 #include "serieview.h"
 
 SerieView::SerieView(QWidget* parent) : QTableView(parent) {
 }
+
+void SerieView::rowsInserted(const QModelIndex& parent, int start, int end) {
+  qDebug() << "blubber" << start << end;
+  QAbstractItemView::rowsInserted(parent, start, end);
+  for(int i = start; i< end; i++) {
+    const QModelIndex id = model()->index(i,4);
+    QPushButton* b = new QPushButton("Play", this);
+    setIndexWidget(id, b);
+  }
+}
+
+

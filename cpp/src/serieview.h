@@ -29,6 +29,7 @@ class SerieView : public QTableView
 public:
 SerieView(QWidget* parent = 0);
 
+void rowsInserted(const QModelIndex& parent, int start, int end);
 private:
 };
 

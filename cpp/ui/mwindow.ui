@@ -306,12 +306,15 @@
      </widget>
     </item>
     <item row="1" column="1" colspan="3">
-     <widget class="QTableView" name="tableView">
+     <widget class="SerieView" name="tableView">
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
       </property>
+      <property name="verticalScrollMode">
+       <enum>QAbstractItemView::ScrollPerItem</enum>
+      </property>
       <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
+       <bool>true</bool>
       </attribute>
       <attribute name="verticalHeaderHighlightSections">
        <bool>false</bool>
@@ -535,6 +538,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SerieView</class>
+   <extends>QTableView</extends>
+   <header>src/serieview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>
