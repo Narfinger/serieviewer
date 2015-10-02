@@ -42,6 +42,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     
     sm = new SerieModel();
     QSortFilterProxyModel* pm = new QSortFilterProxyModel(this);
+    pm->setSortRole(SerieModel::OwnSortRole);
     pm->setSourceModel(sm);
     pm->setFilterKeyColumn(0);
     ui.tableView->setModel(pm);

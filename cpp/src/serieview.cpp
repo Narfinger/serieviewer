@@ -31,7 +31,6 @@ SerieView::SerieView(QWidget* parent) : QTableView(parent) {
 //WARNING: we might leak qpushbuttons if we resize this and might get even multiple signals.
 //I need to find out if the view deletes the buttons or if i have to implement rowsDeleted
 void SerieView::rowsInserted(const QModelIndex& parent, int start, int end) {
-  qDebug() << "blubber" << start << end;
   QAbstractItemView::rowsInserted(parent, start, end);
   for(int i = start; i< end; i++) {
     const QModelIndex id = model()->index(i,4);

@@ -24,6 +24,7 @@
 
 #include "serie.h"
 
+
 class SerieModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -40,7 +41,10 @@ public:
   void addSerie(const SeriePtr& ptr);
   const SeriePtr serieAtIndex(const QModelIndex& i) const { return list.at(i.row()); };
 
+  const static int OwnSortRole = Qt::UserRole + 1;
 private:
+  int sortRole(const QModelIndex& i) const;
+  
   QList<SeriePtr> list;
 };
 
