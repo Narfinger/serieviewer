@@ -17,29 +17,7 @@
  * 
  */
 
-#ifndef SERIEMODEL_H
-#define SERIEMODEL_H
+#include "serieview.h"
 
-#include <QAbstractTableModel>
-
-#include "serie.h"
-
-class SerieModel : public QAbstractTableModel
-{
-    Q_OBJECT
-
-public:
-  SerieModel(QObject* parent = 0);
-virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-virtual int columnCount(const QModelIndex& parent) const { Q_UNUSED(parent) return 5; };
-virtual int rowCount(const QModelIndex& parent) const { Q_UNUSED(parent) return list.size(); };
-virtual QModelIndex parent(const QModelIndex& child) const;
-virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
-void addSerie(const SeriePtr& ptr);
-
-private:
-  QList<SeriePtr> list;
-};
-
-#endif // SERIEMODEL_H
-
+SerieView::SerieView(QWidget* parent) : QTableView(parent) {
+}

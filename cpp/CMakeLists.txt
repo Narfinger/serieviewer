@@ -15,11 +15,11 @@ set(serieviewer_SRCS
     src/serie.cpp
     src/serieviewerdbus.cpp
     src/seriemodel.cpp
+    src/serieview.cpp
     src/setplayerdialogimpl.cpp
     src/settings.cpp
     src/settingsdialogimpl.cpp
     src/xmlhandler.cpp
-    
     src/infodialogimpl.h
 )
 
@@ -31,12 +31,12 @@ SET(serieviewer_FORMS
     ui/setplayerdialog.ui
     ui/settingsdialog.ui
 )
-
+QT5_ADD_RESOURCES(serieviewer_RESOURCES_RCC ui/icons.qrc)
 QT5_WRAP_UI(serieviewer_FORMS_HDRS ${serieviewer_FORMS})
 
 list(APPEND CMAKE_CXX_FLAGS " -std=c++11 -march=native -Wall -pedantic -Wextra -Wundef -Wcast-align -Wwrite-strings -Wunreachable-code -Winit-self ")
 
 add_executable(serieviewer ${serieviewer_SRCS}
-		       ${serieviewer_FORMS_HDRS})
+		       ${serieviewer_FORMS_HDRS} ${serieviewer_RESOURCES_RCC})
 target_link_libraries(serieviewer ${QT_QTCORE_LIBRARY} Qt5::Widgets Qt5::Xml Qt5::DBus)
 install(TARGETS serieviewer RUNTIME DESTINATION bin)

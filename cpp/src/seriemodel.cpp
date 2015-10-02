@@ -17,7 +17,18 @@
  * 
  */
 
+#include <QIcon>
+
 #include "seriemodel.h"
+
+SerieModel::SerieModel(QObject* parent): QAbstractTableModel(parent) {
+  setHeaderData(0, Qt::Horizontal, "Name", Qt::DisplayRole);
+  setHeaderData(1, Qt::Horizontal, "Episode", Qt::DisplayRole);
+  setHeaderData(2, Qt::Horizontal, "Max", Qt::DisplayRole);
+  setHeaderData(3, Qt::Horizontal, "Ongoing", Qt::DisplayRole);
+  //qDebug() << headerData(0, Qt::Horizontal, Qt::DisplayRole);
+}
+
 
 QVariant SerieModel::data(const QModelIndex& index, int role) const {
   const SeriePtr s = list.at(index.row());
@@ -26,8 +37,15 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
       case 0: return s->getName();
       case 1: return s->getEpisodeNum();
       case 2: return s->getMax();
-      case 3: return s->isOngoing();
+      case 3: //return s->isOngoing();
       case 4: return s->getDuration().first;
+    }
+  } else if (role == Qt::DecorationRole) {
+    if (index.column()==3) {
+      if (s->isOngoing())
+	return QIcon(":/icons/button_ok.png");
+      else
+	return QIcon(":/icons/ongoing.png");
     }
   }
   
