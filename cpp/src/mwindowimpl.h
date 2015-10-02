@@ -126,8 +126,6 @@ class MWindowImpl : public QMainWindow
     
     void setGui(int snumber); //! set Gui to Finished or no left if had to (is called if episodeChanged*
     
-    void on_searchEdit_textChanged(const QString & text); //! scrolls to the text in the search box
-    
     void rightClickPopup(QPoint point); //! right click popup
     
     void setLastPlayedName();

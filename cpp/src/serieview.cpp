@@ -19,6 +19,7 @@
 
 #include <QDebug>
 #include <QPushButton>
+#include <QSortFilterProxyModel>
 
 #include "serie.h"
 #include "serieview.h"
@@ -40,15 +41,25 @@ void SerieView::rowsInserted(const QModelIndex& parent, int start, int end) {
   }
 }
 
+void SerieView::setModel(QAbstractItemModel* model) {
+  QTableView::setModel(model);
+  sm = dynamic_cast<SerieModel*>(model);
+  if (sm == nullptr) {
+    pm = dynamic_cast<QSortFilterProxyModel*>(model);
+    sm = dynamic_cast<SerieModel*>(pm->sourceModel());
+  }
+}
+
+
 void SerieView::playButtonPushed() {
   const QPushButton* b = qobject_cast<QPushButton*>(sender());
-  if (b!= nullptr) {
-    const QModelIndex i = indexAt(b->pos());
-    const SerieModel* sm = dynamic_cast<SerieModel*>(model());
-    qDebug() << "button pushed for" << i;
-    const SeriePtr s = sm->serieAtIndex(i);
-    qDebug() << "Playing" << s->getName();
-  }
+  if (b== nullptr  || pm == nullptr) { qDebug() << "Models are nullptr"; return; }
+  
+  const QModelIndex i = pm->mapToSource(indexAt(b->pos())); //index in proxy model converted to index in SerieModel
+  qDebug() << "button pushed for" << i;
+  if (sm == nullptr) { qDebug() << "Null sm"; return; }
+  const SeriePtr s = sm->serieAtIndex(i);
+  qDebug() << "Playing" << s->getName();
 }
 
 

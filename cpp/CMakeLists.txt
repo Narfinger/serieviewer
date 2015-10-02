@@ -1,6 +1,8 @@
 project(serieviewer)
 cmake_minimum_required(VERSION 2.8.12)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 find_package(Qt5 5.2.1 COMPONENTS Widgets Xml DBus)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -33,6 +35,9 @@ SET(serieviewer_FORMS
 )
 QT5_ADD_RESOURCES(serieviewer_RESOURCES_RCC ui/icons.qrc)
 QT5_WRAP_UI(serieviewer_FORMS_HDRS ${serieviewer_FORMS})
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 list(APPEND CMAKE_CXX_FLAGS " -std=c++11 -march=native -Wall -pedantic -Wextra -Wundef -Wcast-align -Wwrite-strings -Wunreachable-code -Winit-self ")
 

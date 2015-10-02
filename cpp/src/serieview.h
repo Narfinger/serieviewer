@@ -22,16 +22,26 @@
 
 #include <qt/QtWidgets/qtableview.h>
 
+class QSortFilterProxyModel;
+class SerieModel;
+
 class SerieView : public QTableView
 {
     Q_OBJECT
 
 public:
   SerieView(QWidget* parent = 0);
+  virtual void setModel(QAbstractItemModel* model);
 
-  void rowsInserted(const QModelIndex& parent, int start, int end);
+public slots:
+  virtual void rowsInserted(const QModelIndex& parent, int start, int end);
+
 private slots:
   void playButtonPushed();
+
+private:
+  SerieModel* sm;
+  QSortFilterProxyModel* pm;
 };
 
 #endif // SERIEVIEW_H

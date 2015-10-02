@@ -41,7 +41,10 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.setupUi(this);
     
     sm = new SerieModel();
-    ui.tableView->setModel(sm);
+    QSortFilterProxyModel* pm = new QSortFilterProxyModel(this);
+    pm->setSourceModel(sm);
+    pm->setFilterKeyColumn(0);
+    ui.tableView->setModel(pm);
 	
     //signalmapper = new QSignalMapper(this);
     spinmapper = new QSignalMapper(this);
@@ -114,12 +117,11 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.numberLabel->setText(QString::number(list.size()));
 
     //search ui
-    connect(ui.searchEdit, SIGNAL(textChanged(QString)), this, SLOT(on_searchEdit_textChanged(QString)));
+    connect(ui.searchEdit, &QLineEdit::textChanged, pm, &QSortFilterProxyModel::setFilterFixedString);
     ui.clearButton->setEnabled(true);
     ui.searchEdit->setEnabled(true);
     ui.filterLabel->setEnabled(true);
-    //setup the unmarked brush, this is kind of ugly but i don't know how to do better
-            
+    
     // setup the context menu for items in tablewidget
     ui.tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.tableWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(rightClickPopup(QPoint)));
@@ -1126,24 +1128,6 @@ void MWindowImpl::serieStopped(int snumber)
     lastplayed = callee;
         
     setLastPlayedName();
-}
-
-void MWindowImpl::on_searchEdit_textChanged(const QString & text)
-{
-    Q_ASSERT(ui.tableWidget->rowCount()>=1);
-    for(int i=0;i<list.size();i++)
-    {
-        Serie* serie = list.at(i);
-        if(text.isEmpty())
-            ui.tableWidget->showRow(i);
-        else
-        {
-            if(!serie->getName().contains(text, Qt::CaseInsensitive))
-                ui.tableWidget->hideRow(i);
-            else
-                ui.tableWidget->showRow(i);
-        }
-    }    
 }
 
 void MWindowImpl::rightClickPopup(QPoint point)
