@@ -27,10 +27,11 @@ class SerieView : public QTableView
     Q_OBJECT
 
 public:
-SerieView(QWidget* parent = 0);
+  SerieView(QWidget* parent = 0);
 
-void rowsInserted(const QModelIndex& parent, int start, int end);
-private:
+  void rowsInserted(const QModelIndex& parent, int start, int end);
+private slots:
+  void playButtonPushed();
 };
 
 #endif // SERIEVIEW_H

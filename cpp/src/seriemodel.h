@@ -30,14 +30,15 @@ class SerieModel : public QAbstractTableModel
 
 public:
   SerieModel(QObject* parent = 0);
-virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-virtual int columnCount(const QModelIndex& parent) const { Q_UNUSED(parent) return 5; };
-virtual int rowCount(const QModelIndex& parent) const { Q_UNUSED(parent) return list.size(); };
-virtual QModelIndex parent(const QModelIndex& child) const;
-virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
-virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  virtual int columnCount(const QModelIndex& parent) const { Q_UNUSED(parent) return 5; };
+  virtual int rowCount(const QModelIndex& parent) const { Q_UNUSED(parent) return list.size(); };
+  virtual QModelIndex parent(const QModelIndex& child) const;
+  virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
+  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-void addSerie(const SeriePtr& ptr);
+  void addSerie(const SeriePtr& ptr);
+  const SeriePtr serieAtIndex(const QModelIndex& i) const { return list.at(i.row()); };
 
 private:
   QList<SeriePtr> list;
