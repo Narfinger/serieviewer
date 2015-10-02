@@ -35,6 +35,8 @@ virtual int columnCount(const QModelIndex& parent) const { Q_UNUSED(parent) retu
 virtual int rowCount(const QModelIndex& parent) const { Q_UNUSED(parent) return list.size(); };
 virtual QModelIndex parent(const QModelIndex& child) const;
 virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
+virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
 void addSerie(const SeriePtr& ptr);
 
 private:

@@ -22,11 +22,6 @@
 #include "seriemodel.h"
 
 SerieModel::SerieModel(QObject* parent): QAbstractTableModel(parent) {
-  setHeaderData(0, Qt::Horizontal, "Name", Qt::DisplayRole);
-  setHeaderData(1, Qt::Horizontal, "Episode", Qt::DisplayRole);
-  setHeaderData(2, Qt::Horizontal, "Max", Qt::DisplayRole);
-  setHeaderData(3, Qt::Horizontal, "Ongoing", Qt::DisplayRole);
-  //qDebug() << headerData(0, Qt::Horizontal, Qt::DisplayRole);
 }
 
 
@@ -61,6 +56,22 @@ QModelIndex SerieModel::parent(const QModelIndex& child) const {
 QModelIndex SerieModel::index(int row, int column, const QModelIndex& parent) const {
   return QAbstractTableModel::index(row, column, parent);
   //return parent.child(row, column);
+}
+
+QVariant SerieModel::headerData(int section, Qt::Orientation orientation, int role) const {
+  if (role != Qt::DisplayRole)
+    return QVariant();
+  if (orientation == Qt::Horizontal) {
+    switch(section) {
+      case 0: return "Serie Name";
+      case 1: return "Episode";
+      case 2: return "Max";
+      case 3: return "Ongoing";
+      case 4: return "Button";
+      case 5: return "Duration";
+    }
+  }
+  return QVariant();
 }
 
 void SerieModel::addSerie(const SeriePtr& ptr) {
