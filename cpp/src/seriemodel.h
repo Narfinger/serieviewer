@@ -32,6 +32,7 @@ class SerieModel : public QAbstractTableModel
 public:
   SerieModel(QObject* parent = 0);
   virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const;
   virtual int columnCount(const QModelIndex& parent) const { Q_UNUSED(parent) return 5; };
   virtual int rowCount(const QModelIndex& parent) const { Q_UNUSED(parent) return list.size(); };
   virtual QModelIndex parent(const QModelIndex& child) const;

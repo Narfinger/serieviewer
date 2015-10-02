@@ -24,8 +24,10 @@
 #include "serie.h"
 #include "serieview.h"
 #include "seriemodel.h"
+#include "spinboxdelegate.h"
 
 SerieView::SerieView(QWidget* parent) : QTableView(parent) {
+  setItemDelegateForColumn(1, new SpinBoxDelegate());
 }
 
 //WARNING: we might leak qpushbuttons if we resize this and might get even multiple signals.

@@ -308,7 +308,10 @@
     <item row="1" column="1" colspan="3">
      <widget class="SerieView" name="tableView">
       <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
+       <set>QAbstractItemView::DoubleClicked</set>
+      </property>
+      <property name="defaultDropAction">
+       <enum>Qt::IgnoreAction</enum>
       </property>
       <property name="verticalScrollMode">
        <enum>QAbstractItemView::ScrollPerItem</enum>

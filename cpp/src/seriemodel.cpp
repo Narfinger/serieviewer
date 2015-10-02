@@ -49,6 +49,16 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
+Qt::ItemFlags SerieModel::flags(const QModelIndex& index) const {
+  if (serieAtIndex(index)->isDisabled())
+    return Qt::ItemIsSelectable;
+  if (index.column()==1)
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+  return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+  //return QAbstractTableModel::flags(index);
+}
+
+
 QModelIndex SerieModel::parent(const QModelIndex& child) const {
   //return QAbstractTableModel::parent(child);
   Q_UNUSED(child)
