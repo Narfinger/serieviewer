@@ -34,7 +34,7 @@ SerieView::SerieView(QWidget* parent) : QTableView(parent) {
 //I need to find out if the view deletes the buttons or if i have to implement rowsDeleted
 void SerieView::rowsInserted(const QModelIndex& parent, int start, int end) {
   QAbstractItemView::rowsInserted(parent, start, end);
-  for(int i = start; i< end; i++) {
+  for(int i = start; i<= end; i++) {
     const QModelIndex id = model()->index(i,4);
     QPushButton* b = new QPushButton("Play", this);
     connect(b, &QPushButton::clicked, this, &SerieView::playButtonPushed);
