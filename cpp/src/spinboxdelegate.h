@@ -21,6 +21,7 @@
 #define SPINBOXDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include "serie.h"
 
 class SpinBoxDelegate : public QStyledItemDelegate
 {
@@ -33,6 +34,7 @@ public:
     void updateEditorGemoetry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
 private:
+  const SeriePtr getSeriePtrFromIndex(const QModelIndex& index) const;
 };
 
 #endif // SPINBOXDELEGATE_H

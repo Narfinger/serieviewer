@@ -48,12 +48,21 @@ void SpinBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, c
   QSpinBox* sb = dynamic_cast<QSpinBox*>(editor);
   sb->interpretText();
   const int value = sb->value();
-  model->setData(index, value, Qt::DisplayRole);
+  const SeriePtr s = getSeriePtrFromIndex(index);
+  s->setEpisode(value);
+  model->setData(index, value, Qt::DisplayRole);	//while we do not need to set this this calls update on the view which we need
 }
 
 void SpinBoxDelegate::updateEditorGemoetry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const {
   editor->setGeometry(option.rect);
 }
+
+const SeriePtr SpinBoxDelegate::getSeriePtrFromIndex(const QModelIndex& index) const {
+  const QSortFilterProxyModel* sfpm = dynamic_cast<const QSortFilterProxyModel*>(index.model());
+  const SerieModel* sm = dynamic_cast<const SerieModel*>(sfpm->sourceModel());
+  return sm->serieAtIndex(index);
+}
+
 
 
 
