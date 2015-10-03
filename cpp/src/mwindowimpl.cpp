@@ -619,96 +619,23 @@ void MWindowImpl::askForSettings()
     delete dialog;
 }
 
-void MWindowImpl::random()
-{
-  /*
-    int first_available_index = 0;
-    for(;first_available_index < list.size() && ( list.at(first_available_index)->isDisabled()
-                                                  || list.at(first_available_index)->isFinished());first_available_index++)
-    {}
-
-
-    if(first_available_index >=list.size() || list.at(first_available_index)->isDisabled() || list.at(first_available_index)->isFinished())
-    {
-        QMessageBox::critical(this, "All series are disabled", "All series are disabled or no series available");
-    }
-    else
-    {
-        int available_series = list.size() - first_available_index;  //is this really correct?
-        int index = (rand() % available_series) + first_available_index;
-        qDebug() << "RANDOM: first_available_index:" << first_available_index
-                 << "available_series:" << available_series
-                 << "index:" << index;
-        list.at( index )->execActFile();
-    } */    
+void MWindowImpl::random() {
+   if (!sm->playRandom())
+     QMessageBox::critical(this, "Error", "All messages done or empty.");
 }
 
-void MWindowImpl::newRandom()
-{
-  /*
-    int first_available_index = 0;
-    int not_played = 0;
-    bool done = false;
-    Serie* serie;
-    foreach(serie, list)
-    {
-        qDebug() << "in:" << serie->isDisabled() << serie->getEpisodeNum() << "done:" << done;
-        Q_ASSERT(serie!=0);
-        if(!done && (serie->isDisabled() || serie->isFinished() || serie->getEpisodeNum()!=1))
-            first_available_index++;
-        else
-            done = true;
-        if(serie->getEpisodeNum()==1)
-            not_played++;
-    }
-
-    const bool a = first_available_index >= list.size();
-    const bool b =list.at(first_available_index)->isDisabled();
-    const bool c = list.at(first_available_index)->getEpisodeNum()!=1;
-    qDebug() << a << b << c;
-    
-    if(first_available_index >=list.size() || list.at(first_available_index)->isDisabled() || list.at(first_available_index)->isFinished() 
-       || list.at(first_available_index)->getEpisodeNum()!=1)
-    {
-        QMessageBox::critical(this, "All series are disabled", "All series are disabled or no series available");
-    }
-    else
-    {
-        int index = (rand() % not_played) + first_available_index;
-        for(;list.at(index)->getEpisodeNum()!=1 && index < list.size(); index++)
-        {}
-        
-        qDebug() << "RANDOM: first_available_index:" << first_available_index
-                 << "not_played:" << not_played
-                 << "index:" << index;
-        Q_ASSERT(index!=list.size()); //i think this should not happen but if it could we should use an if
-        list.at( index )->execActFile();
-    }*/
+void MWindowImpl::newRandom() {
+  if (!sm->playNewRandom())
+    QMessageBox::critical(this, "Error", "All messages done or empty.");
 }
 
 void MWindowImpl::cleanupSeries()
-{
-  /*
-    QMessageBox::StandardButton answer = QMessageBox::question (this, "Cleanup Series?", 
+{  
+  QMessageBox::StandardButton answer = QMessageBox::question (this, "Cleanup Series?", 
                                                                 "Do you want to cleanup series, which will delete series with no directory?", 
                                                                 QMessageBox::Ok | QMessageBox::Cancel);
-
-    if(answer==QMessageBox::Ok)               // 0-th button was pressed
-    {
-        bool needtoreload = false;
-        for(int i=0;i < list.size(); i++)
-        {
-            Serie* serie = list.at(i);
-            if(serie->isDisabledNoDir())
-            {
-                needtoreload = true;
-                list.removeAt(i);
-            }
-        }
-        if(needtoreload)
-            reload();
-    }
-    */
+  if (answer==QMessageBox::Ok)
+    sm->cleanupSeries();
 }
 
 void MWindowImpl::quitWithoutSaving()

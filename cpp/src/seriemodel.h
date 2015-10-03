@@ -39,7 +39,10 @@ public:
 
   void addSerie(const SeriePtr& ptr);
   const SeriePtr serieAtIndex(const QModelIndex& i) const { return list.at(i.row()); };
-
+  bool playRandom();
+  bool playNewRandom();
+  void cleanupSeries();
+  
   const static int OwnSortRole = Qt::UserRole + 1;
 private:
   int sortRole(const QModelIndex& i) const;
