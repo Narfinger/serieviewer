@@ -156,6 +156,16 @@ void SerieModel::cleanupSeries() {
   }
 }
 
+QModelIndex SerieModel::playNext() {
+  for (const SeriePtr& s : list) {
+    if (!s->isDisabled() && !s->isFinished()) {
+      s->execActFile();
+      return QModelIndex();
+    }
+  }
+  return QModelIndex();
+}
+
 int SerieModel::sortRole(const QModelIndex& i) const {
   //this needs a bunch of work
   const SeriePtr s = serieAtIndex(i);

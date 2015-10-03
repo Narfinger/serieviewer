@@ -416,28 +416,10 @@ void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
     }
 }
 
-void MWindowImpl::on_playNextButton_clicked()
-{/*
-    bool done = false;
-    if(list.size() >0)
-    {
-        QListIterator<Serie*> it(list);
-		
-        while(it.hasNext() && !done)
-        {
-            Serie* elem = it.next();
-            Q_ASSERT(elem != 0);
-            if(elem->isDisabled() == false && elem->isFinished() == false)
-            {
-                elem->execActFile();
-                it.toBack();
-                done = true;
-            }
-        }
-    }
-    if(done == false)
-        QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment");
-    */
+void MWindowImpl::on_playNextButton_clicked() {
+  const QModelIndex i = sm->playNext();
+  if (!i.isValid())
+    QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment");
 }
 
 void MWindowImpl::on_playLastAddedButton_clicked()

@@ -36,12 +36,13 @@ public:
   virtual int columnCount(const QModelIndex& parent) const { if (parent.isValid()) return 0; else return 5; };
   virtual int rowCount(const QModelIndex& parent) const { if (parent.isValid()) return 0; else return list.size(); };
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
+  
   void addSerie(const SeriePtr& ptr);
   const SeriePtr serieAtIndex(const QModelIndex& i) const { return list.at(i.row()); };
   bool playRandom();
   bool playNewRandom();
   void cleanupSeries();
+  QModelIndex playNext();  //returns the played index or invalid if nothing played
   
   const static int OwnSortRole = Qt::UserRole + 1;
 private:
