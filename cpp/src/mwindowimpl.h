@@ -26,7 +26,6 @@ class MWindowImpl : public QMainWindow
     XMLHandler* xmlhandler;	//!< Our xmlhandler
     
     bool changed;		//!< Has something changed and do we need to save the file
-    QList<Serie*> list;	//!< List of our serie
     QHash<QUuid, Serie*> hashmap;
     QSignalMapper* spinmapper;	//!< Signal mapper for mapping QSpinBox::valueChanged -> episodeChangedInGui
     
@@ -44,12 +43,7 @@ class MWindowImpl : public QMainWindow
     MWindowImpl(QWidget *parent = 0);
     
     ~MWindowImpl();
-    
-    /**
-       compareing of pointer series, needed for qsort
-    */
-    static bool compareSerieP(Serie* s1, Serie* s2);
-    
+      
     /* returns the serie pointer for the uuid, could be null */
     Serie* getSerieForUuid(QUuid uuid);
     
@@ -92,10 +86,6 @@ class MWindowImpl : public QMainWindow
     
     void addToList(Serie* serie); //! add a serie to list and modify ui
     
-    void episodeChangedInSerie(int snumber); //! episode changed in serie (watched an episode)
-    
-    void episodeChangedInGui(int snumber); 		//! episode changed by spinbox
-    
     void askForSettings();
     
     
@@ -123,8 +113,6 @@ class MWindowImpl : public QMainWindow
     void serieStarted(); //! serie started, change the gui
     
     void serieStopped(int snumber); //! serie stopped, change the gui
-    
-    void setGui(int snumber); //! set Gui to Finished or no left if had to (is called if episodeChanged*
     
     void rightClickPopup(QPoint point); //! right click popup
     

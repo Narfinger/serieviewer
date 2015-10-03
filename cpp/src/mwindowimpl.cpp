@@ -48,8 +48,8 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.tableView->setModel(pm);
 	
     //signalmapper = new QSignalMapper(this);
-    spinmapper = new QSignalMapper(this);
-    connect(spinmapper, SIGNAL(mapped(int)), this, SLOT(episodeChangedInGui(int))); //we need this here, else we will emit more and more signals
+//    spinmapper = new QSignalMapper(this);
+//    connect(spinmapper, SIGNAL(mapped(int)), this, SLOT(episodeChangedInGui(int))); //we need this here, else we will emit more and more signals
 
     xmlhandler = new XMLHandler( this);
 	
@@ -58,12 +58,12 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     QSettings settings(FIRMNAME, APPNAME);
     {
         settings.beginGroup("mainwindow");
-        ui.tableWidget->setColumnWidth(0, settings.value("col0", NAMESIZE).toInt());
-        ui.tableWidget->setColumnWidth(1, settings.value("col1", ACTSIZE).toInt());
-        ui.tableWidget->setColumnWidth(2, settings.value("col2", EPISODESIZE).toInt());
-        ui.tableWidget->setColumnWidth(3, settings.value("col3", ONGOINGSIZE).toInt());
-        ui.tableWidget->setColumnWidth(4, settings.value("col4", WATCHBSIZE).toInt());
-        ui.tableWidget->setColumnWidth(5, settings.value("col5", DURATIONSIZE).toInt());
+        ui.tableView->setColumnWidth(0, settings.value("col0", NAMESIZE).toInt());
+        ui.tableView->setColumnWidth(1, settings.value("col1", ACTSIZE).toInt());
+        ui.tableView->setColumnWidth(2, settings.value("col2", EPISODESIZE).toInt());
+        ui.tableView->setColumnWidth(3, settings.value("col3", ONGOINGSIZE).toInt());
+        ui.tableView->setColumnWidth(4, settings.value("col4", WATCHBSIZE).toInt());
+        ui.tableView->setColumnWidth(5, settings.value("col5", DURATIONSIZE).toInt());
 			
         QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
         QSize size = settings.value("size", QSize(650, 480)).toSize();
@@ -75,26 +75,9 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     if(!settingsfile.isNull())
        Settings::Instance()->setSettingsFilename(settingsfile);
 
-
-    QTableWidgetItem* name = new QTableWidgetItem("Series Name");
-    QTableWidgetItem* episode = new QTableWidgetItem("next Episode");
-    QTableWidgetItem* max = new QTableWidgetItem("episodes");
-    QTableWidgetItem* ongoing = new QTableWidgetItem("Ongoing");
-    QTableWidgetItem* watch = new QTableWidgetItem("Watch it");
-    QTableWidgetItem* duration = new QTableWidgetItem("Duration");
-
-
-    ui.tableWidget->setHorizontalHeaderItem(0,name);
-    ui.tableWidget->setHorizontalHeaderItem(1,episode);
-    ui.tableWidget->setHorizontalHeaderItem(2,max);
-    ui.tableWidget->setHorizontalHeaderItem(3,ongoing);
-    ui.tableWidget->setHorizontalHeaderItem(4,watch);
-    ui.tableWidget->setHorizontalHeaderItem(5,duration);
-
     connect(xmlhandler,SIGNAL(serieParsed(Serie*)), this,SLOT(addToList(Serie*)));
     connect(xmlhandler,SIGNAL(askForPlayer()), this, SLOT(askForSettings()));
-    connect(ui.tableWidget, SIGNAL(currentCellChanged(int,int,int,int)), this, SLOT(cellFocusChanged(int,int,int,int)));
-    connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(cellDoubleClicked(int,int)));
+    //connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(cellDoubleClicked(int,int)));
 	  
     changed = false;
 	
@@ -115,7 +98,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
         //player = DEFAULTPLAYER;
     }
 
-    ui.numberLabel->setText(QString::number(list.size()));
+   // ui.numberLabel->setText(QString::number(list.size()));
 
     //search ui
     connect(ui.searchEdit, &QLineEdit::textChanged, pm, &QSortFilterProxyModel::setFilterFixedString);
@@ -124,8 +107,8 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.filterLabel->setEnabled(true);
     
     // setup the context menu for items in tablewidget
-    ui.tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui.tableWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(rightClickPopup(QPoint)));
+    ui.tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui.tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(rightClickPopup(QPoint)));
 
 
     {
@@ -163,12 +146,12 @@ MWindowImpl::~MWindowImpl()
         settings.beginGroup("mainwindow");
         settings.setValue("pos", pos());
         settings.setValue("size", size());
-        settings.setValue("col0", ui.tableWidget->columnWidth(0));
-        settings.setValue("col1", ui.tableWidget->columnWidth(1));
-        settings.setValue("col2", ui.tableWidget->columnWidth(2));
-        settings.setValue("col3", ui.tableWidget->columnWidth(3));
-        settings.setValue("col4", ui.tableWidget->columnWidth(4));
-        settings.setValue("col5", ui.tableWidget->columnWidth(5));
+        settings.setValue("col0", ui.tableView->columnWidth(0));
+        settings.setValue("col1", ui.tableView->columnWidth(1));
+        settings.setValue("col2", ui.tableView->columnWidth(2));
+        settings.setValue("col3", ui.tableView->columnWidth(3));
+        settings.setValue("col4", ui.tableView->columnWidth(4));
+        settings.setValue("col5", ui.tableView->columnWidth(5));
         settings.endGroup();
 
     }
@@ -225,12 +208,12 @@ void MWindowImpl::saveXML(bool sort)
     
     if( sort && instance->getSort() )
     {
-        qSort(list.begin(), list.end(), compareSerieP);
+       // qSort(list.begin(), list.end(), compareSerieP);
     }
-    if(!xmlhandler->write(list))
-    {
-        QMessageBox::critical(this,"Error in save", "Can't save data!\n All changes will were not saved");
-    }
+ //   if(!xmlhandler->write(list))
+ //   {
+ //       QMessageBox::critical(this,"Error in save", "Can't save data!\n All changes will were not saved");
+ //   }
 
 }
 
@@ -244,18 +227,19 @@ QString MWindowImpl::getCurrentName()
 
 QStringList* MWindowImpl::getSerieListNames()
 {
+  /*
     QStringList* names = new QStringList();
     foreach(Serie* s, list)
     {
         names->append(s->getName());
     }
     return names;
-
+*/
 }
 
 void MWindowImpl::playIndex(int index)
 {
-    if(list.count() < index)
+/*   if(list.count() < index)
         return;
    
     Serie* serie = list.at(index);
@@ -264,10 +248,12 @@ void MWindowImpl::playIndex(int index)
         return;
     else
         serie->execActFile(DBUSARGS);
+    */
 }
 
 void MWindowImpl::reload()
 {
+  /*
     ui.tableWidget->blockSignals(true); //need this because cellFocusChange
 
     // save lastplayed
@@ -296,18 +282,12 @@ void MWindowImpl::reload()
 
     ui.tableWidget->blockSignals(false);
 
-    ui.searchEdit->clear();
-}
-
-
-bool MWindowImpl::compareSerieP(Serie* s1, Serie* s2)
-{
-    return ((*s1) < (*s2) );
+    ui.searchEdit->clear();*/
 }
 
 Serie* MWindowImpl::getSerieForUuid(QUuid uuid)
 {
-    if(!uuid.isNull())
+/*    if(!uuid.isNull())
     {
         foreach(Serie* serie, list)
         {
@@ -317,7 +297,7 @@ Serie* MWindowImpl::getSerieForUuid(QUuid uuid)
             }
         }
     }
-    return 0;
+    return 0;*/
 }
 
 void MWindowImpl::about()
@@ -330,6 +310,7 @@ void MWindowImpl::about()
 
 void MWindowImpl::addSerieRecursive()
 {
+  /*
     const int oldsize = list.size();
     QString dirstring = QFileDialog::getExistingDirectory(this, "Open Dir for Recursive", Settings::Instance()->getLastPath(), 
 							  QFileDialog::ShowDirsOnly);
@@ -357,11 +338,12 @@ void MWindowImpl::addSerieRecursive()
 	    dir.cdUp();
 	    Settings::Instance()->setLastPath(dir.absolutePath());
 	}
-    }
+    }*/
 }
 
 void MWindowImpl::addGuiSerie(QString path)
 {
+  /*
     AddDialogImpl* dialog=new AddDialogImpl(&list, path, this);
     if(dialog->getShow())
     {
@@ -378,11 +360,13 @@ void MWindowImpl::addGuiSerie(QString path)
     }
     delete dialog;
     ui.numberLabel->setText(QString::number(list.size()));
+    */
 }
 
 void MWindowImpl::on_deleteButton_clicked()
 {	
-    QTableWidgetItem* item = ui.tableWidget->currentItem();
+  /*
+    QTableWidgetItem* item = ui.tableView->currentItem();
     if(item!=0)
     {
         int row = item->row();
@@ -397,8 +381,7 @@ void MWindowImpl::on_deleteButton_clicked()
     }
     else 
         QMessageBox::information(this, "Delete", "You have to select an item to delete it.");
-
-	
+    */
 }
 
 void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
@@ -433,9 +416,8 @@ void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
     }
 }
 
-
 void MWindowImpl::on_playNextButton_clicked()
-{
+{/*
     bool done = false;
     if(list.size() >0)
     {
@@ -455,6 +437,7 @@ void MWindowImpl::on_playNextButton_clicked()
     }
     if(done == false)
         QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment");
+    */
 }
 
 void MWindowImpl::on_playLastAddedButton_clicked()
@@ -477,14 +460,12 @@ void MWindowImpl::on_undoButton_clicked()
     }
 }
 
-void MWindowImpl::on_clearButton_clicked()
-{
+void MWindowImpl::on_clearButton_clicked() {
     ui.searchEdit->clear();
-    ui.tableWidget->clearSelection();
 }
 
 void MWindowImpl::cellFocusChanged(int currentrow, int currentcolumn, int previousrow, int previouscolumn)
-{
+{/*
     Q_UNUSED(currentcolumn);
     Q_UNUSED(previousrow);
     Q_UNUSED(previouscolumn);
@@ -495,6 +476,7 @@ void MWindowImpl::cellFocusChanged(int currentrow, int currentcolumn, int previo
   if currentrow==-1 we most likely have no cells hence we don't do anything
   if we call this programm in the gui, then we use the 0 everywhere, but 0 is a valid row
 */
+/*
     if( (currentrow!=previousrow || currentrow==0 ) && currentrow!=-1) 
     {
         Serie* serie = list.at(currentrow);
@@ -526,15 +508,16 @@ void MWindowImpl::cellFocusChanged(int currentrow, int currentcolumn, int previo
             showinfoaction->setEnabled(false);
         else
             showinfoaction->setEnabled(true);
-    }
+    }*/
 }
 
 void MWindowImpl::cellDoubleClicked(int row, int column)
 {
+  /*
     Q_UNUSED(column);
     Serie* serie = list.at(row);
     if(!serie->isDisabled() && !serie->isFinished())
-        serie->execActFile();
+        serie->execActFile();*/
 }
 
 void MWindowImpl::addToList(Serie* serie)
@@ -614,38 +597,6 @@ void MWindowImpl::addToList(Serie* serie)
     spinmapper->setMapping(sbox, serie->getIndex());*/
 }
 
-void MWindowImpl::episodeChangedInSerie(int snumber)
-{
-    Q_ASSERT(snumber>=0);
-    cellFocusChanged(snumber,0,0,0);
-    changed=true;
-    setGui(snumber);
-}
-
-void MWindowImpl::episodeChangedInGui(int snumber)
-{
-    Q_ASSERT(snumber>=0);
-    QSpinBox* sbox = qobject_cast<QSpinBox*>(ui.tableWidget->cellWidget(snumber,1));
-    Q_ASSERT(sbox != 0);
-    Serie* serie = list.at(snumber);
-
-    //don't know if we still need everything but it can't hurt
-    sbox->blockSignals(true);
-    serie->blockSignals(true);
-    spinmapper->blockSignals(true);
-    this->blockSignals(true);
-    if(sbox->value()!=serie->getEpisodeNum())
-    {
-        changed=true;
-        serie->setEpisode(sbox->value());
-    }
-    cellFocusChanged(snumber,0,0,0);
-    sbox->blockSignals(false);
-    serie->blockSignals(false);
-    spinmapper->blockSignals(false);
-    this->blockSignals(false);
-}
-
 void MWindowImpl::askForSettings()
 {
     //ask if player exists mit QValidator ableitung davon
@@ -670,6 +621,7 @@ void MWindowImpl::askForSettings()
 
 void MWindowImpl::random()
 {
+  /*
     int first_available_index = 0;
     for(;first_available_index < list.size() && ( list.at(first_available_index)->isDisabled()
                                                   || list.at(first_available_index)->isFinished());first_available_index++)
@@ -688,12 +640,12 @@ void MWindowImpl::random()
                  << "available_series:" << available_series
                  << "index:" << index;
         list.at( index )->execActFile();
-    }
-        
+    } */    
 }
 
 void MWindowImpl::newRandom()
 {
+  /*
     int first_available_index = 0;
     int not_played = 0;
     bool done = false;
@@ -731,11 +683,12 @@ void MWindowImpl::newRandom()
                  << "index:" << index;
         Q_ASSERT(index!=list.size()); //i think this should not happen but if it could we should use an if
         list.at( index )->execActFile();
-    }
+    }*/
 }
 
 void MWindowImpl::cleanupSeries()
 {
+  /*
     QMessageBox::StandardButton answer = QMessageBox::question (this, "Cleanup Series?", 
                                                                 "Do you want to cleanup series, which will delete series with no directory?", 
                                                                 QMessageBox::Ok | QMessageBox::Cancel);
@@ -755,6 +708,7 @@ void MWindowImpl::cleanupSeries()
         if(needtoreload)
             reload();
     }
+    */
 }
 
 void MWindowImpl::quitWithoutSaving()
@@ -765,6 +719,7 @@ void MWindowImpl::quitWithoutSaving()
 
 void MWindowImpl::showSerieInfo()
 {
+  /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
     {
@@ -785,14 +740,14 @@ void MWindowImpl::showSerieInfo()
             item->setText(newname);
             changed = true;
         }
-        delete infodialog;
-        
-    }
+        delete infodialog;    
+    }*/
 }
 
 
 void MWindowImpl::setOngoing()
 {
+  /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
     {
@@ -852,11 +807,12 @@ void MWindowImpl::setOngoing()
             cellFocusChanged(snumber,0,0,0);
             changed = true;
         }
-    }
+    }*/
 }
 
 void MWindowImpl::setNotOngoing()
 {
+  /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
     {
@@ -912,11 +868,12 @@ void MWindowImpl::setNotOngoing()
             cellFocusChanged(snumber,0,0,0);
             changed = true;
         }
-    }
+    }*/
 }
 
 void MWindowImpl::rewind()
 {
+  /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
     {
@@ -935,11 +892,12 @@ void MWindowImpl::rewind()
     }
     else 
         QMessageBox::information(this, "Rewind", "You have to select an item to rewind it");
-
+*/
 }
 
 void MWindowImpl::setLink()
 {
+  /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
     {
@@ -963,11 +921,12 @@ void MWindowImpl::setLink()
     }
     else 
         QMessageBox::information(this, "Rewind", "You have to select an item to set a link for it");
-
+*/
 }
 
 void MWindowImpl::setPlayer()
 {
+  /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
     {
@@ -983,93 +942,7 @@ void MWindowImpl::setPlayer()
             changed = false;
             
         delete dialog;
-    }
-}
-
-void MWindowImpl::setGui(int snumber)
-{
-    Q_ASSERT(snumber>=0);
-    Serie* serie = list.at(snumber);
-    QPushButton* button = qobject_cast<QPushButton*>(ui.tableWidget->cellWidget(snumber,4));
-    Q_ASSERT(button!=0);
-        
-    serie->blockSignals(true);
-
-    QString durationstring;
-    if(Settings::Instance()->getScanMedia())
-        durationstring = serie->getDuration().first;
-	   
-    QTableWidgetItem* duration = new QTableWidgetItem(durationstring);
-    ui.tableWidget->setItem(snumber,5,duration);
-    if(serie->isFinished())
-    {
-        QSpinBox* sbox = qobject_cast<QSpinBox*>(ui.tableWidget->cellWidget(snumber,1));
-        Q_ASSERT(sbox!=0);
-        disconnect(sbox,0,0,0);
-        spinmapper->removeMappings(sbox);
-		
-        QLineEdit* lineedit = new QLineEdit();
-        lineedit->setReadOnly(true);
-        ui.tableWidget->setCellWidget(snumber,1,lineedit);
-        lineedit->insert("Finished");
-                
-        button->setEnabled(false);
-    }
-    else
-    {	//FIXME see SerieChangedInGui fixme
-
-        bool not_done_already = button->isEnabled();
-        if(serie->isDisabled() && not_done_already )
-        {
-            QSpinBox* sbox = qobject_cast<QSpinBox*>(ui.tableWidget->cellWidget(snumber,1));
-            Q_ASSERT(sbox != 0);
-            sbox->blockSignals(true);
-
-            disconnect(sbox,0,0,0);
-            spinmapper->removeMappings(sbox);
-            QLineEdit* lineedit = new QLineEdit();
-            lineedit->setReadOnly(true);
-            ui.tableWidget->setCellWidget(snumber,1,lineedit);
-            lineedit->insert(serie->getReason());
-            button->setEnabled(false);
-                        
-            sbox->blockSignals(false);
-        }
-        else
-        {
-            QSpinBox* sbox = qobject_cast<QSpinBox*>(ui.tableWidget->cellWidget(snumber,1));
-            if(sbox!=0)
-            {
-                sbox->blockSignals(true);
-                            
-                sbox->setValue(list.at(snumber)->getEpisodeNum());
-                sbox->blockSignals(false);
-            }
-            else
-            {
-                //we are in a case where there exists no spinbox, we likely deleted it somewhere
-                serie->blockSignals(true);
-                            
-                QSpinBox* sbox = new QSpinBox();
-                sbox->setMinimum(1);
-                sbox->setMaximum(serie->getMax());
-                sbox->setValue(serie->getEpisodeNum());
-                sbox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
-
-                spinmapper->removeMappings(sbox);
-                connect(sbox,SIGNAL(valueChanged(int)), spinmapper, SLOT(map()));
-                spinmapper->setMapping(sbox, serie->getIndex());
-                            
-                QTableWidgetItem* ongoing = new QTableWidgetItem();
-                ui.tableWidget->setCellWidget(snumber, 1, sbox);
-                ui.tableWidget->setItem(snumber, 3, ongoing);
-                ui.tableWidget->cellWidget(snumber,4)->setEnabled(true);
-
-                serie->blockSignals(false);
-            }
-        }
-    }
-    serie->blockSignals(false);
+    }*/
 }
 
 void MWindowImpl::serieStarted()
@@ -1081,7 +954,7 @@ void MWindowImpl::serieStarted()
    currentlyplaying = callee;
    ui.clearButton->click();
    
-   ui.tableWidget->setEnabled(false);
+   ui.tableView->setEnabled(false);
    
    ui.deleteButton->setEnabled(false);
    ui.menubar->setEnabled(false);
@@ -1104,7 +977,7 @@ void MWindowImpl::serieStopped(int snumber)
         
     currentlyplaying = 0;
 
-    ui.tableWidget->setEnabled(true);
+    ui.tableView->setEnabled(true);
     ui.deleteButton->setEnabled(true);
     ui.menubar->setEnabled(true);
     ui.playNextButton->setEnabled(true);
@@ -1117,15 +990,6 @@ void MWindowImpl::serieStopped(int snumber)
 
     this->setWindowOpacity ( 1.0);
 
-    Q_ASSERT(snumber!=-1);
-    if(callee->isDisabled() || callee->isFinished())
-    {
-        QLineEdit* lineedit = new QLineEdit();
-        lineedit->setReadOnly(true);
-        ui.tableWidget->setCellWidget(snumber,1,lineedit);
-        lineedit->insert(callee->getReason());
-    }
-
     lastplayed = callee;
         
     setLastPlayedName();
@@ -1133,22 +997,23 @@ void MWindowImpl::serieStopped(int snumber)
 
 void MWindowImpl::rightClickPopup(QPoint point)
 {
-    const QModelIndex index = ui.tableWidget->indexAt(point);
+    const QModelIndex index = ui.tableView->indexAt(point);
 
     // this gets cast to NULL if it is not a QPushButton
-    const QPushButton* button = qobject_cast<QPushButton*>(ui.tableWidget->indexWidget(index)); 
+    const QPushButton* button = qobject_cast<QPushButton*>(ui.tableView->indexWidget(index)); 
 
     if(!index.isValid() || button!=0)
         return;
     else
     {
-      ui.menuSerie->popup(ui.tableWidget->mapToGlobal(point));
+      ui.menuSerie->popup(ui.tableView->mapToGlobal(point));
     }
 }
 
 
 void MWindowImpl::setLastPlayedName()
 {
+  /*
     if(lastplayed!=0)
     {
         if(lastplayed->isFinished())
@@ -1177,11 +1042,12 @@ void MWindowImpl::setLastPlayedName()
             }
             ui.nextNameLabel->setText(nextepisodename);	 
         }
-    }
+    }*/
 }
 
 void MWindowImpl::setDuration()
 {
+  /*
     QObject* sender = QObject::sender();
     QFutureWatcher<QPair<QString, int> >* futurewatcher = static_cast<QFutureWatcher<QPair<QString, int> >* >(sender);
     QFuture<QPair<QString, int> > future =  futurewatcher->future();
@@ -1189,5 +1055,5 @@ void MWindowImpl::setDuration()
     QTableWidgetItem* duration = new QTableWidgetItem(future.result().first);
     ui.tableWidget->setItem(future.result().second, 5, duration);  
   
-    delete futurewatcher;
+    delete futurewatcher;*/
 }
