@@ -644,33 +644,23 @@ void MWindowImpl::quitWithoutSaving()
     qApp->quit();
 }
 
-void MWindowImpl::showSerieInfo()
-{
-  /*
-    QTableWidgetItem* item = ui.tableWidget->currentItem();
-    if(item!=0)
-    {
-        int snumber = item->row();
-        Serie* serie = list.at(snumber);
-        Q_ASSERT(serie!=0);
-        Q_ASSERT(!serie->isDisabled());
-
-        InfoDialogImpl* infodialog = new InfoDialogImpl(this,serie);
-	Serie* linked = getSerieForUuid(serie->getLink());
-	if(linked!= nullptr)
-	  infodialog->setLinkName(linked->getName());
-        infodialog->exec();
-        if(infodialog->result()==QDialog::Accepted)
-        {
-            QString newname = infodialog->getResult();
-            serie->setName(newname);
-            item->setText(newname);
-            changed = true;
-        }
-        delete infodialog;    
-    }*/
+void MWindowImpl::showSerieInfo() {
+  const QModelIndexList il = ui.tableView->selectedIndexes();
+  if (!il.isEmpty()) {
+    const QModelIndex i = ui.tableView->selectedIndexes().at(0);
+    if (i.isValid()) {
+      SeriePtr s = sm->serieAtIndex(i);
+      InfoDialogImpl infodialog(this, s);
+      infodialog.exec();
+   
+      if (infodialog.result() == QDialog::Accepted) {
+	const QString newname = infodialog.getResult();
+	s->setName(newname);
+	changed = true;
+      }
+    }
+  }
 }
-
 
 void MWindowImpl::setOngoing()
 {

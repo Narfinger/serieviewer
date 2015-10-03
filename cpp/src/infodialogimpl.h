@@ -23,7 +23,7 @@ class InfoDialogImpl : public QDialog
         ui.setupUi(this);
     }
     
-  InfoDialogImpl(QWidget *parent = 0, Serie* serie = 0)
+  InfoDialogImpl(QWidget *parent = 0, const SeriePtr& serie = SeriePtr())
       : QDialog(parent)
     {
         ui.setupUi(this);

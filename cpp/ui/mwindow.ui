@@ -285,6 +285,12 @@
       <property name="defaultDropAction">
        <enum>Qt::IgnoreAction</enum>
       </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <property name="verticalScrollMode">
        <enum>QAbstractItemView::ScrollPerItem</enum>
       </property>

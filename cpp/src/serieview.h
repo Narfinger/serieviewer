@@ -32,6 +32,7 @@ class SerieView : public QTableView
 public:
   SerieView(QWidget* parent = 0);
   virtual void setModel(QAbstractItemModel* model);
+  virtual QModelIndexList selectedIndexes() const {return QTableView::selectedIndexes(); };
 
 public slots:
   virtual void rowsInserted(const QModelIndex& parent, int start, int end);
