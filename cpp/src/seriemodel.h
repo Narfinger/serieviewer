@@ -33,10 +33,8 @@ public:
   SerieModel(QObject* parent = 0);
   virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex& index) const;
-  virtual int columnCount(const QModelIndex& parent) const { Q_UNUSED(parent) return 5; };
-  virtual int rowCount(const QModelIndex& parent) const { Q_UNUSED(parent) return list.size(); };
-  virtual QModelIndex parent(const QModelIndex& child) const;
-  virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
+  virtual int columnCount(const QModelIndex& parent) const { if (parent.isValid()) return 0; else return 5; };
+  virtual int rowCount(const QModelIndex& parent) const { if (parent.isValid()) return 0; else return list.size(); };
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
   void addSerie(const SeriePtr& ptr);
