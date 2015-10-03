@@ -21,12 +21,14 @@
 #include <QPushButton>
 #include <QSortFilterProxyModel>
 
+#include "namedelegate.h"
 #include "serie.h"
 #include "serieview.h"
 #include "seriemodel.h"
 #include "spinboxdelegate.h"
 
 SerieView::SerieView(QWidget* parent) : QTableView(parent) {
+  setItemDelegateForColumn(0, new NameDelegate());
   setItemDelegateForColumn(1, new SpinBoxDelegate());
 }
 
@@ -60,6 +62,7 @@ void SerieView::playButtonPushed() {
   qDebug() << "button pushed for" << i;
   if (sm == nullptr) { qDebug() << "Null sm"; return; }
   const SeriePtr s = sm->serieAtIndex(i);
+  s->execActFile();
   qDebug() << "Playing" << s->getName();
 }
 

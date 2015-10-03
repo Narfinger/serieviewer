@@ -14,6 +14,7 @@ set(serieviewer_SRCS
     src/linkdialogimpl.cpp
     src/main.cpp
     src/mwindowimpl.cpp
+    src/namedelegate.cpp
     src/serie.cpp
     src/serieviewerdbus.cpp
     src/seriemodel.cpp

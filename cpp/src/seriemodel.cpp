@@ -56,7 +56,7 @@ Qt::ItemFlags SerieModel::flags(const QModelIndex& index) const {
   
   if (serieAtIndex(index)->isDisabled())
     return Qt::ItemIsSelectable;
-  if (index.column()==1)
+  if (index.column()==1 || index.column() == 0)
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
   //return QAbstractTableModel::flags(index);
