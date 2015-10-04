@@ -5,6 +5,13 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(Qt5 5.2.1 COMPONENTS Widgets Xml DBus)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+find_package(FFMPEG)
+include_directories(${FFMPEG_INCLUDE_DIRS})
+if(${FFMPEG_FOUND})
+  add_definitions(-DFFMPEG_LIB)
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -46,5 +53,5 @@ list(APPEND CMAKE_CXX_FLAGS " -std=c++11 -march=native -Wall -pedantic -Wextra -
 
 add_executable(serieviewer ${serieviewer_SRCS}
 		       ${serieviewer_FORMS_HDRS} ${serieviewer_RESOURCES_RCC})
-target_link_libraries(serieviewer ${QT_QTCORE_LIBRARY} Qt5::Widgets Qt5::Xml Qt5::DBus)
+target_link_libraries(serieviewer ${QT_QTCORE_LIBRARY} Qt5::Widgets Qt5::Xml Qt5::DBus ${FFMPEG_LIBRARIES})
 install(TARGETS serieviewer RUNTIME DESTINATION bin)
