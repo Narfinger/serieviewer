@@ -8,6 +8,7 @@
 #include <QFuture>
 
 #include "ui_mwindow.h"
+#include "serie.h"
 
 class XMLHandler;
 class Serie;
@@ -29,9 +30,9 @@ class MWindowImpl : public QMainWindow
     QHash<QUuid, Serie*> hashmap;
     QSignalMapper* spinmapper;	//!< Signal mapper for mapping QSpinBox::valueChanged -> episodeChangedInGui
     
-    Serie* lastplayed;
-    Serie* lastadded;
-    Serie* currentlyplaying;             //!< serie which is currently playing otherwise null
+    SeriePtr lastplayed;
+    SeriePtr lastadded;
+    SeriePtr currentlyplaying;             //!< serie which is currently playing otherwise null
     
     SerieModel* sm;
     QSortFilterProxyModel* pm;

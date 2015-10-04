@@ -8,6 +8,8 @@
 #include <QtXml/QtXml>
 #include <QFile>
 
+#include "serie.h"
+
 class Serie;
 
 /** 	@class XMLHandler
@@ -23,7 +25,7 @@ class XMLHandler : public QObject
     bool readSerie(QDomDocument &doc);
     
     void writeSettings(QDomDocument & doc, QDomElement &root);
-    void writeSerie( QDomDocument &doc, QDomElement &series, QList<Serie*> &list);
+    void writeSerie( QDomDocument &doc, QDomElement &series, QList<SeriePtr> &list);
     
     const QString getFileStringFromSettings(); /* produces the correct string from settings, still does need to be opened */
     
@@ -41,7 +43,7 @@ class XMLHandler : public QObject
     /**
        write this list to the xml file specified by Settings Module
     */
-    bool write(QList<Serie*>  list);
+    bool write(QList<SeriePtr>  list);
     
   signals:
     /**

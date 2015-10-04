@@ -111,7 +111,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(rightClickPopup(QPoint)));
 
-
+/*
     {
         currentlyplaying = 0;
 	   
@@ -124,7 +124,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
         lastadded = 0;
         QUuid uuidadded = Settings::Instance()->getLastAdded();
         lastadded = getSerieForUuid(uuidadded);
-    }
+    }*/
 }
 
 
@@ -185,37 +185,28 @@ void MWindowImpl::buildmenus()
     connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 }
 
-void MWindowImpl::saveXML(bool sort)
-{
-    Q_ASSERT(xmlhandler!=0);
-    Settings* instance = Settings::Instance();
-    if(lastplayed!=0)
-    {
-        if(lastplayed->isFinished() && lastplayed->validLink())
-        {
-            instance->setLastPlayed( lastplayed->getLink() );
-        }
-        else
-        {
-            instance->setLastPlayed(lastplayed->getUuid());
-        }
+void MWindowImpl::saveXML(bool sort) {
+  Q_ASSERT(xmlhandler!=0);
+  Settings* instance = Settings::Instance();
+  if (!lastplayed.isNull()) {
+    if (lastplayed->isFinished() && lastplayed->validLink()) {
+      instance->setLastPlayed(lastplayed->getLink());
+    } else {
+      instance->setLastPlayed(lastplayed->getUuid());
     }
-
-    if(lastadded!=0)
-    {
-        if(lastadded->validLink())
-            instance->setLastAdded (lastadded->getLink() );
-    }
-    
-    if( sort && instance->getSort() )
-    {
-       // qSort(list.begin(), list.end(), compareSerieP);
-    }
- //   if(!xmlhandler->write(list))
- //   {
- //       QMessageBox::critical(this,"Error in save", "Can't save data!\n All changes will were not saved");
- //   }
-
+  }
+  if (!lastadded.isNull()) {
+    if (lastadded->validLink())
+      instance->setLastAdded(lastadded->getLink());
+  }
+  
+  QList<SeriePtr> list;
+  SerieModelIterator i(pm);
+  while (i.hasNext())
+    list.append(i.next());
+  
+  if (!xmlhandler->write(list))
+    QMessageBox::critical(this,"Error in save", "Can't save data!\n All changes will were not saved");
 }
 
 QString MWindowImpl::getCurrentName()
@@ -851,10 +842,10 @@ void MWindowImpl::setPlayer()
 void MWindowImpl::serieStarted()
 {
    int opacity = Settings::Instance()->getOpacity();
-   Serie* callee = qobject_cast<Serie*>(QObject::sender());
-   if(callee==0)
-      qDebug() << "The callee is null (in started), do we really want that?";
-   currentlyplaying = callee;
+   //SeriePtr callee = qobject_cast<Serie*>(QObject::sender());
+   //if(callee.isNull())
+   //   qDebug() << "The callee is null (in started), do we really want that?";
+   //currentlyplaying = callee;
    ui.clearButton->click();
    
    ui.tableView->setEnabled(false);
@@ -874,11 +865,11 @@ void MWindowImpl::serieStarted()
 
 void MWindowImpl::serieStopped(int snumber)
 {
-    Serie* callee = qobject_cast<Serie*>(QObject::sender());
-    if(callee==0)
-        qDebug() << "The callee is null (in stopped), do we really want that?";
+    //SeriePtr callee = qobject_cast<Serie*>(QObject::sender());
+    //if(callee.isNull())
+    //    qDebug() << "The callee is null (in stopped), do we really want that?";
         
-    currentlyplaying = 0;
+    //currentlyplaying = 0;
 
     ui.tableView->setEnabled(true);
     ui.deleteButton->setEnabled(true);
@@ -893,7 +884,7 @@ void MWindowImpl::serieStopped(int snumber)
 
     this->setWindowOpacity ( 1.0);
 
-    lastplayed = callee;
+    //lastplayed = callee;
         
     setLastPlayedName();
 }

@@ -8,7 +8,6 @@
 
 #include "defines.h"
 #include "xmlhandler.h"
-#include "serie.h"
 #include "settings.h"
 
 
@@ -237,9 +236,9 @@ void XMLHandler::writeSettings(QDomDocument &doc, QDomElement &root)
     }
 }
 
-void XMLHandler::writeSerie(QDomDocument &doc, QDomElement &series, QList<Serie*> &list)
+void XMLHandler::writeSerie(QDomDocument &doc, QDomElement &series, QList<SeriePtr> &list)
 {
-    foreach(Serie* serie, list)
+    foreach(const SeriePtr& serie, list)
     {
         Q_ASSERT(serie!=0);
         if(serie->isFinished()==false)
@@ -271,7 +270,7 @@ void XMLHandler::writeSerie(QDomDocument &doc, QDomElement &series, QList<Serie*
 }
 
 
-bool XMLHandler::write(QList<Serie*>  list)
+bool XMLHandler::write(QList<SeriePtr>  list)
 {
     const QString filename = this->getFileStringFromSettings();
     QFile file(filename);
