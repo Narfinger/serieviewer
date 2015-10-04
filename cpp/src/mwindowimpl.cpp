@@ -34,6 +34,7 @@
 #include "xmlhandler.h"
 #include "settings.h"
 #include "seriemodel.h"
+#include "seriemodeliterator.h"
 
 MWindowImpl::MWindowImpl(QWidget *parent)
     : QMainWindow(parent)
@@ -41,7 +42,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.setupUi(this);
     
     sm = new SerieModel();
-    QSortFilterProxyModel* pm = new QSortFilterProxyModel(this);
+    pm = new QSortFilterProxyModel(this);
     pm->setSortRole(SerieModel::OwnSortRole);
     pm->setSourceModel(sm);
     pm->setFilterKeyColumn(0);
@@ -417,9 +418,12 @@ void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
 }
 
 void MWindowImpl::on_playNextButton_clicked() {
-  const QModelIndex i = sm->playNext();
-  if (!i.isValid())
+  SerieModelIterator i(pm);
+  if (!i.hasNext()) {
     QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment");
+  }
+  const SeriePtr s = i.next();
+  s->execActFile();
 }
 
 void MWindowImpl::on_playLastAddedButton_clicked()

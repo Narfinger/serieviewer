@@ -32,6 +32,7 @@
 class SerieModelIterator : public QObject
 {
     Q_OBJECT
+public:
     SerieModelIterator(QSortFilterProxyModel* m, QObject* parent = nullptr);
     bool hasNext();
     SeriePtr next();

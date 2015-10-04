@@ -34,6 +34,7 @@ class MWindowImpl : public QMainWindow
     Serie* currentlyplaying;             //!< serie which is currently playing otherwise null
     
     SerieModel* sm;
+    QSortFilterProxyModel* pm;
     
     void buildmenus(); //!< builds the menu bar at the start and adds seriemenu
     
