@@ -132,6 +132,8 @@ class Serie : public QObject
        @return is the serie disabled because we have no dir
     */
     bool isDisabledNoDir();
+    
+    bool isReadyToPlay() { return !isDisabled() && !isFinished(); };
 
     /**
        @return returns the index of the serie

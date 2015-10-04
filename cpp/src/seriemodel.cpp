@@ -143,6 +143,7 @@ bool SerieModel::playNewRandom() {
     Q_ASSERT(index!=list.size()); //i think this should not happen but if it could we should use an if
     list.at( index )->execActFile();
   }
+  changed = true;
 }
 
 void SerieModel::cleanupSeries() {
@@ -154,11 +155,13 @@ void SerieModel::cleanupSeries() {
       list.removeAt(i);
     }
   }
+  changed = true;
 }
 
 QModelIndex SerieModel::playNext() {
   for (const SeriePtr& s : list) {
-    if (!s->isDisabled() && !s->isFinished()) {
+    if (s->isReadyToPlay()) {
+      changed = true;
       s->execActFile();
       return QModelIndex();
     }

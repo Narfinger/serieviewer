@@ -26,7 +26,6 @@ class MWindowImpl : public QMainWindow
     Ui::MainWindow ui;	//!< Userinterface
     XMLHandler* xmlhandler;	//!< Our xmlhandler
     
-    bool changed;		//!< Has something changed and do we need to save the file
     QHash<QUuid, Serie*> hashmap;
     QSignalMapper* spinmapper;	//!< Signal mapper for mapping QSpinBox::valueChanged -> episodeChangedInGui
     

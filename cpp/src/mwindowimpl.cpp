@@ -79,8 +79,6 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     connect(xmlhandler,SIGNAL(serieParsed(Serie*)), this,SLOT(addToList(Serie*)));
     connect(xmlhandler,SIGNAL(askForPlayer()), this, SLOT(askForSettings()));
     //connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(cellDoubleClicked(int,int)));
-	  
-    changed = false;
 	
     buildmenus();
 	
@@ -133,7 +131,7 @@ MWindowImpl::~MWindowImpl()
     Q_ASSERT(xmlhandler!=0);
 
     QSettings settings(FIRMNAME, APPNAME);
-    if(changed)
+    if(sm->changed)
     {
         saveXML(true);
         settings.setValue("settingsfile", Settings::Instance()->getSettingsFilename());
@@ -378,7 +376,7 @@ void MWindowImpl::on_deleteButton_clicked()
 
 void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
 {
-    if(lastplayed==0)
+    if(lastplayed.isNull())
         QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment.");
     else
     {
@@ -410,11 +408,14 @@ void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
 
 void MWindowImpl::on_playNextButton_clicked() {
   SerieModelIterator i(pm);
-  if (!i.hasNext()) {
-    QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment");
+  while (i.hasNext()) {
+    const SeriePtr s = i.next();
+    if (s->isReadyToPlay()) {
+      s->execActFile();
+      return;
+    }
   }
-  const SeriePtr s = i.next();
-  s->execActFile();
+  QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment");
 }
 
 void MWindowImpl::on_playLastAddedButton_clicked()
@@ -588,11 +589,11 @@ void MWindowImpl::askForSettings()
     {
         QMessageBox::critical(this, "Player choosen", errorstring);
         Settings::Instance()->addPlayer( DEFAULTPLAYER ,"");
-        changed = true;
+        //changed = true;
     }
     else
         if(dialog->result() == QDialog::Accepted)
-            changed = true;
+            //changed = true;
     delete dialog;
 }
 
@@ -617,12 +618,12 @@ void MWindowImpl::cleanupSeries()
 
 void MWindowImpl::quitWithoutSaving()
 {
-    changed = false;
+    sm->changed = false;
     qApp->quit();
 }
 
 void MWindowImpl::showSerieInfo() {
-  const QModelIndexList il = ui.tableView->selectedIndexes();
+  /*const QModelIndexList il = ui.tableView->selectedIndexes();
   if (!il.isEmpty()) {
     const QModelIndex i = ui.tableView->selectedIndexes().at(0);
     if (i.isValid()) {
@@ -636,7 +637,7 @@ void MWindowImpl::showSerieInfo() {
 	changed = true;
       }
     }
-  }
+  }*/
 }
 
 void MWindowImpl::setOngoing()

@@ -45,6 +45,7 @@ public:
   QModelIndex playNext();  //returns the played index or invalid if nothing played
   
   const static int OwnSortRole = Qt::UserRole + 1;
+  bool changed = false;
 private:
   int sortRole(const QModelIndex& i) const;
   
