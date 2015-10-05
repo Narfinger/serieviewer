@@ -44,43 +44,18 @@ class Serie : public QObject
     
     ~Serie();
     
-    QUuid getUuid()  { return m_uuid; }
+    QUuid getUuid() const { return m_uuid; }
+
+    QString getPlayer() const { return m_player; };
+    void setPlayer(const QString& player) { m_player = player; };
+
+    QString getArguments() { return m_arguments; };
+    void setArguments(const QString& arg) { m_arguments = arg; };
     
-    /**
-       @return Returns the player
-    */
-    QString getPlayer();
+    QString getName() const { return m_name; };
+    void setName(const QString& name) { m_name = name; };
     
-    /**
-       sets the playerid
-    */
-    void setPlayer(QString id);
-    
-    /**
-       @return Returns the arguments for the player
-    */
-    QString getArguments();
-		
-    /**
-       sets the arguments for the player
-    */
-    void setArguments(QString arg);
-    
-    /** 
-        @return Returns the name of the serie
-    */
-    QString getName();
-    
-    void setName(QString name);
-    
-    /**
-       @return Actual episode number
-    */
-    int getEpisodeNum();
-    
-    /**
-       @param episodetoset Sets the episode number
-    */
+    int getEpisodeNum() const { return m_episode; };
     void setEpisode(int episodetoset);
     
     /**
@@ -101,17 +76,11 @@ class Serie : public QObject
     /**
        @return returns the directory
     */
-    QString getDir();
+    QString getDir() const { return m_dir.absolutePath(); };
     
-    /**
-       @return is this serie finished?
-    */
-    bool isFinished();
+    bool isFinished() const { return m_finished; };
     
-    /**
-       @return is this serie ongoing?
-    */
-    bool isOngoing();
+    bool isOngoing() const { return m_ongoing; };
     
     /**
        @return returns the duration of next episode with the index of the serie
@@ -123,43 +92,23 @@ class Serie : public QObject
     */
     void setOngoing(bool valuetoset);
     
-    /**
-       @return is this serie disabled? (this does not include isFinished, only directory not there and not enough files)
-    */
-    bool isDisabled();
+    bool isDisabled() const { return m_disabled; };
     
     /**
        @return is the serie disabled because we have no dir
     */
-    bool isDisabledNoDir();
+    bool isDisabledNoDir() const { return m_disabled && !m_dir.exists(); };
     
     bool isReadyToPlay() { return !isDisabled() && !isFinished(); };
 
-    /**
-       @return returns the index of the serie
-    */
-    int getIndex();
-		
-    /**
-       @param indextoset sets the index
-    */
-    void setIndex(int indextoset);
+    int getIndex() const { return m_index; };
+    void setIndex(int indextoset) { m_index = indextoset; };
 		
     /* which serie should we link/play after this one */
-    QUuid getLink()
-    {
-        return m_link;
-    }
-
-    void setLink(QUuid valuetoset)
-    {
-        m_link = valuetoset;
-    }
+    QUuid getLink() const { return m_link; };
+    void setLink(const QUuid& valuetoset) { m_link = valuetoset; };
                 
-    bool validLink()
-    {
-        return !m_link.isNull();
-    }
+    bool validLink() { return !m_link.isNull(); };
                 
     /**
        Values are "No Left" or "No Dir"

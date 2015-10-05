@@ -47,63 +47,12 @@ Serie::Serie(QString nametoset, QDir dirtoset, bool ongoingtoset, int maxtoset, 
 Serie::~Serie()
 {}
 
-QString Serie::getPlayer()
-{
-    return m_player;
-}
-
-void Serie::setPlayer(QString player)
-{
-    m_player = player;
-}
-
-QString Serie::getArguments()
-{
-    return m_arguments;
-}
-
-void Serie::setArguments(QString arg)
-{
-    m_arguments = arg;
-}
-
-
-QString Serie::getName()
-{
-    return m_name;
-}
-
-void Serie::setName(QString name)
-{
-    m_name = name;
-}
-
-int Serie::getEpisodeNum()
-{
-    return m_episode;
-}
-
 int Serie::getMax()
 {
     //if ongoing we need to get an episode past the episode now
     if(m_ongoing)
         return m_max + 1;
     return m_max;
-}
-
-QString Serie::getDir()
-{
-    return m_dir.absolutePath();
-}
-
-bool Serie::isFinished()
-{
-    return m_finished;
-}
-
-bool Serie::isOngoing()
-{
-    return m_ongoing;
 }
 
 QPair<QString, int> Serie::getDuration()
@@ -165,16 +114,6 @@ void Serie::setOngoing(bool valuetoset)
     }
 }
 
-bool Serie::isDisabled()
-{
-    return m_disabled;
-}
-
-bool Serie::isDisabledNoDir()
-{
-    return m_disabled && !m_dir.exists();
-}
-
 void Serie::setEpisode(int episodetoset)
 {
     Q_ASSERT(episodetoset > 0);
@@ -194,7 +133,6 @@ QString Serie::getNextEpisodeName()
     else 
         return QString();
 }
-
 
 QString Serie::getDirectoryListing()
 {
@@ -305,17 +243,6 @@ void Serie::afterFinished(int exitCode, QProcess::ExitStatus exitStatus)
     else
         qDebug() << "Wrong exit code, the player crashed?";
     emit stopped(m_index);        
-}
-
-int Serie::getIndex()
-{
-    Q_ASSERT(m_index >=0);
-    return m_index;
-}
-
-void Serie::setIndex(int indextoset)
-{
-    m_index = indextoset;
 }
 
 QString Serie::getReason()
