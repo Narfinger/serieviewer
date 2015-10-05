@@ -141,6 +141,8 @@ class Serie : public QObject
     void execActFile(QString additional_args = "");
 		
   signals:
+      void durationRead();
+      
     /**
        we changed something with index int
     */

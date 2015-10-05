@@ -85,6 +85,9 @@ void SerieModel::addSerie(const SeriePtr& ptr) {
   beginInsertRows(QModelIndex(), row, row);
   list.append(ptr);
   endInsertRows();
+  
+  const QModelIndex i = index(row,3);
+  connect(ptr.data(), &Serie::durationRead, [=] () { this->dataChanged(i,i); });
 }
 
 bool SerieModel::playRandom() {
