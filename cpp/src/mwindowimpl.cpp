@@ -22,7 +22,7 @@
 #include <QAction>
 #include <QShortcut>
 #include <Qt>
-#include <QtConcurrent/QtConcurrent>
+
 
 #include "defines.h"
 #include "adddialogimpl.h"

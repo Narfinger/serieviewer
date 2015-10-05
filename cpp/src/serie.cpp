@@ -1,3 +1,4 @@
+#include <QtConcurrent/QtConcurrent>
 #include <QtDebug>
 #include <QMessageBox>
 #include <QStringList>
@@ -25,7 +26,6 @@ Serie::Serie(QString nametoset, QDir dirtoset, bool ongoingtoset, int maxtoset, 
       m_ongoing(ongoingtoset),
       m_disabled(false),
       m_episode(1),
-      m_index(-1),
       m_player(DEFAULTPLAYER)
 {
     // these filter holds for every operation on m_dir, even later, so we need only to set it once
@@ -47,21 +47,26 @@ Serie::Serie(QString nametoset, QDir dirtoset, bool ongoingtoset, int maxtoset, 
 Serie::~Serie()
 {}
 
-int Serie::getMax()
-{
-    //if ongoing we need to get an episode past the episode now
-    if(m_ongoing)
-        return m_max + 1;
-    return m_max;
+QString Serie::getDuration() {
+  switch(m_workerstate) {
+    case FINISHED: return m_duration;
+    case RUNNING:  return "...";
+    case NOT_STARTED:
+      m_workerstate = RUNNING;
+      QtConcurrent::run(this, &Serie::getDurationWorker);
+      return ""; 
+  }
 }
 
-QPair<QString, int> Serie::getDuration()
+void Serie::getDurationWorker()
 {
     #ifdef FFMPEG_LIB
-        if(this->isDisabled() || this->isFinished())
-            return qMakePair(QString(""), m_index);
+        if(this->isDisabled() || this->isFinished()) {
+	  m_duration = "";
+	  m_workerstate = FINISHED;
+	}
         
-        //this is multiple times and stupid
+        //this is multiple times and stupid       
         QString nextepisodetoplay = m_dir.absoluteFilePath( m_dir.entryList(QDir::Files, QDir::Name).at(m_episode-1) );
         QByteArray ba = nextepisodetoplay.toLocal8Bit();
         const char *c_str = ba.data();
@@ -69,11 +74,14 @@ QPair<QString, int> Serie::getDuration()
         AVFormatContext* pFormatCtx = avformat_alloc_context();
         int ret = avformat_open_input(&pFormatCtx, c_str, NULL, NULL);
         
-        if(ret != 0)
-            return qMakePair(QString("?"), m_index);
+        if(ret != 0) {
+            m_duration = "?";
+	    m_workerstate = FINISHED;
+	}
         if(avformat_find_stream_info(pFormatCtx, 0) < 0) {
             qDebug() << "problem with stream info";
-            return qMakePair(QString("?"), m_index);
+	    m_duration = "?";
+	    m_workerstate = FINISHED;
         }
     
         const qint64 duration = static_cast<qint64>(pFormatCtx->duration / AV_TIME_BASE);
@@ -88,9 +96,11 @@ QPair<QString, int> Serie::getDuration()
         
         QTime time(hours,minutes,seconds);
         if(hours==0)
-            return qMakePair(time.toString("mm:ss"), m_index);
+            m_duration = time.toString("mm:ss");
         else
-            return qMakePair(time.toString("hh:mm:ss"), m_index);
+            m_duration = time.toString("hh:mm:ss");
+	
+	m_workerstate = FINISHED;
     #else
         return qMakePair(QString(""), m_index);
     #endif
@@ -125,8 +135,7 @@ void Serie::setEpisode(int episodetoset)
     }
 }
 
-QString Serie::getNextEpisodeName()
-{
+QString Serie::getNextEpisodeName() {
     QStringList entries = m_dir.entryList(QDir::Files, QDir::Name);
     if(entries.count() >= m_episode)
         return entries.at(m_episode-1);
@@ -134,8 +143,7 @@ QString Serie::getNextEpisodeName()
         return QString();
 }
 
-QString Serie::getDirectoryListing()
-{
+QString Serie::getDirectoryListing() {
     QStringList list = m_dir.entryList(QDir::Files, QDir::Name);
     QString returnstring = "";
     foreach(QString string, list)
@@ -238,11 +246,11 @@ void Serie::afterFinished(int exitCode, QProcess::ExitStatus exitStatus)
             else
                 m_finished = true;
         }
-        emit changed(m_index);		
+        emit changed();		
     }
     else
         qDebug() << "Wrong exit code, the player crashed?";
-    emit stopped(m_index);        
+    emit stopped();        
 }
 
 QString Serie::getReason()
@@ -266,7 +274,7 @@ void Serie::rewind()
     Q_ASSERT(m_episode!=0);
 
     setEpisode(m_episode - 1);
-    emit changed(m_index);
+    emit changed();
 }
 
 QDebug operator<<(QDebug dbg, Serie &c)

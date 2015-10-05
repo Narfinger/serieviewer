@@ -35,7 +35,7 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
       case 1: return s->getEpisodeNum();
       case 2: return s->getMax();
       case 3: //return s->isOngoing();
-      case 4: return s->getDuration().first;
+      case 4: return s->getDuration();
     }const int OwnSortRole = Qt::UserRole + 1;
   } else if (role == Qt::DecorationRole) {
     if (index.column()==3) {

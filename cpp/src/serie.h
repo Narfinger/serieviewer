@@ -27,12 +27,26 @@ class Serie : public QObject
     bool m_disabled;	//!< is this serie disabled (no episodes left or directory not avaible)
     int m_episode;		//!< actual episode we are in
     int m_max;		//!< number of episodes we see
-    int m_index;		//!< which index we are in the list of MWindowImpl
     QUuid m_link;           //!< the link to the next serie
     QString m_player;		//!< which player do we want
     QString m_arguments;	//!< arguments for the players
     
     static QMutex mutex;
+
+    enum duration_state { NOT_STARTED, RUNNING, FINISHED };
+    
+    duration_state m_workerstate = NOT_STARTED;
+    QString m_duration;
+    
+  private slots:
+    /**
+       called after finished playing
+    */
+    void afterFinished( int exitCode, QProcess::ExitStatus exitStatus );
+    
+    void getDurationWorker();
+    
+    
   public:
     /** Constructor
         @param nametoset The name we set
@@ -68,10 +82,7 @@ class Serie : public QObject
     */
     QString getDirectoryListing();
     
-    /**
-       @return maximum value if we are ongoing, this is set to max+1 !
-    */
-    int getMax();
+    int getMax() const { if(m_ongoing) return m_max + 1; return m_max;};
     
     /**
        @return returns the directory
@@ -85,7 +96,7 @@ class Serie : public QObject
     /**
        @return returns the duration of next episode with the index of the serie
     */
-    QPair<QString, int> getDuration();
+    QString getDuration();
     
     /**
        set ongoing
@@ -100,9 +111,6 @@ class Serie : public QObject
     bool isDisabledNoDir() const { return m_disabled && !m_dir.exists(); };
     
     bool isReadyToPlay() { return !isDisabled() && !isFinished(); };
-
-    int getIndex() const { return m_index; };
-    void setIndex(int indextoset) { m_index = indextoset; };
 		
     /* which serie should we link/play after this one */
     QUuid getLink() const { return m_link; };
@@ -125,13 +133,6 @@ class Serie : public QObject
        To compare serie
     */
     bool operator<(Serie& s1);
-    		
-  private slots:
-    /**
-       called after finished playing
-    */
-    void afterFinished( int exitCode, QProcess::ExitStatus exitStatus );
-      
     
   public slots:
     /**
@@ -143,7 +144,7 @@ class Serie : public QObject
     /**
        we changed something with index int
     */
-    void changed(int);
+    void changed();
     
     /**
        playing started
@@ -153,7 +154,7 @@ class Serie : public QObject
     /**
        playing stopped
     */
-    void stopped(int);
+    void stopped();    
 };
 
 /**
