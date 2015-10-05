@@ -64,6 +64,7 @@ void Serie::getDurationWorker()
         if(this->isDisabled() || this->isFinished()) {
 	  m_duration = "";
 	  m_workerstate = FINISHED;
+          return;
 	}
         
         //this is multiple times and stupid       
@@ -77,11 +78,13 @@ void Serie::getDurationWorker()
         if(ret != 0) {
             m_duration = "?";
 	    m_workerstate = FINISHED;
+            return;
 	}
         if(avformat_find_stream_info(pFormatCtx, 0) < 0) {
             qDebug() << "problem with stream info";
 	    m_duration = "?";
 	    m_workerstate = FINISHED;
+            return;
         }
     
         const qint64 duration = static_cast<qint64>(pFormatCtx->duration / AV_TIME_BASE);
