@@ -32,11 +32,8 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
   if (role == Qt::DisplayRole) {
     switch(index.column()) {
       case 0: return s->getName();
-      case 1: if (s->isDisabled()) 
-		return s->getReason();
-	      else
-		return s->getEpisodeNum();
-      case 2: return s->getMax();
+      case 1: return getEpisodeNum(s);
+      case 2: return getMax(s);
       case 3: //return s->isOngoing();
       case 4: return s->getDuration();
     }

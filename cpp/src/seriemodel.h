@@ -54,6 +54,9 @@ private:
   void serieChanged(int row);
   void serieStopped(SeriePtr ptr);
   
+  QVariant getEpisodeNum(const SeriePtr& s) const { if (s->isDisabled()) return s->getReason(); else return s->getEpisodeNum(); };
+  QVariant getMax(const SeriePtr& s) const        { if (s->isOngoing())  return s->getMax() -1; else return s->getMax();        };
+  
   QList<SeriePtr> list;
 };
 
