@@ -56,6 +56,7 @@ QString Serie::getDuration() {
       QtConcurrent::run(this, &Serie::getDurationWorker);
       return ""; 
   }
+  return "NOT IMPLEMENTED";
 }
 
 void Serie::getDurationWorker()

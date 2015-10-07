@@ -34,7 +34,7 @@ class AddDialogImpl : public QDialog
     ~AddDialogImpl();
 		
     
-    void construct(QList<Serie*> *list, const QString& path = "");
+    void construct(const QString& path = "");
     /**
        do we want to show this dialog because the user selected not valid files
     */

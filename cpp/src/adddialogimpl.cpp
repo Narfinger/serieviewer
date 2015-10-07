@@ -17,17 +17,17 @@ AddDialogImpl::AddDialogImpl(QWidget *parent): QDialog(parent) {
 
 AddDialogImpl::AddDialogImpl(const QString& path, QWidget* parent) : QDialog(parent) {
   ui.setupUi(this);
-  QList<Serie*> list;
-  construct(&list, path);
+  m_list = nullptr;
+  construct(path);
 }
 
 
 AddDialogImpl::AddDialogImpl(QList<Serie*> *list, const QString& path, QWidget *parent) : QDialog(parent), m_list(list) {
   ui.setupUi(this);
-  construct(list, path);
+  construct(path);
 }
   
-void AddDialogImpl::construct(QList<Serie*> *list, const QString& path) {
+void AddDialogImpl::construct(const QString& path) {
 
     //fill replacelist
     replacelist << REPLACELIST;

@@ -159,6 +159,7 @@ bool SerieModel::playNewRandom() {
     list.at( index )->execActFile();
   }
   changed = true;
+  return true;
 }
 
 void SerieModel::cleanupSeries() {
