@@ -17,17 +17,17 @@
  *
  */
 
-#ifndef SPINBOXDELEGATE_H
-#define SPINBOXDELEGATE_H
+#ifndef SERIEDELEGATE_H
+#define SERIEDELEGATE_H
 
 #include <QStyledItemDelegate>
 #include "serie.h"
 
-class SpinBoxDelegate : public QStyledItemDelegate
+class SerieDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    SpinBoxDelegate(QObject* parent = 0);
+    SerieDelegate(QObject* parent = 0);
     QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
     void setEditorData(QWidget* editor, const QModelIndex& index) const;
     void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;

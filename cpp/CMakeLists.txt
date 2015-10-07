@@ -21,8 +21,8 @@ set(serieviewer_SRCS
     src/linkdialogimpl.cpp
     src/main.cpp
     src/mwindowimpl.cpp
-    src/namedelegate.cpp
     src/serie.cpp
+    src/seriedelegate.cpp
     src/serieviewerdbus.cpp
     src/seriemodel.cpp
     src/seriemodeliterator.cpp
@@ -30,7 +30,6 @@ set(serieviewer_SRCS
     src/setplayerdialogimpl.cpp
     src/settings.cpp
     src/settingsdialogimpl.cpp
-    src/spinboxdelegate.cpp
     src/xmlhandler.cpp
     src/infodialogimpl.h
 )
