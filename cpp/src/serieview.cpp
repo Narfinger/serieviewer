@@ -29,6 +29,7 @@
 SerieView::SerieView(QWidget* parent) : QTableView(parent) {
   setItemDelegateForColumn(0, new SerieDelegate());
   setItemDelegateForColumn(1, new SerieDelegate());
+  setItemDelegateForColumn(3, new SerieDelegate());
 }
 
 //WARNING: we might leak qpushbuttons if we resize this and might get even multiple signals.

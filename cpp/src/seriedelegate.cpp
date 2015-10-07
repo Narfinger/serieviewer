@@ -17,6 +17,7 @@
  *
  */
 
+#include <QCheckBox>
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QSortFilterProxyModel>
@@ -42,6 +43,14 @@ QWidget* SerieDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem
     const int max = getSeriePtrFromIndex(index)->getMax();
     editor->setMaximum(max);
     return editor;
+  } else if (index.column() == 3) {
+    QCheckBox* editor = new QCheckBox(parent);
+    
+    const bool val = getSeriePtrFromIndex(index)->isOngoing();
+    if (val)
+      editor->setCheckState(Qt::Checked);
+    else
+      editor->setCheckState(Qt::Unchecked);
   }
   return nullptr;
 }
@@ -68,6 +77,10 @@ void SerieDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, con
     sb->interpretText();
     const int value = sb->value();
     model->setData(index, value, Qt::DisplayRole);	//while we do not need to set this this calls update on the view which we need
+  } else if (index.column()==3) {
+    QCheckBox* b = dynamic_cast<QCheckBox*>(editor);
+    const bool value = (b->checkState() == Qt::Checked);
+    
   }
 }
 
