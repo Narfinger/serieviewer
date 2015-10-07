@@ -51,6 +51,7 @@ QWidget* SerieDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem
       editor->setCheckState(Qt::Checked);
     else
       editor->setCheckState(Qt::Unchecked);
+    return editor;
   }
   return nullptr;
 }
@@ -64,6 +65,13 @@ void SerieDelegate::setEditorData(QWidget* editor, const QModelIndex& index) con
     const int value = index.model()->data(index, Qt::DisplayRole).toInt();
     QSpinBox* sb = dynamic_cast<QSpinBox*>(editor);
     sb->setValue(value);
+  } else if (index.column()==3) {
+    const bool value = getSeriePtrFromIndex(index)->isOngoing();
+    QCheckBox* b = dynamic_cast<QCheckBox*>(editor);
+    if (value) 
+      b->setCheckState(Qt::Checked);
+    else
+      b->setCheckState(Qt::Unchecked);
   }
 }
 
@@ -80,7 +88,9 @@ void SerieDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, con
   } else if (index.column()==3) {
     QCheckBox* b = dynamic_cast<QCheckBox*>(editor);
     const bool value = (b->checkState() == Qt::Checked);
-    
+    getSeriePtrFromIndex(index)->setOngoing(value);
+    qDebug() << "bool" << value;
+    model->setData(index, value, Qt::DisplayRole);
   }
 }
 
