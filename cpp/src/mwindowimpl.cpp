@@ -77,7 +77,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     //connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(cellDoubleClicked(int,int)));
 	
     buildmenus();
-	
+
     if(!xmlhandler->read())
     {
         qDebug() << "Couldn't read any data. If you don't change anything you might recover the file.";
@@ -105,6 +105,10 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(rightClickPopup(QPoint)));
 
+    QUuid uuidplayed = Settings::Instance()->getLastPlayed();
+    sm->lastplayed = sm->getSerieFromUuid(uuidplayed);
+    setLastPlayedName();
+    
 /*
     {
         currentlyplaying = 0;
@@ -182,6 +186,7 @@ void MWindowImpl::buildmenus()
 void MWindowImpl::saveXML(bool sort) {
   Q_ASSERT(xmlhandler!=0);
   Settings* instance = Settings::Instance();
+  /*
   if (!lastplayed.isNull()) {
     if (lastplayed->isFinished() && lastplayed->validLink()) {
       instance->setLastPlayed(lastplayed->getLink());
@@ -193,7 +198,8 @@ void MWindowImpl::saveXML(bool sort) {
     if (lastadded->validLink())
       instance->setLastAdded(lastadded->getLink());
   }
-  
+  */
+  instance->setLastPlayed(sm->lastplayed->getUuid());
   QList<SeriePtr> list;
   SerieModelIterator i(pm);
   while (i.hasNext())
@@ -367,15 +373,18 @@ void MWindowImpl::on_deleteButton_clicked()
     */
 }
 
-void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
-{
-    if(lastplayed.isNull())
-        QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment.");
-    else
-    {
-        if(lastplayed->isFinished() && lastplayed->validLink())
-        {
-            Serie* serie = hashmap[lastplayed->getLink()];
+void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus) {
+  if (sm->lastplayed.isNull())
+    QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment.");
+  else {
+    if (!sm->lastplayed->isFinished())
+      if (from_dbus)
+	sm->lastplayed->execActFile(DBUSARGS);
+      else
+	sm->lastplayed->execActFile();
+  }
+    /*if(sm->lastplayed->isFinished() && sm->lastplayed->validLink()) {
+      SeriePtr serie = hashmap[lastplayed->getLink()];
             if(from_dbus)
                 serie->execActFile(DBUSARGS);
             else
@@ -396,7 +405,7 @@ void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus)
                     lastplayed->execActFile();
             }
         }
-    }
+    }*/
 }
 
 void MWindowImpl::on_playNextButton_clicked() {
@@ -424,9 +433,9 @@ void MWindowImpl::on_playLastAddedButton_clicked()
 
 void MWindowImpl::on_undoButton_clicked()
 {
-    if(lastplayed!=0 && lastplayed->getEpisodeNum()!=1)
+    if(sm->lastplayed.isNull() && sm->lastplayed->getEpisodeNum()!=1)
     {
-        lastplayed->rewind();
+        sm->lastplayed->rewind();
 	setLastPlayedName();
     }
 }
@@ -897,38 +906,30 @@ void MWindowImpl::rightClickPopup(QPoint point)
 }
 
 
-void MWindowImpl::setLastPlayedName()
-{
-  /*
-    if(lastplayed!=0)
-    {
-        if(lastplayed->isFinished())
-        {
+void MWindowImpl::setLastPlayedName() {
+  if(sm->lastplayed.isNull()) {
+    if(sm->lastplayed->isFinished()){
             ui.nextLabel->setText("");
             ui.nextNameLabel->setToolTip("");
             ui.nextNameLabel->setText("");
-        }
-        else
-        {
-            QString label = lastplayed->getName();
-            if(label.size() > LASTPLAYEDLABELSIZE)
-            {
-                label.truncate(LASTPLAYEDLABELSIZE);
-                label.append("[..]");
-            }
-            ui.nextLabel->setText(label);
+    } else {
+      QString label = sm->lastplayed->getName();
+      if(label.size() > LASTPLAYEDLABELSIZE) {
+	label.truncate(LASTPLAYEDLABELSIZE);
+        label.append("[..]");
+    }
+    ui.nextLabel->setText(label);
       
-            QString nextepisodename = lastplayed->getNextEpisodeName();
-            ui.nextNameLabel->setToolTip(nextepisodename);
-            //trim it if to long
-            if(nextepisodename.size() > LASTPLAYEDLABELSIZE)
-            {
-                nextepisodename.truncate(LASTPLAYEDLABELSIZE);
-                nextepisodename.append("[..]");
-            }
-            ui.nextNameLabel->setText(nextepisodename);	 
-        }
-    }*/
+    QString nextepisodename = sm->lastplayed->getNextEpisodeName();
+    ui.nextNameLabel->setToolTip(nextepisodename);
+    //trim it if to long
+    if(nextepisodename.size() > LASTPLAYEDLABELSIZE) {
+      nextepisodename.truncate(LASTPLAYEDLABELSIZE);
+      nextepisodename.append("[..]");
+    }
+    ui.nextNameLabel->setText(nextepisodename);
+    }
+  }
 }
 
 void MWindowImpl::setDuration()

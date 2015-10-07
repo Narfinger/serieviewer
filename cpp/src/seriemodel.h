@@ -44,12 +44,15 @@ public:
   bool playNewRandom();
   void cleanupSeries();
   QModelIndex playNext();  //returns the played index or invalid if nothing played
+  SeriePtr getSerieFromUuid(const QUuid& uuid) const;
   
   const static int OwnSortRole = Qt::UserRole + 1;
   bool changed = false;
+  SeriePtr lastplayed;
 private:
   int sortRole(const QModelIndex& i) const;
   void serieChanged(int row);
+  void serieStopped(SeriePtr ptr);
   
   QList<SeriePtr> list;
 };

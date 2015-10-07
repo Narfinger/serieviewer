@@ -99,6 +99,7 @@ void SerieModel::addSerie(const SeriePtr& ptr) {
   const QModelIndex i = index(row,3);
   connect(ptr.data(), &Serie::durationRead, [=] () { this->dataChanged(i,i); });
   connect(ptr.data(), &Serie::changed, [=] () { serieChanged(row); });
+  connect(ptr.data(), &Serie::stopped, [=] () { serieStopped(ptr); });
 }
 
 bool SerieModel::playRandom() {
@@ -183,6 +184,14 @@ QModelIndex SerieModel::playNext() {
   return QModelIndex();
 }
 
+SeriePtr SerieModel::getSerieFromUuid(const QUuid& uuid) const {
+  for( const SeriePtr& s : list) {
+    if (s->getUuid() == uuid)
+      return s;
+  }
+  return SeriePtr();
+}
+
 int SerieModel::sortRole(const QModelIndex& i) const {
   //this needs a bunch of work
   const SeriePtr s = serieAtIndex(i);
@@ -221,4 +230,8 @@ void SerieModel::serieChanged(int row) {
   const QModelIndex start = index(row, 0);
   const QModelIndex end   = index(row, columnCount(start));
   dataChanged(start, end);
+}
+
+void SerieModel::serieStopped(SeriePtr ptr) {
+  lastplayed = ptr;
 }

@@ -29,7 +29,7 @@ class MWindowImpl : public QMainWindow
     QHash<QUuid, Serie*> hashmap;
     QSignalMapper* spinmapper;	//!< Signal mapper for mapping QSpinBox::valueChanged -> episodeChangedInGui
     
-    SeriePtr lastplayed;
+    //SeriePtr lastplayed;
     SeriePtr lastadded;
     SeriePtr currentlyplaying;             //!< serie which is currently playing otherwise null
     
