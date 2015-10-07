@@ -47,10 +47,6 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     pm->setSourceModel(sm);
     pm->setFilterKeyColumn(0);
     ui.tableView->setModel(pm);
-	
-    //signalmapper = new QSignalMapper(this);
-//    spinmapper = new QSignalMapper(this);
-//    connect(spinmapper, SIGNAL(mapped(int)), this, SLOT(episodeChangedInGui(int))); //we need this here, else we will emit more and more signals
 
     xmlhandler = new XMLHandler( this);
 	
@@ -97,7 +93,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
         //player = DEFAULTPLAYER;
     }
 
-   // ui.numberLabel->setText(QString::number(list.size()));
+    ui.numberLabel->setText(QString::number(sm->rowCount()));
 
     //search ui
     connect(ui.searchEdit, &QLineEdit::textChanged, pm, &QSortFilterProxyModel::setFilterFixedString);
