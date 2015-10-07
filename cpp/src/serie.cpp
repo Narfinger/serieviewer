@@ -249,6 +249,7 @@ void Serie::afterFinished(int exitCode, QProcess::ExitStatus exitStatus)
             else
                 m_finished = true;
         }
+        m_workerstate = NOT_STARTED;
         emit changed();		
     }
     else

@@ -49,6 +49,7 @@ public:
   bool changed = false;
 private:
   int sortRole(const QModelIndex& i) const;
+  void serieChanged(int row);
   
   QList<SeriePtr> list;
 };

@@ -36,7 +36,7 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
       case 2: return s->getMax();
       case 3: //return s->isOngoing();
       case 4: return s->getDuration();
-    }const int OwnSortRole = Qt::UserRole + 1;
+    }
   } else if (role == Qt::DecorationRole) {
     if (index.column()==3) {
       if (s->isOngoing())
@@ -98,6 +98,7 @@ void SerieModel::addSerie(const SeriePtr& ptr) {
   
   const QModelIndex i = index(row,3);
   connect(ptr.data(), &Serie::durationRead, [=] () { this->dataChanged(i,i); });
+  connect(ptr.data(), &Serie::changed, [=] () { serieChanged(row); });
 }
 
 bool SerieModel::playRandom() {
@@ -213,4 +214,11 @@ int SerieModel::sortRole(const QModelIndex& i) const {
     double dm = static_cast<double>(s1.getEpisodeNum()) / static_cast<double>(s1.getMax());
     return (dthis > dm );Model::sortRole(const QModelIndex& i) const {
   */
+}
+
+void SerieModel::serieChanged(int row) {
+  changed = true;
+  const QModelIndex start = index(row, 0);
+  const QModelIndex end   = index(row, columnCount(start));
+  dataChanged(start, end);
 }
