@@ -51,6 +51,16 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
+bool SerieModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+  SeriePtr s = serieAtIndex(index);
+  switch(index.column()) {
+    case 0: s->setName(value.toString()); break;
+    case 1: s->setEpisode(value.toInt()); break;
+  }
+  changed = true;
+  return QAbstractTableModel::setData(index, value, role);
+}
+
 Qt::ItemFlags SerieModel::flags(const QModelIndex& index) const {
   if (!index.isValid()) return Qt::NoItemFlags;
   

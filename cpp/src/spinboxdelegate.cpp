@@ -46,8 +46,6 @@ void SpinBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, c
   QSpinBox* sb = dynamic_cast<QSpinBox*>(editor);
   sb->interpretText();
   const int value = sb->value();
-  const SeriePtr s = getSeriePtrFromIndex(index);
-  s->setEpisode(value);
   model->setData(index, value, Qt::DisplayRole);	//while we do not need to set this this calls update on the view which we need
 }
 

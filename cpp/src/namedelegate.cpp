@@ -42,8 +42,6 @@ void NameDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
 void NameDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const {
   QLineEdit* le = dynamic_cast<QLineEdit*>(editor);
   const QString value = le->text();
-  const SeriePtr s = getSeriePtrFromIndex(index);
-  s->setName(value);
   model->setData(index, value, Qt::DisplayRole);	//while we do not need to set this this calls update on the view which we need
 }
 
