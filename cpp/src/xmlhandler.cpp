@@ -150,7 +150,7 @@ bool XMLHandler::readSerie(QDomDocument &doc)
 
         QUuid uuid(elem.attribute("uuid"));
 
-        Serie *tmp = new Serie(name, dir, ongoing, max, uuid);
+        SeriePtr tmp = QSharedPointer<Serie>(new Serie(name, dir, ongoing, max, uuid));
         tmp->setEpisode(episode);
         tmp->setArguments(arguments);
         if(!player.isEmpty())

@@ -72,7 +72,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     if(!settingsfile.isNull())
        Settings::Instance()->setSettingsFilename(settingsfile);
 
-    connect(xmlhandler,SIGNAL(serieParsed(Serie*)), this,SLOT(addToList(Serie*)));
+    connect(xmlhandler,SIGNAL(serieParsed(SeriePtr)), this,SLOT(addToList(SeriePtr)));
     connect(xmlhandler,SIGNAL(askForPlayer()), this, SLOT(askForSettings()));
     //connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(cellDoubleClicked(int,int)));
 	
@@ -329,28 +329,25 @@ void MWindowImpl::addSerieRecursive()
 
 void MWindowImpl::addGuiSerie(QString path)
 {
-  /*
-    AddDialogImpl* dialog=new AddDialogImpl(&list, path, this);
+    AddDialogImpl* dialog=new AddDialogImpl(path, this);
     if(dialog->getShow())
     {
         dialog->exec();
         if(dialog->result()==QDialog::Accepted)
         {
             Settings::Instance()->setLastPath( dialog->getLastPath() );
-            Serie* result = dialog->getResult(this);
+            SeriePtr result = dialog->getResult(this);
             addToList(result);
             lastadded = result;
+	}
                         
-        }
-        changed=true;
     }
     delete dialog;
-    ui.numberLabel->setText(QString::number(list.size()));
-    */
+    ui.numberLabel->setText(QString::number(sm->rowCount()));
 }
 
 void MWindowImpl::on_deleteButton_clicked()
-{	
+{
   /*
     QTableWidgetItem* item = ui.tableView->currentItem();
     if(item!=0)
@@ -494,10 +491,8 @@ void MWindowImpl::cellDoubleClicked(int row, int column)
         serie->execActFile();*/
 }
 
-void MWindowImpl::addToList(Serie* serie)
+void MWindowImpl::addToList(SeriePtr s)
 {
-    Q_ASSERT(serie!=0);
-    QSharedPointer<Serie> s(serie);
     sm->addSerie(s);
     
     

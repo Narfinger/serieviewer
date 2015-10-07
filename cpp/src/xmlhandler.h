@@ -49,7 +49,7 @@ class XMLHandler : public QObject
     /**
        we parsed and constructed this serie
     */
-    void serieParsed(Serie*);
+    void serieParsed(SeriePtr);
     
     /**
        no file there, we need to ask for a player

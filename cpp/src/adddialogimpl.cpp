@@ -6,22 +6,28 @@
 #include <QFileDialog>
 #include <QList>
 #include <QPair>
+#include <QSharedPointer>
 
-#include "serie.h"
 #include "defines.h"
 #include "settings.h"
 
-AddDialogImpl::AddDialogImpl(QWidget *parent)
-    : QDialog(parent)
-{
+AddDialogImpl::AddDialogImpl(QWidget *parent): QDialog(parent) {
     ui.setupUi(this);
 }
 
-AddDialogImpl::AddDialogImpl( QList<Serie*> *list, QString path, QWidget *parent)
-    : QDialog(parent),
-      m_list(list)
-{
-    ui.setupUi(this);
+AddDialogImpl::AddDialogImpl(const QString& path, QWidget* parent) : QDialog(parent) {
+  ui.setupUi(this);
+  QList<Serie*> list;
+  construct(&list, path);
+}
+
+
+AddDialogImpl::AddDialogImpl(QList<Serie*> *list, const QString& path, QWidget *parent) : QDialog(parent), m_list(list) {
+  ui.setupUi(this);
+  construct(list, path);
+}
+  
+void AddDialogImpl::construct(QList<Serie*> *list, const QString& path) {
 
     //fill replacelist
     replacelist << REPLACELIST;
@@ -115,14 +121,14 @@ QString AddDialogImpl::getLastPath()
 	
 }
 
-Serie* AddDialogImpl::getResult(QObject *parent)
+SeriePtr AddDialogImpl::getResult(QObject *parent)
 {
     QDir dir(ui.pathlabel->text());
     QStringList filters;
     filters << ALLFILTERS;
     dir.setNameFilters(filters);
     int max =  dir.entryList(QDir::Files,QDir::Name).size();
-    Serie* tmp = new Serie(ui.nameline->text(), dir, ui.ongoingCheckBox->isChecked(), max, QUuid::createUuid(), parent);
+    SeriePtr tmp = QSharedPointer<Serie>(new Serie(ui.nameline->text(), dir, ui.ongoingCheckBox->isChecked(), max, QUuid::createUuid(), parent));
 	
     Q_ASSERT(tmp!=0);
     tmp->setPlayer(ui.playerComboBox->currentText());
@@ -131,7 +137,7 @@ Serie* AddDialogImpl::getResult(QObject *parent)
         tmp->setLink(QUuid());
     else
     {
-        Serie* serie = m_list->at(ui.linkBox->currentIndex() -1);
+        SeriePtr serie = QSharedPointer<Serie>(m_list->at(ui.linkBox->currentIndex() -1));
         tmp->setLink( serie->getUuid() );
     }
     return tmp;

@@ -85,7 +85,7 @@ class MWindowImpl : public QMainWindow
     
     void cellDoubleClicked(int, int);
     
-    void addToList(Serie* serie); //! add a serie to list and modify ui
+    void addToList(SeriePtr serie); //! add a serie to list and modify ui
     
     void askForSettings();
     

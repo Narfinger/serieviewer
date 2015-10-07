@@ -8,6 +8,8 @@
 
 #include "ui_adddialog.h"
 
+#include "serie.h"
+
 class Serie;
 
 /** 	@class AddDialogImpl
@@ -26,10 +28,13 @@ class AddDialogImpl : public QDialog
   public:
     AddDialogImpl(QWidget *parent = 0);
     
-    AddDialogImpl( QList<Serie*> *list, QString path = "", QWidget *parent = 0);
+    AddDialogImpl(const QString& path = "", QWidget* parent = 0);
+    AddDialogImpl(QList<Serie*> *list, const QString& path = "", QWidget *parent = 0);
     
     ~AddDialogImpl();
 		
+    
+    void construct(QList<Serie*> *list, const QString& path = "");
     /**
        do we want to show this dialog because the user selected not valid files
     */
@@ -43,7 +48,7 @@ class AddDialogImpl : public QDialog
     /**
        get the serie we constructed here
     */
-    Serie* getResult(QObject *parent = 0);
+    SeriePtr getResult(QObject *parent = 0);
     
 };
 
