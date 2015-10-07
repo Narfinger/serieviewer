@@ -135,15 +135,10 @@ bool XMLHandler::readSerie(QDomDocument &doc)
 			
         QDomElement elem = domlist.at(i).toElement();
         dir.setPath(elem.attribute("dir"));
-			
         int episode = elem.attribute("episode").toInt();
-                
         QString name = elem.text();
-			
         QString player = elem.attribute("player");
-			
         QString arguments = elem.attribute("arguments");
-			
         int max = elem.attribute("max").toInt();
 
         bool ongoing = ( elem.attribute("ongoing") == "true" );
@@ -158,7 +153,7 @@ bool XMLHandler::readSerie(QDomDocument &doc)
 
         QUuid link(elem.attribute("link"));
         tmp->setLink(link);
-		                
+
         emit serieParsed(tmp);
     }
     return true;
