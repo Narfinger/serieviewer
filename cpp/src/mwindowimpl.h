@@ -113,7 +113,7 @@ class MWindowImpl : public QMainWindow
     
     void serieStarted(); //! serie started, change the gui
     
-    void serieStopped(int snumber); //! serie stopped, change the gui
+    void serieStopped(); //! serie stopped, change the gui
     
     void rightClickPopup(QPoint point); //! right click popup
     

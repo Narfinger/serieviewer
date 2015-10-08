@@ -49,10 +49,15 @@ public:
   const static int OwnSortRole = Qt::UserRole + 1;
   bool changed = false;
   SeriePtr lastplayed;
+
+signals:
+  void serieStarted();
+  void serieStopped();
+
 private:
   int sortRole(const QModelIndex& i) const;
   void serieChanged(int row);
-  void serieStopped(SeriePtr ptr);
+  void serieStoppedF(SeriePtr ptr);
   
   QVariant getEpisodeNum(const SeriePtr& s) const { if (s->isDisabled()) return s->getReason(); else return s->getEpisodeNum(); };
   QVariant getMax(const SeriePtr& s) const        { if (s->isOngoing())  return s->getMax() -1; else return s->getMax();        };

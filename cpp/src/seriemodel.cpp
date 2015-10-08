@@ -99,7 +99,8 @@ void SerieModel::addSerie(const SeriePtr& ptr) {
   const QModelIndex i = index(row,3);
   connect(ptr.data(), &Serie::durationRead, [=] () { this->dataChanged(i,i); });
   connect(ptr.data(), &Serie::changed, [=] () { serieChanged(row); });
-  connect(ptr.data(), &Serie::stopped, [=] () { serieStopped(ptr); });
+  connect(ptr.data(), &Serie::started, [=] () { emit serieStarted(); });
+  connect(ptr.data(), &Serie::stopped, [=] () { serieStoppedF(ptr); });
 }
 
 bool SerieModel::playRandom() {
@@ -233,6 +234,7 @@ void SerieModel::serieChanged(int row) {
   dataChanged(start, end);
 }
 
-void SerieModel::serieStopped(SeriePtr ptr) {
+void SerieModel::serieStoppedF(SeriePtr ptr) {
   lastplayed = ptr;
+  emit serieStopped();
 }

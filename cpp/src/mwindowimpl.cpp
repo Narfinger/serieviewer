@@ -48,6 +48,8 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     pm->setSourceModel(sm);
     pm->setFilterKeyColumn(0);
     ui.tableView->setModel(pm);
+    connect(sm, &SerieModel::serieStarted, this, &MWindowImpl::serieStarted);
+    connect(sm, &SerieModel::serieStopped, this, &MWindowImpl::serieStopped);
 
     xmlhandler = new XMLHandler( this);
 	
@@ -841,8 +843,7 @@ void MWindowImpl::setPlayer()
     }*/
 }
 
-void MWindowImpl::serieStarted()
-{
+void MWindowImpl::serieStarted() {
    int opacity = Settings::Instance()->getOpacity();
    //SeriePtr callee = qobject_cast<Serie*>(QObject::sender());
    //if(callee.isNull())
@@ -865,8 +866,7 @@ void MWindowImpl::serieStarted()
    this->setWindowOpacity( (100 - opacity)/100.0 );
 }
 
-void MWindowImpl::serieStopped(int snumber)
-{
+void MWindowImpl::serieStopped() {
     //SeriePtr callee = qobject_cast<Serie*>(QObject::sender());
     //if(callee.isNull())
     //    qDebug() << "The callee is null (in stopped), do we really want that?";
