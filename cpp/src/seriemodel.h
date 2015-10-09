@@ -44,6 +44,7 @@ public:
   bool playNewRandom();
   void cleanupSeries();
   QModelIndex playNext();  //returns the played index or invalid if nothing played
+  void rewind();
   SeriePtr getSerieFromUuid(const QUuid& uuid) const;
   
   const static int OwnSortRole = Qt::UserRole + 1;

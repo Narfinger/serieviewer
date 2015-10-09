@@ -186,6 +186,13 @@ QModelIndex SerieModel::playNext() {
   return QModelIndex();
 }
 
+void SerieModel::rewind() {
+  if(!lastplayed.isNull() && lastplayed->getEpisodeNum()!=1) {
+    lastplayed->rewind();
+  }
+}
+
+
 SeriePtr SerieModel::getSerieFromUuid(const QUuid& uuid) const {
   for( const SeriePtr& s : list) {
     if (s->getUuid() == uuid)

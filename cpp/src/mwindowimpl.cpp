@@ -434,13 +434,9 @@ void MWindowImpl::on_playLastAddedButton_clicked()
     }
 }
 
-void MWindowImpl::on_undoButton_clicked()
-{
-    if(sm->lastplayed.isNull() && sm->lastplayed->getEpisodeNum()!=1)
-    {
-        sm->lastplayed->rewind();
-	setLastPlayedName();
-    }
+void MWindowImpl::on_undoButton_clicked() {
+  sm->rewind();
+  setLastPlayedName();
 }
 
 void MWindowImpl::on_clearButton_clicked() {
@@ -908,7 +904,7 @@ void MWindowImpl::rightClickPopup(QPoint point)
 
 
 void MWindowImpl::setLastPlayedName() {
-  if(sm->lastplayed.isNull()) {
+  if(!sm->lastplayed.isNull()) {
     if(sm->lastplayed->isFinished()){
             ui.nextLabel->setText("");
             ui.nextNameLabel->setToolTip("");

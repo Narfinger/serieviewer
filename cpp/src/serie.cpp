@@ -270,6 +270,7 @@ QString Serie::getReason()
 
 void Serie::rewind()
 {
+  qDebug() << "rewind";
     Q_ASSERT(m_dir.exists());
 
     m_finished=false;
