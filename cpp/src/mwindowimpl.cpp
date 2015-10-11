@@ -380,35 +380,27 @@ void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus) {
   if (sm->lastplayed.isNull())
     QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment.");
   else {
-    if (!sm->lastplayed->isFinished())
+    SeriePtr s;
+    if (!sm->lastplayed->isFinished()) {
+      s = sm->lastplayed;
+    } else {
+      const QUuid link = sm->lastplayed->getLink();
+      if (!link.isNull()) {
+	QMessageBox::critical(this, "No serie to play", "Serie is finished and we do not have a link");
+	return;
+      } else
+	s = sm->getSerieFromUuid(link);
+    }
+    if (!s->isReadyToPlay()) {
+      QMessageBox::critical(this, "No serie to play", "Something is wrong with the serie we would like to play");
+      return;
+    } else {
       if (from_dbus)
 	sm->lastplayed->execActFile(DBUSARGS);
       else
 	sm->lastplayed->execActFile();
+    }
   }
-    /*if(sm->lastplayed->isFinished() && sm->lastplayed->validLink()) {
-      SeriePtr serie = hashmap[lastplayed->getLink()];
-            if(from_dbus)
-                serie->execActFile(DBUSARGS);
-            else
-                serie->execActFile();
-        }
-        else
-        {
-            if(lastplayed->isDisabled() || lastplayed->isFinished())
-            {
-                QString message = "This serie is disabled or finished, we cannot play this.\n Lastplayed was: " + lastplayed->getName();
-                QMessageBox::critical(this, "Serie is disabled", message);
-            }
-            else
-            {
-                if(from_dbus)
-                    lastplayed->execActFile(DBUSARGS);
-                else
-                    lastplayed->execActFile();
-            }
-        }
-    }*/
 }
 
 void MWindowImpl::on_playNextButton_clicked() {
