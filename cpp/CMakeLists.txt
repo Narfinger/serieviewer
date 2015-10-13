@@ -24,6 +24,7 @@ set(serieviewer_SRCS
     src/serie.cpp
     src/seriedelegate.cpp
     src/serieviewerdbus.cpp
+    src/seriesortfilterproxymodel.cpp
     src/seriemodel.cpp
     src/seriemodeliterator.cpp
     src/serieview.cpp

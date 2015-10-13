@@ -294,6 +294,9 @@
       <property name="verticalScrollMode">
        <enum>QAbstractItemView::ScrollPerItem</enum>
       </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
       <attribute name="verticalHeaderVisible">
        <bool>true</bool>
       </attribute>

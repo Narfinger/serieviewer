@@ -46,8 +46,7 @@ public:
   QModelIndex playNext();  //returns the played index or invalid if nothing played
   void rewind();
   SeriePtr getSerieFromUuid(const QUuid& uuid) const;
-  
-  const static int OwnSortRole = Qt::UserRole + 1;
+
   bool changed = false;
   SeriePtr lastplayed;
 
@@ -56,7 +55,6 @@ signals:
   void serieStopped();
 
 private:
-  int sortRole(const QModelIndex& i) const;
   void serieChanged(int row);
   void serieStoppedF(SeriePtr ptr);
   

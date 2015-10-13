@@ -33,6 +33,7 @@
 #include "serie.h"
 #include "xmlhandler.h"
 #include "settings.h"
+#include "seriesortfilterproxymodel.h"
 #include "seriemodel.h"
 #include "seriemodeliterator.h"
 
@@ -42,12 +43,11 @@ MWindowImpl::MWindowImpl(QWidget *parent)
     ui.setupUi(this);
     
     sm = new SerieModel();
-    pm = new QSortFilterProxyModel(this);
-    pm->setSortRole(SerieModel::OwnSortRole);
-    pm->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    pm = new SerieSortFilterProxyModel(this);
     pm->setSourceModel(sm);
     pm->setFilterKeyColumn(0);
     ui.tableView->setModel(pm);
+    ui.tableView->setSortingEnabled(true);
     connect(sm, &SerieModel::serieStarted, this, &MWindowImpl::serieStarted);
     connect(sm, &SerieModel::serieStopped, this, &MWindowImpl::serieStopped);
 

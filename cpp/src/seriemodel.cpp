@@ -18,6 +18,7 @@
  */
 
 #include <QIcon>
+#include "settings.h"
 
 #include "seriemodel.h"
 
@@ -44,8 +45,6 @@ QVariant SerieModel::data(const QModelIndex& index, int role) const {
       else
 	return QIcon(":/icons/ongoing.png");
     }
-  } else if (role == OwnSortRole) {
-    return sortRole(index);
   }
   
   return QVariant();
@@ -199,39 +198,6 @@ SeriePtr SerieModel::getSerieFromUuid(const QUuid& uuid) const {
       return s;
   }
   return SeriePtr();
-}
-
-int SerieModel::sortRole(const QModelIndex& i) const {
-  //this needs a bunch of work
-  const SeriePtr s = serieAtIndex(i);
-  double dthis = static_cast<double>(s->getEpisodeNum()) / static_cast<double>(s->getMax());
-  return dthis;
-  
-  /*Settings* instance = Settings::Instance();
-    Q_ASSERT(instance != 0);
-    if(! instance->getOngoingSort() )		//sort ongoing normal
-    {
-        if(this->isOngoing() )
-            return false;
-        if(s1.isOngoing() )
-            return true;
-    }
-    if( instance->getPriorSort() )			//priortised sorting
-    {
-        if( this->getEpisodeNum() >1  && s1.getEpisodeNum() == 1)
-        {
-            return true;				
-        }
-        else
-            if( this->getEpisodeNum() == 1 && s1.getEpisodeNum() >1 )
-                return false;
-        //if both >1 compare and if both ==1 compare
-    }
-    
-    double dthis = static_cast<double>(this->getEpisodeNum()) / static_cast<double>(this->getMax());
-    double dm = static_cast<double>(s1.getEpisodeNum()) / static_cast<double>(s1.getMax());
-    return (dthis > dm );Model::sortRole(const QModelIndex& i) const {
-  */
 }
 
 void SerieModel::serieChanged(int row) {
