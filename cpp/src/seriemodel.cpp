@@ -242,6 +242,10 @@ void SerieModel::serieChanged(int row) {
 }
 
 void SerieModel::serieStoppedF(SeriePtr ptr) {
-  lastplayed = ptr;
+  if (ptr->isFinished() && !ptr->getLink().isNull())
+    lastplayed = getSerieFromUuid(ptr->getLink());
+  else
+    lastplayed = ptr;
+  
   emit serieStopped();
 }
