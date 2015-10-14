@@ -91,13 +91,13 @@ void AddDialogImpl::construct(const QString& path) {
 
 
         // setup the linkbox
-        ui.linkBox->addItem("No Link", -1);
-        for(int i=0; i<m_list->size(); i++)
-        {
-            Serie* serie = m_list->at(i);
-            ui.linkBox->addItem(serie->getName(), i);
+        /*ui.linkBox->addItem("No Link", -1);
+        for(int i=0; i<m_list->size(); i++) {
+	  qDebug() << i;
+          Serie* serie = m_list->at(i);
+          ui.linkBox->addItem(serie->getName(), i);
         }
-        ui.linkBox->setCurrentIndex(0);
+        ui.linkBox->setCurrentIndex(0);*/
     }
     else
         dontshow = true;
@@ -133,13 +133,11 @@ SeriePtr AddDialogImpl::getResult(QObject *parent)
     Q_ASSERT(tmp!=0);
     tmp->setPlayer(ui.playerComboBox->currentText());
     tmp->setArguments(ui.argline->text());
-    if(ui.linkBox->currentIndex()==0)
+    //if(ui.linkBox->currentIndex()==0)
         tmp->setLink(QUuid());
-    else
-    {
-        SeriePtr serie = QSharedPointer<Serie>(m_list->at(ui.linkBox->currentIndex() -1));
-        tmp->setLink( serie->getUuid() );
-    }
+    //else {
+    //    SeriePtr serie = QSharedPointer<Serie>(m_list->at(ui.linkBox->currentIndex() -1));
+    //    tmp->setLink( serie->getUuid() );
+    //}
     return tmp;
 }
-

@@ -37,6 +37,7 @@ public:
   virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { if (parent.isValid()) return 0; else return 5; };
   virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { if (parent.isValid()) return 0; else return list.size(); };
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
   
   void addSerie(const SeriePtr& ptr);
   const SeriePtr serieAtIndex(const QModelIndex& i) const { return list.at(i.row()); };

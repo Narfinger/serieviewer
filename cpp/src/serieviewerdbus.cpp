@@ -24,11 +24,6 @@ void SerieviewerAdaptor::playNext()
     mwindow->on_playNextButton_clicked();
 }
 
-void SerieviewerAdaptor::playIndex(int index)
-{
-    mwindow->playIndex(index);
-}
-
 void SerieviewerAdaptor::reload()
 {
     qDebug() << "reloaded";
@@ -48,10 +43,4 @@ void SerieviewerAdaptor::newRandom()
 QString SerieviewerAdaptor::getCurrentName()
 {
     return mwindow->getCurrentName();
-}
-
-QStringList SerieviewerAdaptor::getSerieNameList()
-{
-    QStringList* names = mwindow->getSerieListNames();
-    return *names;
 }

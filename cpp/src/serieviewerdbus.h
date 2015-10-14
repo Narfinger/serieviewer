@@ -30,12 +30,10 @@ class SerieviewerAdaptor: public QDBusAbstractAdaptor
         //this are just the methods calling the methods in MWindowImpl, check there for documentation
         void playNextInSerie();
         void playNext();
-        void playIndex(int index);
         void reload();
         void random();
         void newRandom();
         QString getCurrentName();
-        QStringList getSerieNameList();
 };
 
 #endif //class

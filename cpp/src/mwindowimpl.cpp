@@ -189,19 +189,7 @@ void MWindowImpl::buildmenus()
 void MWindowImpl::saveXML(bool sort) {
   Q_ASSERT(xmlhandler!=0);
   Settings* instance = Settings::Instance();
-  /*
-  if (!lastplayed.isNull()) {
-    if (lastplayed->isFinished() && lastplayed->validLink()) {
-      instance->setLastPlayed(lastplayed->getLink());
-    } else {
-      instance->setLastPlayed(lastplayed->getUuid());
-    }
-  }
-  if (!lastadded.isNull()) {
-    if (lastadded->validLink())
-      instance->setLastAdded(lastadded->getLink());
-  }
-  */
+
   instance->setLastPlayed(sm->lastplayed->getUuid());
   QList<SeriePtr> list;
   SerieModelIterator i(pm);
@@ -220,34 +208,9 @@ QString MWindowImpl::getCurrentName()
         return currentlyplaying->getName();
 }
 
-QStringList* MWindowImpl::getSerieListNames()
-{
-  /*
-    QStringList* names = new QStringList();
-    foreach(Serie* s, list)
-    {
-        names->append(s->getName());
-    }
-    return names;
-*/
-}
-
-void MWindowImpl::playIndex(int index)
-{
-/*   if(list.count() < index)
-        return;
-   
-    Serie* serie = list.at(index);
-    qDebug() << "Playing " + serie->getName() + " from dbus";
-    if(serie->isDisabled() || serie->isFinished())
-        return;
-    else
-        serie->execActFile(DBUSARGS);
-    */
-}
-
-void MWindowImpl::reload()
-{
+void MWindowImpl::reload() {
+  //saveXML();
+  
   /*
     ui.tableWidget->blockSignals(true); //need this because cellFocusChange
 
@@ -278,21 +241,6 @@ void MWindowImpl::reload()
     ui.tableWidget->blockSignals(false);
 
     ui.searchEdit->clear();*/
-}
-
-Serie* MWindowImpl::getSerieForUuid(QUuid uuid)
-{
-/*    if(!uuid.isNull())
-    {
-        foreach(Serie* serie, list)
-        {
-            if(uuid==serie->getUuid())
-            {
-                return serie;
-            }
-        }
-    }
-    return 0;*/
 }
 
 void MWindowImpl::about()
@@ -347,7 +295,7 @@ void MWindowImpl::addGuiSerie(QString path)
             Settings::Instance()->setLastPath( dialog->getLastPath() );
             SeriePtr result = dialog->getResult(this);
             addToList(result);
-            lastadded = result;
+            sm->changed = true;
 	}
                         
     }
@@ -355,25 +303,12 @@ void MWindowImpl::addGuiSerie(QString path)
     ui.numberLabel->setText(QString::number(sm->rowCount()));
 }
 
-void MWindowImpl::on_deleteButton_clicked()
-{
-  /*
-    QTableWidgetItem* item = ui.tableView->currentItem();
-    if(item!=0)
-    {
-        int row = item->row();
-        ui.tableWidget->removeRow(row);
-        //delete item; //it seems we should not delete this, don't know why at the moment
-        //Serie* serie = list.at(row);
-        //delete serie;
-        list.removeAt(row);
-        reload();
-        changed = true;
-        ui.numberLabel->setText(QString::number(list.size()));
-    }
-    else 
-        QMessageBox::information(this, "Delete", "You have to select an item to delete it.");
-    */
+void MWindowImpl::on_deleteButton_clicked() {
+  const QModelIndexList mil = ui.tableView->selectedIndexes();
+  if (mil.isEmpty()) { QMessageBox::information(this, "Delete", "You have to select an item to delete it"); return; }
+  
+  const QModelIndex i = mil.at(0);
+  sm->removeRows(i.row(),1);
 }
 
 void MWindowImpl::on_playNextInSerieButton_clicked(bool from_dbus) {
@@ -919,17 +854,4 @@ void MWindowImpl::setLastPlayedName() {
     ui.nextNameLabel->setText(nextepisodename);
     }
   }
-}
-
-void MWindowImpl::setDuration()
-{
-  /*
-    QObject* sender = QObject::sender();
-    QFutureWatcher<QPair<QString, int> >* futurewatcher = static_cast<QFutureWatcher<QPair<QString, int> >* >(sender);
-    QFuture<QPair<QString, int> > future =  futurewatcher->future();
-  
-    QTableWidgetItem* duration = new QTableWidgetItem(future.result().first);
-    ui.tableWidget->setItem(future.result().second, 5, duration);  
-  
-    delete futurewatcher;*/
 }

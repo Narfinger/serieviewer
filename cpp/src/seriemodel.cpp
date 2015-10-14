@@ -89,6 +89,17 @@ QVariant SerieModel::headerData(int section, Qt::Orientation orientation, int ro
   return QVariant();
 }
 
+bool SerieModel::removeRows(int row, int count, const QModelIndex& parent) {
+  beginRemoveRows(parent, row, row+count);
+  for(int i = row; i< row + count; i++) {
+    list.removeAt(row); //this is correct because QList shrinks
+  }
+  changed = true;
+  const bool result = QAbstractTableModel::removeRows(0, count, parent);
+  endRemoveRows();
+  return result;
+}
+
 void SerieModel::addSerie(const SeriePtr& ptr) {
   const int row = list.size();
   beginInsertRows(QModelIndex(), row, row);

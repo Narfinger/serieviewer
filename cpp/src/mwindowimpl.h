@@ -44,18 +44,10 @@ class MWindowImpl : public QMainWindow
     MWindowImpl(QWidget *parent = 0);
     
     ~MWindowImpl();
-      
-    /* returns the serie pointer for the uuid, could be null */
-    Serie* getSerieForUuid(QUuid uuid);
     
   public slots:
     // returns name of the last serie played (aka current)
     QString getCurrentName();
-  
-    // returns a list of all series we have
-    QStringList* getSerieListNames();
-
-    void playIndex(int index);
     
     void reload();                  //!< saves the xml and reloads the serie
     
@@ -118,7 +110,5 @@ class MWindowImpl : public QMainWindow
     void rightClickPopup(QPoint point); //! right click popup
     
     void setLastPlayedName();
-    
-    void setDuration();
 };
 #endif
