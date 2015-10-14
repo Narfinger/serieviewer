@@ -27,9 +27,11 @@
 #include "seriedelegate.h"
 
 SerieView::SerieView(QWidget* parent) : QTableView(parent) {
+  setSortingEnabled(true);
   setItemDelegateForColumn(0, new SerieDelegate());
   setItemDelegateForColumn(1, new SerieDelegate());
   setItemDelegateForColumn(3, new SerieDelegate());
+  sortByColumn(0, Qt::AscendingOrder);
 }
 
 //WARNING: we might leak qpushbuttons if we resize this and might get even multiple signals.

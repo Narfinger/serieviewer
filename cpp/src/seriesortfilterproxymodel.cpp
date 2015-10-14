@@ -42,7 +42,7 @@ bool SerieSortFilterProxyModel::lessThan(const QModelIndex& source_left, const Q
   SeriePtr right = sm_->serieAtIndex(source_right);
 
   Q_ASSERT(instance != 0);
-  if (! instance->getOngoingSort()) {
+  if (!instance->getOngoingSort()) {
         if (left->isOngoing() )
             return false;
         if (right->isOngoing() )
