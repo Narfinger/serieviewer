@@ -73,10 +73,6 @@ class MWindowImpl : public QMainWindow
 
     void on_clearButton_clicked();
     
-    void cellFocusChanged(int,int,int,int);
-    
-    void cellDoubleClicked(int, int);
-    
     void addToList(SeriePtr serie); //! add a serie to list and modify ui
     
     void askForSettings();
@@ -92,10 +88,6 @@ class MWindowImpl : public QMainWindow
     
     //! show information from the serie, at the moment only filename of next episode
     void showSerieInfo();
-    
-    void setOngoing(); //! set the marked serie as ongoing
-    
-    void setNotOngoing(); //! set the marked serie as not ongoing
 
     void rewind(); //! rewind the marked series by one episode
     

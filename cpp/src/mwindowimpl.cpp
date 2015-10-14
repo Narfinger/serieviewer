@@ -169,8 +169,6 @@ void MWindowImpl::buildmenus()
     connect(ui.actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
     
     connect(ui.actionShow_Series_Info, SIGNAL(triggered()), this, SLOT(showSerieInfo()));
-    connect(ui.actionEnable_Ongoing, SIGNAL(triggered()), this, SLOT(setOngoing()));
-    connect(ui.actionDisable_Ongoing, SIGNAL(triggered()), this, SLOT(setNotOngoing()));
     connect(ui.actionRewind_by_one, SIGNAL(triggered()), this, SLOT(rewind()));
     connect(ui.actionSet_the_link, SIGNAL(triggered()), this, SLOT(setLink()));
     connect(ui.actionSet_player, SIGNAL(triggered()), this, SLOT(setPlayer()));
@@ -251,41 +249,21 @@ void MWindowImpl::about()
     QMessageBox::about ( this, QString("Versioninfo"), message );
 }
 
-void MWindowImpl::addSerieRecursive()
-{
-  /*
-    const int oldsize = list.size();
-    QString dirstring = QFileDialog::getExistingDirectory(this, "Open Dir for Recursive", Settings::Instance()->getLastPath(), 
-							  QFileDialog::ShowDirsOnly);
-    if(!dirstring.isEmpty())
-    {
-        QDir dir(dirstring);
-        for(const QFileInfo& d : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot))
-	{
-	    if(d.isDir())
-		addGuiSerie(d.absoluteFilePath());
-	}
-	
-	//set lastpath we need to check if somebody added series, this is not nice but i don't know any other way really
-	//I know this is a hack and ideally addGuiSerie should just return a bool
-	if(oldsize != list.size())
-	{
-	    //setup links
-	    for(int i = oldsize; i<list.size()-1; i++)
-	    {
-		Serie* s = list.at(i);
-		Serie* next = list.at(i+1);
-		s->setLink(next->getUuid());
-		qDebug() << "linking:" << s->getName() << "to" << next->getName();
-	    }
-	    dir.cdUp();
-	    Settings::Instance()->setLastPath(dir.absolutePath());
-	}
-    }*/
+void MWindowImpl::addSerieRecursive() {
+  const QString dirstring = QFileDialog::getExistingDirectory(this, "Open Dir for Recursive", Settings::Instance()->getLastPath(), 
+							      QFileDialog::ShowDirsOnly);
+  if(!dirstring.isEmpty()) {
+    QDir dir(dirstring);
+    for(const QFileInfo& d : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+      if(d.isDir())
+	addGuiSerie(d.absoluteFilePath());
+    }
+    dir.cdUp();
+    Settings::Instance()->setLastPath(dir.absolutePath());
+  }
 }
 
-void MWindowImpl::addGuiSerie(QString path)
-{
+void MWindowImpl::addGuiSerie(QString path) {
     AddDialogImpl* dialog=new AddDialogImpl(path, this);
     if(dialog->getShow())
     {
@@ -297,7 +275,6 @@ void MWindowImpl::addGuiSerie(QString path)
             addToList(result);
             sm->changed = true;
 	}
-                        
     }
     delete dialog;
     ui.numberLabel->setText(QString::number(sm->rowCount()));
@@ -370,135 +347,8 @@ void MWindowImpl::on_clearButton_clicked() {
     ui.searchEdit->clear();
 }
 
-void MWindowImpl::cellFocusChanged(int currentrow, int currentcolumn, int previousrow, int previouscolumn)
-{/*
-    Q_UNUSED(currentcolumn);
-    Q_UNUSED(previousrow);
-    Q_UNUSED(previouscolumn);
-    
-//    qDebug() << "currentrow:" << currentrow << "listsize:" << list.size();
-
-/*
-  if currentrow==-1 we most likely have no cells hence we don't do anything
-  if we call this programm in the gui, then we use the 0 everywhere, but 0 is a valid row
-*/
-/*
-    if( (currentrow!=previousrow || currentrow==0 ) && currentrow!=-1) 
-    {
-        Serie* serie = list.at(currentrow);
-        Q_ASSERT(serie!=0);
-        QAction* showinfoaction = ui.actionShow_Series_Info;
-        QAction* ongoingaction = ui.actionEnable_Ongoing;
-        QAction* notongoingaction = ui.actionDisable_Ongoing;
-        QAction* rewindaction = ui.actionRewind_by_one;
-        QAction* playeraction = ui.actionSet_player;
-        Q_UNUSED(playeraction);
-    
-        if(serie->isOngoing())
-        {
-            ongoingaction->setEnabled(false);
-            notongoingaction->setEnabled(true);
-        }
-        else
-        {
-            ongoingaction->setEnabled(true);
-            notongoingaction->setEnabled(false);
-        }
-
-        if(serie->getEpisodeNum()==1)
-            rewindaction->setEnabled(false);
-        else
-            rewindaction->setEnabled(true);
-
-        if(serie->isDisabled())
-            showinfoaction->setEnabled(false);
-        else
-            showinfoaction->setEnabled(true);
-    }*/
-}
-
-void MWindowImpl::cellDoubleClicked(int row, int column)
-{
-  /*
-    Q_UNUSED(column);
-    Serie* serie = list.at(row);
-    if(!serie->isDisabled() && !serie->isFinished())
-        serie->execActFile();*/
-}
-
-void MWindowImpl::addToList(SeriePtr s)
-{
+void MWindowImpl::addToList(SeriePtr s) {
     sm->addSerie(s);
-    
-    
-    /*hashmap.insert(serie->getUuid(), serie);
-    Q_ASSERT(serie->getUuid() == hashmap[serie->getUuid()]->getUuid() );
-
-    serie->setIndex(list.size());	//the old size is the exact position where the new element comes in
-    list.append(serie);
-    
-    //disable after serie started
-    connect(serie, SIGNAL(started()), this, SLOT(serieStarted()));
-    connect(serie, SIGNAL(stopped(int)), this, SLOT(serieStopped(int)));
-	
-    connect(serie, SIGNAL(changed(int)), this, SLOT(episodeChangedInSerie(int)));
-    QTableWidgetItem* name = new QTableWidgetItem(serie->getName());
-    name->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    name->setToolTip(serie->getDir());
-
-    QSpinBox* sbox = new QSpinBox();
-    sbox->setMinimum(1);
-    sbox->setMaximum(serie->getMax());
-    sbox->setValue(serie->getEpisodeNum());
-    sbox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
-
-    //if ongoing we show the actual max but the getmax is one up to have a nice spinbox
-    int maximum;
-    if(serie->isOngoing())
-        maximum = serie->getMax() - 1;
-    else
-        maximum = serie->getMax();
-  
-    QTableWidgetItem* max = new QTableWidgetItem( QString::number( maximum ) );
-    max->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    
-    QTableWidgetItem* ongoing = new QTableWidgetItem();
-    if(serie->isOngoing())
-    {
-        QIcon icon(":/icons/button_ok.png");
-        ongoing->setIcon(icon);
-    }
-
-    QPushButton* button = new QPushButton("Play");
-    button->setToolTip("Play serie: \"" + serie->getName() + "\"");
-    connect(button,SIGNAL(clicked()), serie, SLOT(execActFile()));
-
-    if( Settings::Instance()->getScanMedia())
-    {
-        QFuture<QPair<QString, int> > futureduration = QtConcurrent::run(serie,
-                                                                         &Serie::getDuration);
-        QFutureWatcher<QPair<QString, int> >* m_futureWatcher = new QFutureWatcher<QPair<QString, int> >();
-        m_futureWatcher->setFuture(futureduration);
-        connect(m_futureWatcher, SIGNAL(finished()), this, SLOT(setDuration()));
-    }
-
-    int row = ui.tableWidget->rowCount();
-    ui.tableWidget->insertRow(row);
-    ui.tableWidget->setItem(row, 0, name);
-    ui.tableWidget->setCellWidget(row, 1, sbox);
-    ui.tableWidget->setItem(row, 2, max);
-    ui.tableWidget->setItem(row, 3, ongoing);
-    ui.tableWidget->setCellWidget(row, 4, button);
-
-    //do something if is ongoing and no episodes left
-    if(serie->isDisabled() )
-        setGui( list.size() -1);
-    sbox->setValue(serie->getEpisodeNum());
-    
-    //connect the spinmapper after setup, otherwise this gets weird
-    spinmapper->removeMappings(sbox);
-    connect(sbox,SIGNAL(valueChanged(int)), spinmapper, SLOT(map()));
-    spinmapper->setMapping(sbox, serie->getIndex());*/
 }
 
 void MWindowImpl::askForSettings()
@@ -564,132 +414,6 @@ void MWindowImpl::showSerieInfo() {
       }
     }
   }*/
-}
-
-void MWindowImpl::setOngoing()
-{
-  /*
-    QTableWidgetItem* item = ui.tableWidget->currentItem();
-    if(item!=0)
-    {
-        int snumber = item->row();
-        Serie* serie = list.at(snumber);
-        Q_ASSERT(serie!=0);
-        Q_ASSERT(!serie->isOngoing());
-        if(!serie->isOngoing())
-        {
-            serie->setOngoing(true);
-        
-            disconnect(serie,0,0,0);
-            ui.tableWidget->removeCellWidget(snumber,1);
-            
-            QPushButton* button = qobject_cast<QPushButton*>(ui.tableWidget->cellWidget(snumber,4));
-            if(serie->isDisabled()==false) // need to check this because ongoing series are never finished
-            {
-                connect(serie, SIGNAL(changed(int)), this, SLOT(episodeChangedInSerie(int)));	
-                QSpinBox* sbox = new QSpinBox();
-                sbox->setMinimum(1);
-                sbox->setMaximum(serie->getMax());
-                sbox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
-                
-                //if ongoing we show the actual max but the getmax is one up to have a nice spinbox
-                int maximum = serie->getMax();
-                
-                QTableWidgetItem* max = new QTableWidgetItem( QString::number( maximum ) );
-                max->setFlags(Qt::ItemIsEnabled);
-            
-
-                button->setEnabled(true);
-                
-                ui.tableWidget->setCellWidget(snumber, 1, sbox);
-            
-                sbox->setValue(serie->getEpisodeNum());
-
-                spinmapper->removeMappings(sbox);
-                connect(sbox,SIGNAL(valueChanged(int)), spinmapper, SLOT(map()));
-                spinmapper->setMapping(sbox, serie->getIndex());
-            }
-            else
-            {
-                QLineEdit* lineedit = new QLineEdit();
-                lineedit->setReadOnly(true);
-
-                ui.tableWidget->setCellWidget(snumber,1,lineedit);
-                lineedit->insert("None Left");
-                
-                button->setEnabled(false);
-            }
-
-            QTableWidgetItem* ongoing = new QTableWidgetItem();
-            QIcon icon(":/icons/button_ok.png");
-            ongoing->setIcon(icon);
-            ui.tableWidget->setItem(snumber, 3, ongoing);
-                
-            cellFocusChanged(snumber,0,0,0);
-            changed = true;
-        }
-    }*/
-}
-
-void MWindowImpl::setNotOngoing()
-{
-  /*
-    QTableWidgetItem* item = ui.tableWidget->currentItem();
-    if(item!=0)
-    {
-        int snumber = item->row();
-        Q_ASSERT(snumber!=-1);
-        Serie* serie = list.at(snumber);
-        Q_ASSERT(serie!=0);
-        if(serie->isOngoing())
-        {
-            serie->setOngoing(false);
-            
-            // This is copy and pasted, i should better just use a function but on the first try it didn't work
-            
-            
-            //remove the old one, this seems to be important, otherwise there are somehow 2 widgets
-            disconnect(serie,0,0,0);
-            ui.tableWidget->removeCellWidget(snumber,1);
-            
-            
-            QPushButton* button = qobject_cast<QPushButton*>(ui.tableWidget->cellWidget(snumber,4));
-            if(serie->isFinished()==false)
-            {
-                connect(serie, SIGNAL(changed(int)), this, SLOT(episodeChangedInSerie(int)));	
-                QSpinBox* sbox = new QSpinBox();
-                sbox->setMinimum(1);
-                sbox->setMaximum(serie->getMax());
-                sbox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
-                
-                //if ongoing we show the actual max but the getmax is one up to have a nice spinbox
-                int maximum = serie->getMax();
-                
-                QTableWidgetItem* max = new QTableWidgetItem( QString::number( maximum ) );
-                max->setFlags(Qt::ItemIsEnabled);
-                
-                button->setEnabled(true);
-                ui.tableWidget->setCellWidget(snumber, 1, sbox);
-                sbox->setValue(serie->getEpisodeNum());
-            }
-            else
-            {
-                QLineEdit* lineedit = new QLineEdit();
-                lineedit->setReadOnly(true);
-                ui.tableWidget->setCellWidget(snumber,1,lineedit);
-                lineedit->insert("Finished");
-                
-                button->setEnabled(false);
-            }
-            
-            QTableWidgetItem* ongoing = new QTableWidgetItem();
-            ui.tableWidget->setItem(snumber, 3, ongoing);
-            
-    
-            cellFocusChanged(snumber,0,0,0);
-            changed = true;
-        }
-    }*/
 }
 
 void MWindowImpl::rewind()

@@ -332,8 +332,6 @@
      <string>Serie</string>
     </property>
     <addaction name="actionShow_Series_Info"/>
-    <addaction name="actionEnable_Ongoing"/>
-    <addaction name="actionDisable_Ongoing"/>
     <addaction name="actionRewind_by_one"/>
     <addaction name="actionSet_the_link"/>
     <addaction name="actionSet_player"/>
