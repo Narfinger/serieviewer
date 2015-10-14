@@ -40,78 +40,76 @@
 MWindowImpl::MWindowImpl(QWidget *parent)
     : QMainWindow(parent)
 {
-    ui.setupUi(this);
+  ui.setupUi(this);
     
-    sm = new SerieModel();
-    pm = new SerieSortFilterProxyModel(this);
-    pm->setSourceModel(sm);
-    pm->setFilterKeyColumn(0);
-    ui.tableView->setModel(pm);
-    ui.tableView->setSortingEnabled(true);
-    connect(sm, &SerieModel::serieStarted, this, &MWindowImpl::serieStarted);
-    connect(sm, &SerieModel::serieStopped, this, &MWindowImpl::serieStopped);
+  sm = new SerieModel();
+  pm = new SerieSortFilterProxyModel(this);
+  pm->setSourceModel(sm);
+  pm->setFilterKeyColumn(0);
+  ui.tableView->setModel(pm);
+  ui.tableView->setSortingEnabled(true);
+  connect(sm, &SerieModel::serieStarted, this, &MWindowImpl::serieStarted);
+  connect(sm, &SerieModel::serieStopped, this, &MWindowImpl::serieStopped);
 
-    xmlhandler = new XMLHandler( this);
+  xmlhandler = new XMLHandler( this);
 	
 
-    //load settings
-    QSettings settings(FIRMNAME, APPNAME);
-    {
-        settings.beginGroup("mainwindow");
-        ui.tableView->setColumnWidth(0, settings.value("col0", NAMESIZE).toInt());
-        ui.tableView->setColumnWidth(1, settings.value("col1", ACTSIZE).toInt());
-        ui.tableView->setColumnWidth(2, settings.value("col2", EPISODESIZE).toInt());
-        ui.tableView->setColumnWidth(3, settings.value("col3", ONGOINGSIZE).toInt());
-        ui.tableView->setColumnWidth(4, settings.value("col4", WATCHBSIZE).toInt());
-        ui.tableView->setColumnWidth(5, settings.value("col5", DURATIONSIZE).toInt());
-			
-        QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-        QSize size = settings.value("size", QSize(650, 480)).toSize();
-        resize(size);
-        move(pos);
-        settings.endGroup();
-    }
-    QString settingsfile = settings.value("settingsfile").toString();
-    if(!settingsfile.isNull())
-       Settings::Instance()->setSettingsFilename(settingsfile);
+  //load settings
+  QSettings settings(FIRMNAME, APPNAME);
+  {
+    settings.beginGroup("mainwindow");
+    ui.tableView->setColumnWidth(0, settings.value("col0", NAMESIZE).toInt());
+    ui.tableView->setColumnWidth(1, settings.value("col1", ACTSIZE).toInt());
+    ui.tableView->setColumnWidth(2, settings.value("col2", EPISODESIZE).toInt());
+    ui.tableView->setColumnWidth(3, settings.value("col3", ONGOINGSIZE).toInt());
+    ui.tableView->setColumnWidth(4, settings.value("col4", WATCHBSIZE).toInt());
+    ui.tableView->setColumnWidth(5, settings.value("col5", DURATIONSIZE).toInt());
 
-    connect(xmlhandler,SIGNAL(serieParsed(SeriePtr)), this,SLOT(addToList(SeriePtr)));
-    connect(xmlhandler,SIGNAL(askForPlayer()), this, SLOT(askForSettings()));
-    //connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(cellDoubleClicked(int,int)));
-	
-    buildmenus();
+    QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
+    QSize size = settings.value("size", QSize(650, 480)).toSize();
+    resize(size);
+    move(pos);
+    settings.endGroup();
+  }
+  QString settingsfile = settings.value("settingsfile").toString();
+  if(!settingsfile.isNull())
+    Settings::Instance()->setSettingsFilename(settingsfile);
 
-    if(!xmlhandler->read())
-    {
-        qDebug() << "Couldn't read any data. If you don't change anything you might recover the file.";
-        // QFile backup(BFILENAME);
-        // QFile file(FILENAME);
-        // if(file.exists())
-        // {
-        //     qDebug() << "try to copy";
-        //     if(backup.exists())
-        //         backup.remove();
-        //     file.copy(BFILENAME);
-        // }
-        //player = DEFAULTPLAYER;
-    }
+  connect(xmlhandler,SIGNAL(serieParsed(SeriePtr)), this,SLOT(addToList(SeriePtr)));
+  connect(xmlhandler,SIGNAL(askForPlayer()), this, SLOT(askForSettings()));
+  //connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(cellDoubleClicked(int,int)));
 
-    ui.numberLabel->setText(QString::number(sm->rowCount()));
+  buildmenus();
 
-    //search ui
-    connect(ui.searchEdit, &QLineEdit::textChanged, pm, &QSortFilterProxyModel::setFilterFixedString);
-    ui.clearButton->setEnabled(true);
-    ui.searchEdit->setEnabled(true);
-    ui.filterLabel->setEnabled(true);
-    
-    // setup the context menu for items in tablewidget
-    ui.tableView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui.tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(rightClickPopup(QPoint)));
+  if(!xmlhandler->read()) {
+    qDebug() << "Couldn't read any data. If you don't change anything you might recover the file.";
+    // QFile backup(BFILENAME);
+    // QFile file(FILENAME);
+    // if(file.exists())
+    // {
+    //     qDebug() << "try to copy";
+    //     if(backup.exists())
+    //         backup.remove();
+    //     file.copy(BFILENAME);
+    // }
+    //player = DEFAULTPLAYER;
+  }
+  ui.numberLabel->setText(QString::number(sm->rowCount()));
 
-    QUuid uuidplayed = Settings::Instance()->getLastPlayed();
-    sm->lastplayed = sm->getSerieFromUuid(uuidplayed);
-    setLastPlayedName();
-    
+  //search ui
+  connect(ui.searchEdit, &QLineEdit::textChanged, pm, &QSortFilterProxyModel::setFilterFixedString);
+  ui.clearButton->setEnabled(true);
+  ui.searchEdit->setEnabled(true);
+  ui.filterLabel->setEnabled(true);
+  
+  // setup the context menu for items in tablewidget
+  ui.tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui.tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(rightClickPopup(QPoint)));
+
+  QUuid uuidplayed = Settings::Instance()->getLastPlayed();
+  sm->lastplayed = sm->getSerieFromUuid(uuidplayed);
+  setLastPlayedName();
+   
 /*
     {
         currentlyplaying = 0;
@@ -129,8 +127,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
 }
 
 
-MWindowImpl::~MWindowImpl()
-{
+MWindowImpl::~MWindowImpl() {
     Q_ASSERT(xmlhandler!=0);
 
     QSettings settings(FIRMNAME, APPNAME);
@@ -159,29 +156,28 @@ MWindowImpl::~MWindowImpl()
     }
 }
 
-void MWindowImpl::buildmenus()
-{
-    connect(ui.actionAdd_recursive, SIGNAL(triggered()), this, SLOT(addSerieRecursive()));
-    connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(askForSettings()));
-    connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(reload()));
-    connect(ui.actionClean_up_Series, SIGNAL(triggered()), this, SLOT(cleanupSeries()));
-    connect(ui.actionQuit_without_saving, SIGNAL(triggered()), this, SLOT(quitWithoutSaving()));
-    connect(ui.actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-    
-    connect(ui.actionShow_Series_Info, SIGNAL(triggered()), this, SLOT(showSerieInfo()));
-    connect(ui.actionRewind_by_one, SIGNAL(triggered()), this, SLOT(rewind()));
-    connect(ui.actionSet_the_link, SIGNAL(triggered()), this, SLOT(setLink()));
-    connect(ui.actionSet_player, SIGNAL(triggered()), this, SLOT(setPlayer()));
-    
-    connect(ui.actionRandom, SIGNAL(triggered()), this, SLOT(random()));
-    connect(ui.actionNewRandom, SIGNAL(triggered()), this, SLOT(newRandom()));
-    connect(ui.actionPlay_next_in_Series, SIGNAL(triggered()), this, SLOT(on_playNextInSerieButton_clicked()));
-    connect(ui.actionPlay_last_added, SIGNAL(triggered()), this, SLOT(on_playLastAddedButton_clicked()));
-    connect(ui.actionPlay_next, SIGNAL(triggered()), this, SLOT(on_playNextButton_clicked()));
-    connect(ui.actionUndo_last_play, SIGNAL(triggered()), this, SLOT(on_undoButton_clicked()));
-    
-    connect(ui.actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-    connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+void MWindowImpl::buildmenus() {
+  connect(ui.actionAdd_recursive, SIGNAL(triggered()), this, SLOT(addSerieRecursive()));
+  connect(ui.actionSettings, SIGNAL(triggered()), this, SLOT(askForSettings()));
+  connect(ui.actionRefresh, SIGNAL(triggered()), this, SLOT(reload()));
+  connect(ui.actionClean_up_Series, SIGNAL(triggered()), this, SLOT(cleanupSeries()));
+  connect(ui.actionQuit_without_saving, SIGNAL(triggered()), this, SLOT(quitWithoutSaving()));
+  connect(ui.actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+  connect(ui.actionShow_Series_Info, SIGNAL(triggered()), this, SLOT(showSerieInfo()));
+  connect(ui.actionRewind_by_one, SIGNAL(triggered()), this, SLOT(rewind()));
+  connect(ui.actionSet_the_link, SIGNAL(triggered()), this, SLOT(setLink()));
+  connect(ui.actionSet_player, SIGNAL(triggered()), this, SLOT(setPlayer()));
+
+  connect(ui.actionRandom, SIGNAL(triggered()), this, SLOT(random()));
+  connect(ui.actionNewRandom, SIGNAL(triggered()), this, SLOT(newRandom()));
+  connect(ui.actionPlay_next_in_Series, SIGNAL(triggered()), this, SLOT(on_playNextInSerieButton_clicked()));
+  connect(ui.actionPlay_last_added, SIGNAL(triggered()), this, SLOT(on_playLastAddedButton_clicked()));
+  connect(ui.actionPlay_next, SIGNAL(triggered()), this, SLOT(on_playNextButton_clicked()));
+  connect(ui.actionUndo_last_play, SIGNAL(triggered()), this, SLOT(on_undoButton_clicked()));
+
+  connect(ui.actionAbout_Qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+  connect(ui.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 }
 
 void MWindowImpl::saveXML(bool sort) {
@@ -198,8 +194,7 @@ void MWindowImpl::saveXML(bool sort) {
     QMessageBox::critical(this,"Error in save", "Can't save data!\n All changes will were not saved");
 }
 
-QString MWindowImpl::getCurrentName()
-{
+QString MWindowImpl::getCurrentName() {
     if(currentlyplaying==0)
         return QString();
     else
@@ -207,42 +202,13 @@ QString MWindowImpl::getCurrentName()
 }
 
 void MWindowImpl::reload() {
-  //saveXML();
-  
-  /*
-    ui.tableWidget->blockSignals(true); //need this because cellFocusChange
-
-    // save lastplayed
-    QUuid lastplayeduuid = QUuid();
-    if(lastplayed!=0)
-        lastplayeduuid = lastplayed->getUuid();
-
-    saveXML(Settings::Instance()->getReloadSort());
-    foreach(Serie* tmp, list)
-        tmp->deleteLater();
-    list.clear();
-    ui.tableWidget->clearContents();
-    while(ui.tableWidget->rowCount() !=0 )
-        ui.tableWidget->removeRow(ui.tableWidget->rowCount() -1 );
-    
-    if(!xmlhandler->read())
-    {
-        qDebug() << "Couldn't read any data.";
-    }
-    ui.numberLabel->setText(QString::number(list.size()));
-
-    lastplayed = getSerieForUuid(lastplayeduuid);
-    setLastPlayedName();
-    
-    qDebug() << "reloaded";
-
-    ui.tableWidget->blockSignals(false);
-
-    ui.searchEdit->clear();*/
+  saveXML();
+  sm->removeRows(0,sm->rowCount());
+  xmlhandler->read();
+  ui.searchEdit->clear();
 }
 
-void MWindowImpl::about()
-{
+void MWindowImpl::about() {
     QString message;
     message.append("This programm comes with no warranty.\n\n You are using Version: ");
     message.append(PROGRAMMVERSION);
@@ -264,20 +230,18 @@ void MWindowImpl::addSerieRecursive() {
 }
 
 void MWindowImpl::addGuiSerie(QString path) {
-    AddDialogImpl* dialog=new AddDialogImpl(path, this);
-    if(dialog->getShow())
-    {
-        dialog->exec();
-        if(dialog->result()==QDialog::Accepted)
-        {
-            Settings::Instance()->setLastPath( dialog->getLastPath() );
-            SeriePtr result = dialog->getResult(this);
-            addToList(result);
-            sm->changed = true;
-	}
+  AddDialogImpl* dialog=new AddDialogImpl(path, this);
+  if(dialog->getShow()) {
+    dialog->exec();
+    if(dialog->result()==QDialog::Accepted) {
+      Settings::Instance()->setLastPath( dialog->getLastPath() );
+      SeriePtr result = dialog->getResult(this);
+      addToList(result);
+      sm->changed = true;
     }
-    delete dialog;
-    ui.numberLabel->setText(QString::number(sm->rowCount()));
+  }
+  delete dialog;
+  ui.numberLabel->setText(QString::number(sm->rowCount()));
 }
 
 void MWindowImpl::on_deleteButton_clicked() {
@@ -327,15 +291,13 @@ void MWindowImpl::on_playNextButton_clicked() {
   QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment");
 }
 
-void MWindowImpl::on_playLastAddedButton_clicked()
-{
-    if(lastadded==0)
-        QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment (no last added).");
-    else
-    {
-        if(!lastadded->isDisabled())
-            lastadded->execActFile();
-    }
+void MWindowImpl::on_playLastAddedButton_clicked() {
+  if(lastadded==0)
+    QMessageBox::critical(this, "No serie to play", "There isn't any serie we can play at the moment (no last added).");
+  else {
+    if(!lastadded->isDisabled())
+      lastadded->execActFile();
+  }
 }
 
 void MWindowImpl::on_undoButton_clicked() {
@@ -344,38 +306,36 @@ void MWindowImpl::on_undoButton_clicked() {
 }
 
 void MWindowImpl::on_clearButton_clicked() {
-    ui.searchEdit->clear();
+  ui.searchEdit->clear();
 }
 
 void MWindowImpl::addToList(SeriePtr s) {
-    sm->addSerie(s);
+  sm->addSerie(s);
 }
 
-void MWindowImpl::askForSettings()
-{
-    //ask if player exists mit QValidator ableitung davon
-    SettingsDialogImpl* dialog = new SettingsDialogImpl(this);
-    dialog->exec();
-	
-    QString errorstring = "You have not configured a player software, defaulting to ";
-    errorstring.append(DEFAULTPLAYER);
-    errorstring.append("\nThis will probably not work on your system.\n Change the settings in the config.");
+void MWindowImpl::askForSettings() {
+  //ask if player exists mit QValidator ableitung davon
+  SettingsDialogImpl* dialog = new SettingsDialogImpl(this);
+  dialog->exec();
 
-    if(Settings::Instance()->noPlayer())
-    {
-        QMessageBox::critical(this, "Player choosen", errorstring);
-        Settings::Instance()->addPlayer( DEFAULTPLAYER ,"");
-        //changed = true;
-    }
-    else
+  QString errorstring = "You have not configured a player software, defaulting to ";
+  errorstring.append(DEFAULTPLAYER);
+  errorstring.append("\nThis will probably not work on your system.\n Change the settings in the config.");
+
+  if(Settings::Instance()->noPlayer()) {
+    QMessageBox::critical(this, "Player choosen", errorstring);
+    Settings::Instance()->addPlayer( DEFAULTPLAYER ,"");
+    //changed = true;
+  } else {
         if(dialog->result() == QDialog::Accepted)
+	    delete dialog;
             //changed = true;
-    delete dialog;
+  }
 }
 
 void MWindowImpl::random() {
-   if (!sm->playRandom())
-     QMessageBox::critical(this, "Error", "All messages done or empty.");
+  if (!sm->playRandom())
+    QMessageBox::critical(this, "Error", "All messages done or empty.");
 }
 
 void MWindowImpl::newRandom() {
@@ -383,8 +343,7 @@ void MWindowImpl::newRandom() {
     QMessageBox::critical(this, "Error", "All messages done or empty.");
 }
 
-void MWindowImpl::cleanupSeries()
-{  
+void MWindowImpl::cleanupSeries() {
   QMessageBox::StandardButton answer = QMessageBox::question (this, "Cleanup Series?", 
                                                                 "Do you want to cleanup series, which will delete series with no directory?", 
                                                                 QMessageBox::Ok | QMessageBox::Cancel);
@@ -392,10 +351,9 @@ void MWindowImpl::cleanupSeries()
     sm->cleanupSeries();
 }
 
-void MWindowImpl::quitWithoutSaving()
-{
-    sm->changed = false;
-    qApp->quit();
+void MWindowImpl::quitWithoutSaving() {
+  sm->changed = false;
+  qApp->quit();
 }
 
 void MWindowImpl::showSerieInfo() {
@@ -416,8 +374,7 @@ void MWindowImpl::showSerieInfo() {
   }*/
 }
 
-void MWindowImpl::rewind()
-{
+void MWindowImpl::rewind() {
   /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
@@ -440,8 +397,7 @@ void MWindowImpl::rewind()
 */
 }
 
-void MWindowImpl::setLink()
-{
+void MWindowImpl::setLink() {
   /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
@@ -469,8 +425,7 @@ void MWindowImpl::setLink()
 */
 }
 
-void MWindowImpl::setPlayer()
-{
+void MWindowImpl::setPlayer() {
   /*
     QTableWidgetItem* item = ui.tableWidget->currentItem();
     if(item!=0)
@@ -514,43 +469,32 @@ void MWindowImpl::serieStarted() {
 }
 
 void MWindowImpl::serieStopped() {
-    //SeriePtr callee = qobject_cast<Serie*>(QObject::sender());
-    //if(callee.isNull())
-    //    qDebug() << "The callee is null (in stopped), do we really want that?";
-        
-    //currentlyplaying = 0;
+  ui.tableView->setEnabled(true);
+  ui.deleteButton->setEnabled(true);
+  ui.menubar->setEnabled(true);
+  ui.playNextButton->setEnabled(true);
+  ui.playNextInSerieButton->setEnabled(true);
+  ui.playLastAddedButton->setEnabled(true);
+  ui.undoButton->setEnabled(true);
 
-    ui.tableView->setEnabled(true);
-    ui.deleteButton->setEnabled(true);
-    ui.menubar->setEnabled(true);
-    ui.playNextButton->setEnabled(true);
-    ui.playNextInSerieButton->setEnabled(true);
-    ui.playLastAddedButton->setEnabled(true);
-    ui.undoButton->setEnabled(true);
+  ui.searchEdit->setEnabled(true);
+  ui.clearButton->setEnabled(true);
 
-    ui.searchEdit->setEnabled(true);
-    ui.clearButton->setEnabled(true);
-
-    this->setWindowOpacity ( 1.0);
-
-    //lastplayed = callee;
-        
-    setLastPlayedName();
+  this->setWindowOpacity ( 1.0);
+  setLastPlayedName();
 }
 
-void MWindowImpl::rightClickPopup(QPoint point)
-{
-    const QModelIndex index = ui.tableView->indexAt(point);
+void MWindowImpl::rightClickPopup(QPoint point) {
+  const QModelIndex index = ui.tableView->indexAt(point);
 
-    // this gets cast to NULL if it is not a QPushButton
-    const QPushButton* button = qobject_cast<QPushButton*>(ui.tableView->indexWidget(index)); 
+  // this gets cast to NULL if it is not a QPushButton
+  const QPushButton* button = qobject_cast<QPushButton*>(ui.tableView->indexWidget(index)); 
 
-    if(!index.isValid() || button!=0)
-        return;
-    else
-    {
-      ui.menuSerie->popup(ui.tableView->mapToGlobal(point));
-    }
+  if(!index.isValid() || button!=0)
+    return;
+  else {
+    ui.menuSerie->popup(ui.tableView->mapToGlobal(point));
+  }
 }
 
 
