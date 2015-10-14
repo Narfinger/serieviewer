@@ -44,7 +44,7 @@ QWidget* SerieDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem
     editor->setMaximum(max);
     return editor;
   } else if (index.column() == 3) {
-    QCheckBox* editor = new QCheckBox(parent);
+    QCheckBox* editor = new QCheckBox("....", parent);
     
     const bool val = getSeriePtrFromIndex(index)->isOngoing();
     if (val)
