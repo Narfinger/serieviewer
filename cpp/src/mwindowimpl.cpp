@@ -184,7 +184,8 @@ void MWindowImpl::saveXML(bool sort) {
   Q_ASSERT(xmlhandler!=0);
   Settings* instance = Settings::Instance();
 
-  instance->setLastPlayed(sm->lastplayed->getUuid());
+  if (!sm->lastplayed.isNull())
+    instance->setLastPlayed(sm->lastplayed->getUuid());
   QList<SeriePtr> list;
   SerieModelIterator i(pm);
   while (i.hasNext())
