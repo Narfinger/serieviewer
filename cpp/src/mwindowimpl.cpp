@@ -195,6 +195,17 @@ void MWindowImpl::saveXML(bool sort) {
     QMessageBox::critical(this,"Error in save", "Can't save data!\n All changes will were not saved");
 }
 
+const QModelIndex MWindowImpl::selectedTranslatedIndex() const {
+  const QModelIndexList il = ui.tableView->selectedIndexes();
+  if (!il.isEmpty()) {
+    const QModelIndex i = il.at(0);
+    if (i.isValid()) {
+      return pm->mapToSource(i);
+    }
+  }
+  return QModelIndex();
+}
+
 QString MWindowImpl::getCurrentName() {
     if(currentlyplaying==0)
         return QString();
@@ -358,6 +369,10 @@ void MWindowImpl::quitWithoutSaving() {
 }
 
 void MWindowImpl::showSerieInfo() {
+  const QModelIndex i = selectedTranslatedIndex();
+  SeriePtr s = sm->getSerieFromIndex(i);
+  InfoDialogImpl infodialog(this, s);
+  infodialog.exec();
   /*const QModelIndexList il = ui.tableView->selectedIndexes();
   if (!il.isEmpty()) {
     const QModelIndex i = ui.tableView->selectedIndexes().at(0);

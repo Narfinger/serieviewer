@@ -39,6 +39,8 @@ class MWindowImpl : public QMainWindow
     void buildmenus(); //!< builds the menu bar at the start and adds seriemenu
     
     void saveXML(bool sort = true);      //!< saves the XML file (we have some things we need to do before it)
+    
+    const QModelIndex selectedTranslatedIndex() const; //check if this is valid
   
   public:
     MWindowImpl(QWidget *parent = 0);

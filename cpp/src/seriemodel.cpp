@@ -211,6 +211,10 @@ SeriePtr SerieModel::getSerieFromUuid(const QUuid& uuid) const {
   return SeriePtr();
 }
 
+SeriePtr SerieModel::getSerieFromIndex(const QModelIndex& i) const {
+  return list.at(i.row());
+}
+
 void SerieModel::serieChanged(int row) {
   changed = true;
   const QModelIndex start = index(row, 0);
