@@ -47,7 +47,6 @@ public:
   QModelIndex playNext();  //returns the played index or invalid if nothing played
   void rewind();
   SeriePtr getSerieFromUuid(const QUuid& uuid) const;
-  SeriePtr getSerieFromIndex(const QModelIndex& i) const;
 
   bool changed = false;
   SeriePtr lastplayed;

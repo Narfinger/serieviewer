@@ -370,7 +370,7 @@ void MWindowImpl::quitWithoutSaving() {
 
 void MWindowImpl::showSerieInfo() {
   const QModelIndex i = selectedTranslatedIndex();
-  SeriePtr s = sm->getSerieFromIndex(i);
+  SeriePtr s = sm->serieAtIndex(i);
   InfoDialogImpl infodialog(this, s);
   infodialog.exec();
   /*const QModelIndexList il = ui.tableView->selectedIndexes();
