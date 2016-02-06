@@ -33,7 +33,7 @@ Settings::Settings()
 }
 
 
-int Settings::find(QString searchstring)
+int Settings::find(QString searchstring) const
 {
     if(m_players.isEmpty())
         return -1;
@@ -49,12 +49,12 @@ int Settings::find(QString searchstring)
     return -2;
 }
 
-bool Settings::noPlayer()
+bool Settings::noPlayer() const
 {
     return m_players.isEmpty();
 }
 
-bool Settings::playerListContains(QString player)
+bool Settings::playerListContains(QString player) const
 {
     int i = find(player);
     if(0<=i && i< m_players.size())
@@ -68,7 +68,7 @@ void Settings::clearPlayers()
     m_players.clear();
 }
 
-QString Settings::getPlayerArguments(QString player)
+QString Settings::getPlayerArguments(QString player) const
 {
     int index = find(player);
     Q_ASSERT_X(index>=0, "settings", "You don't have any arguments about this player");
@@ -80,11 +80,6 @@ QString Settings::getPlayerArguments(QString player)
         
     arguments.append( m_players.at(index).second );
     return arguments;	
-}
-
-QString Settings::getPlayer()
-{
-    return m_players.at(0).first;
 }
 
 void Settings::addPlayer(QString player, QString arguments)
@@ -101,11 +96,3 @@ void Settings::addPlayer(QString player, QString arguments)
         }
     }
 }
-		
-QList<QPair<QString,QString> > Settings::getPlayerList()
-{
-    return m_players;
-}
-
-
-
