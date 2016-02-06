@@ -48,6 +48,10 @@ Serie::~Serie()
 {}
 
 QString Serie::getDuration() {
+  const Settings* se = Settings::Instance();
+  if (!se->getScanMedia())
+    return "";
+  
   switch(m_workerstate) {
     case FINISHED: return m_duration;
     case RUNNING:  return "...";
@@ -69,7 +73,13 @@ void Serie::getDurationWorker()
 	}
         
         //this is multiple times and stupid       
-        QString nextepisodetoplay = m_dir.absoluteFilePath( m_dir.entryList(QDir::Files, QDir::Name).at(m_episode-1) );
+        const QStringList nextepisodetoplay_list =  m_dir.entryList(QDir::Files, QDir::Name);
+	if (nextepisodetoplay_list.size() < m_episode) {
+	  m_duration = "??";
+	  m_workerstate = FINISHED;
+	  return;
+	}
+        QString nextepisodetoplay = m_dir.absoluteFilePath(nextepisodetoplay_list.at(m_episode-1));
         QByteArray ba = nextepisodetoplay.toLocal8Bit();
         const char *c_str = ba.data();
         
