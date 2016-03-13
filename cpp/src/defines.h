@@ -13,7 +13,7 @@ extern const char* PROGRAMMVERSION;
 extern const char* DBUSARGS;
 
 #ifndef ALLFILTERS
-#define ALLFILTERS "*.avi" << "*.mkv" << "*.ogm" << "*.mpg" << "*.mpeg" << "*.rmvb" << "*.rm" << "*.mp4" << "*.flv" << "*.m4v" << "*.mov" << "*.xvid"
+#define ALLFILTERS "*.avi" << "*.mkv" << "*.ogm" << "*.mpg" << "*.mpeg" << "*.rmvb" << "*.rm" << "*.mp4" << "*.flv" << "*.m4v" << "*.mov" << "*.xvid" << "*.webm"
 #endif
 
 #ifndef REPLACELIST
