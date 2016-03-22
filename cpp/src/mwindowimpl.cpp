@@ -129,6 +129,7 @@ MWindowImpl::MWindowImpl(QWidget *parent)
 
 MWindowImpl::~MWindowImpl() {
     Q_ASSERT(xmlhandler!=0);
+    ui.clearButton->click();
 
     QSettings settings(FIRMNAME, APPNAME);
     if(sm->changed)
